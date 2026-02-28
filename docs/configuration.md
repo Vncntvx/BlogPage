@@ -88,7 +88,7 @@ export const SITE = {
 
 ```ts
 export const SOCIAL = {
-  github: { enabled: true, href: "https://github.com/WayneXuCN/astro-paper" },
+  github: { enabled: true, href: "https://github.com/Vncntvx/astro-paper" },
   bilibili: { enabled: false, href: "https://space.bilibili.com/" },
   zhihu: { enabled: false, href: "https://www.zhihu.com/people/" },
   juejin: { enabled: false, href: "https://juejin.cn/user/" },
@@ -137,7 +137,7 @@ export const COMMENTS = {
   enabled: true, // 是否启用评论功能
   provider: "giscus" as const, // 评论提供商，当前支持 giscus
   giscus: {
-    repo: "WayneXuCN/BlogComments", // GitHub 仓库名称
+    repo: "Vncntvx/BlogComments", // GitHub 仓库名称
     repoId: "R_kgDOMFTH3A", // 仓库 ID
     category: "Announcements", // 评论分类
     categoryId: "DIC_kwDOMFTH3M4Cf4dF", // 分类 ID

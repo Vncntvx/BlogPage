@@ -55,7 +55,7 @@ jobs:
             cd /opt/1panel/www/sites/blog.wenjiexu.site/BlogPage
 
             # 设置代理加速
-            git remote set-url origin https://gh.xmly.dev/https://github.com/WayneXuCN/BlogPage
+            git remote set-url origin https://gh.xmly.dev/https://github.com/Vncntvx/BlogPage
 
             # 拉取最新代码（gh-pages 分支）
             git config --global --add safe.directory "$(pwd)"

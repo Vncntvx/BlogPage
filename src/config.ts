@@ -42,7 +42,7 @@ export const SITE = {
  */
 export const SOCIAL = {
   // Global
-  github: { enabled: true, href: "https://github.com/WayneXuCN" },
+  github: { enabled: true, href: "https://github.com/Vncntvx" },
   email: { enabled: true, href: "mailto:wenjie.xu.cn@outlook.com" },
   x: { enabled: false, href: "https://x.com/username" },
   linkedin: { enabled: false, href: "https://www.linkedin.com/in/username/" },
@@ -93,7 +93,7 @@ export const COMMENTS = {
   enabled: true,
   provider: "giscus" as const,
   giscus: {
-    repo: "WayneXuCN/BlogComments",
+    repo: "Vncntvx/BlogComments",
     repoId: "R_kgDOMFTH3A",
     category: "Announcements",
     categoryId: "DIC_kwDOMFTH3M4Cf4dF",
