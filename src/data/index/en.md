@@ -1,5 +1,5 @@
 ---
 title: "Untitled"
-description: "Notes on life, tech, academia, and everything in between"
+description: "You can change it. You can do what you want. This is how Innovation happens."
 lang: en
 ---
