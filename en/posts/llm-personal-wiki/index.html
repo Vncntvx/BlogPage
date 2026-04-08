@@ -1,22 +1,22 @@
-<!DOCTYPE html><html dir="ltr" lang="en" class="scroll-smooth" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta name="generator" content="Astro v6.1.4"><!-- General Meta Tags --><title>Building a Self-Maintaining Personal Wiki with LLMs | Blog</title><meta name="title" content="Building a Self-Maintaining Personal Wiki with LLMs | Blog"><meta name="description" content="Design and workflows for an LLM-powered self-maintaining personal Wiki"><meta name="author" content="Wenjie Xu"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph / Facebook --><meta property="og:title" content="Building a Self-Maintaining Personal Wiki with LLMs | Blog"><meta property="og:description" content="Design and workflows for an LLM-powered self-maintaining personal Wiki"><meta property="og:url" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta property="og:image" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png"><!-- Article Published/Modified time --><meta property="article:published_time" content="2026-04-08T08:36:53.000Z"><meta property="article:modified_time" content="2026-04-08T08:36:53.000Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta property="twitter:title" content="Building a Self-Maintaining Personal Wiki with LLMs | Blog"><meta property="twitter:description" content="Design and workflows for an LLM-powered self-maintaining personal Wiki"><meta property="twitter:image" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png"><!-- Google JSON-LD Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building a Self-Maintaining Personal Wiki with LLMs | Blog","image":"https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png","datePublished":"2026-04-08T08:36:53.000Z","dateModified":"2026-04-08T08:36:53.000Z","author":[{"@type":"Person","name":"Wenjie Xu","url":"https://wenjiexu.site/"}]}</script><!-- Enable RSS feed auto-discovery  --><!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery --><link rel="alternate" type="application/rss+xml" title="Blog" href="https://blog.wenjiexu.site/en/rss.xml"><meta name="theme-color" content=""><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.j56hQv-j.js"></script><script src="/toggle-theme.js"></script><link rel="stylesheet" href="/_astro/Footer.BG7QricC.css">
+<!DOCTYPE html><html dir="ltr" lang="en" class="scroll-smooth" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta name="generator" content="Astro v6.1.4"><!-- General Meta Tags --><title>Built a Self‑Maintaining Personal Wiki with an LLM | Blog</title><meta name="title" content="Built a Self‑Maintaining Personal Wiki with an LLM | Blog"><meta name="description" content="Design and workflow of a self‑maintaining personal knowledge base powered by LLMs"><meta name="author" content="徐文杰"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph / Facebook --><meta property="og:title" content="Built a Self‑Maintaining Personal Wiki with an LLM | Blog"><meta property="og:description" content="Design and workflow of a self‑maintaining personal knowledge base powered by LLMs"><meta property="og:url" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta property="og:image" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png"><!-- Article Published/Modified time --><meta property="article:published_time" content="2026-04-08T08:36:53.000Z"><meta property="article:modified_time" content="2026-04-08T12:30:15.000Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta property="twitter:title" content="Built a Self‑Maintaining Personal Wiki with an LLM | Blog"><meta property="twitter:description" content="Design and workflow of a self‑maintaining personal knowledge base powered by LLMs"><meta property="twitter:image" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png"><!-- Google JSON-LD Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Built a Self‑Maintaining Personal Wiki with an LLM | Blog","image":"https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png","datePublished":"2026-04-08T08:36:53.000Z","dateModified":"2026-04-08T12:30:15.000Z","author":[{"@type":"Person","name":"徐文杰","url":"https://wenjiexu.site/"}]}</script><!-- Enable RSS feed auto-discovery  --><!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery --><link rel="alternate" type="application/rss+xml" title="Blog" href="https://blog.wenjiexu.site/en/rss.xml"><meta name="theme-color" content=""><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.j56hQv-j.js"></script><script src="/toggle-theme.js"></script><link rel="stylesheet" href="/_astro/Footer.BG7QricC.css">
 <style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
 </style>
 <link rel="stylesheet" href="/_astro/KatexStyles.HM2DiD67.css">
 <style>.animated-signature[data-astro-cid-74s6d3ud]{overflow:visible}.animated-signature[data-astro-cid-74s6d3ud] path{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2;fill:currentColor;fill-opacity:0;stroke-dasharray:1;stroke-dashoffset:1;animation:signature-draw 8s linear infinite both;will-change:stroke-dashoffset,fill-opacity}@keyframes signature-draw{0%{stroke-dashoffset:1;fill-opacity:0}15%{fill-opacity:0}35%,75%{stroke-dashoffset:0;fill-opacity:1}90%,to{stroke-dashoffset:1;fill-opacity:0}}@media(prefers-reduced-motion:reduce){.animated-signature[data-astro-cid-74s6d3ud] path{animation:none;stroke-dasharray:none;stroke-dashoffset:0;fill:currentColor;fill-opacity:1}}
 :where([data-astro-image]){height:auto}:where([data-astro-image=full-width]){width:100%}:where([data-astro-image=constrained]){max-width:100%}[data-astro-image-fit=fill]{object-fit:fill}[data-astro-image-fit=contain]{object-fit:contain}[data-astro-image-fit=cover]{object-fit:cover}[data-astro-image-fit=scale-down]{object-fit:scale-down}
-</style><style>[data-astro-transition-scope="astro-pcwlacsx-1"] { view-transition-name: building-a-self-maintaining-personal-wiki-with-ll-ms; }@layer astro { ::view-transition-old(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+</style><style>[data-astro-transition-scope="astro-pcwlacsx-1"] { view-transition-name: built-a-self-maintaining-personal-wiki-with-an-llm; }@layer astro { ::view-transition-old(built-a-self-maintaining-personal-wiki-with-an-llm) { 
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
-	animation-name: astroFadeOut; }::view-transition-new(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-name: astroFadeOut; }::view-transition-new(built-a-self-maintaining-personal-wiki-with-an-llm) { 
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
-	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(built-a-self-maintaining-personal-wiki-with-an-llm) { 
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
-	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(built-a-self-maintaining-personal-wiki-with-an-llm) { 
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
@@ -112,24 +112,25 @@
 	animation-duration: 180ms;
 	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
 	animation-fill-mode: both;
-	animation-name: astroFadeIn; }</style></head> <body data-astro-cid-sckkx6r4> <header> <a id="skip-to-content" href="#main-content" class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"> Skip to content </a> <div id="nav-container" class="mx-auto flex max-w-app flex-col items-center justify-between sm:flex-row"> <div id="top-nav-wrap" class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"> <a href="/en" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"> Blog </a> <nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"> <button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open Menu" aria-expanded="false" aria-controls="menu-items"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg> </button> <ul id="menu-items" class="mt-4 grid w-44 grid-cols-2 place-content-center gap-2 [&#38;>li>a]:block [&#38;>li>a]:px-4 [&#38;>li>a]:py-3 [&#38;>li>a]:text-center [&#38;>li>a]:font-medium [&#38;>li>a]:hover:text-accent sm:[&#38;>li>a]:px-2 sm:[&#38;>li>a]:py-1 hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"> <li class="col-span-2"> <a href="/en/posts" class="active-nav"> Posts </a> </li> <li class="col-span-2"> <a href="/en/tags"> Tags </a> </li> <li class="col-span-2"> <a href="/en/categories"> Categories </a> </li>  <li class="col-span-1 flex items-center justify-center"> <a href="/en/archives" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Archives" title="Archives"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-archive" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg> <span class="sr-only">Archives</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <a href="/en/search" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Search" title="Search"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-search" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg> <span class="sr-only">Search</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <div class="language-switcher relative" data-astro-cid-a2mxz4y6> <button id="language-toggle" class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" title="English" data-astro-cid-a2mxz4y6> <svg class="size-6 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <circle cx="12" cy="12" r="10" data-astro-cid-a2mxz4y6></circle> <line x1="2" y1="12" x2="22" y2="12" data-astro-cid-a2mxz4y6></line> <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-a2mxz4y6></path> </svg> <span class="sr-only" data-astro-cid-a2mxz4y6>English</span> </button> <ul id="language-menu" class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg" role="menu" data-astro-cid-a2mxz4y6> <li role="none" data-astro-cid-a2mxz4y6> <a href="/en/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent bg-muted/50 font-medium text-accent" role="menuitem" lang="en" hreflang="en" data-astro-cid-a2mxz4y6> English <svg class="ml-1 inline-block size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <polyline points="20 6 9 17 4 12" data-astro-cid-a2mxz4y6></polyline> </svg> </a> </li><li role="none" data-astro-cid-a2mxz4y6> <a href="/zh/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent text-foreground" role="menuitem" lang="zh" hreflang="zh" data-astro-cid-a2mxz4y6> 中文  </a> </li> </ul> </div> <script type="module">document.addEventListener("click",e=>{const t=document.querySelector("#language-toggle"),n=document.querySelector("#language-menu"),a=e.target;t&&n&&!t.contains(a)&&!n.contains(a)&&(n.classList.add("hidden"),t.setAttribute("aria-expanded","false"))});function s(){const e=document.querySelector("#language-toggle"),t=document.querySelector("#language-menu");!e||!t||e.dataset.lsInit||(e.dataset.lsInit="true",e.addEventListener("click",()=>{!t.classList.contains("hidden")?(t.classList.add("hidden"),e.setAttribute("aria-expanded","false")):(t.classList.remove("hidden"),e.setAttribute("aria-expanded","true"))}),e.addEventListener("keydown",n=>{const a=n;a.key==="Enter"||a.key===" "?(n.preventDefault(),e.click()):a.key==="Escape"&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}))}s();document.addEventListener("astro:after-swap",s);</script> </li> <li class="col-span-1 flex items-center justify-center"> <button id="theme-btn" class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent" title="Toggle theme" aria-label="auto" aria-live="polite"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg> </button> </li> </ul> </nav> </div> </div> <div class="mx-auto max-w-app px-4"> <hr class="border-border" aria-hidden="true"> </div> </header> <script type="module">function u(){const e=document.querySelector("#menu-btn"),t=document.querySelector("#menu-items"),n=document.querySelector("#menu-icon"),o=document.querySelector("#close-icon");!e||!t||!n||!o||e.dataset.navInit||(e.dataset.navInit="true",e.addEventListener("click",()=>{const s=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",s?"false":"true"),e.setAttribute("aria-label",s?"Close Menu":"Open Menu"),t.classList.toggle("hidden"),n.classList.toggle("hidden"),o.classList.toggle("hidden")}))}u();document.addEventListener("astro:after-swap",u);</script> <div class="mx-auto flex w-full max-w-app items-center justify-start px-2"><a id="back-button" href="/en" class="group inline-block hover:text-accent focus-outline mt-8 mb-2 flex hover:text-foreground/75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 6-6 6 6 6" /></svg><span>Back to home</span></a></div><script type="module">function o(){const t=document.querySelector("#back-button"),e=sessionStorage.getItem("backUrl");e&&t&&(t.href=e)}document.addEventListener("astro:page-load",o);o();</script> <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12" data-pagefind-body> <h1 class="inline-block text-2xl font-bold text-accent sm:text-3xl" data-astro-transition-scope="astro-pcwlacsx-1"> Building a Self-Maintaining Personal Wiki with LLMs </h1> <ul class="my-2 flex flex-wrap items-center gap-y-1"> <li class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <div class="flex items-start gap-x-2 opacity-80 sm:items-center"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-muted-foreground inline-block flex-none size-6" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg> <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0"> <span class="text-sm break-keep whitespace-nowrap sm:text-base"> Published on:
-</span> <time class="text-sm break-keep whitespace-nowrap sm:text-base" datetime="2026-04-08T08:36:53.000Z"> 8 Apr, 2026 </time> </span> </div> </li>  <li class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <span class="whitespace-nowrap"> 15 min read </span> </li> <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm"> <a href="/en/categories/tools/" class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"> Category: Tools </a> </li> </ul> <article id="article" class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"> <blockquote>
-<p>A personal knowledge base that continuously maintains itself as materials grow.</p>
+	animation-name: astroFadeIn; }</style></head> <body data-astro-cid-sckkx6r4> <header> <a id="skip-to-content" href="#main-content" class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"> Skip to content </a> <div id="nav-container" class="mx-auto flex max-w-app flex-col items-center justify-between sm:flex-row"> <div id="top-nav-wrap" class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"> <a href="/en" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"> Blog </a> <nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"> <button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open Menu" aria-expanded="false" aria-controls="menu-items"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg> </button> <ul id="menu-items" class="mt-4 grid w-44 grid-cols-2 place-content-center gap-2 [&#38;>li>a]:block [&#38;>li>a]:px-4 [&#38;>li>a]:py-3 [&#38;>li>a]:text-center [&#38;>li>a]:font-medium [&#38;>li>a]:hover:text-accent sm:[&#38;>li>a]:px-2 sm:[&#38;>li>a]:py-1 hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"> <li class="col-span-2"> <a href="/en/posts" class="active-nav"> Posts </a> </li> <li class="col-span-2"> <a href="/en/tags"> Tags </a> </li> <li class="col-span-2"> <a href="/en/categories"> Categories </a> </li>  <li class="col-span-1 flex items-center justify-center"> <a href="/en/archives" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Archives" title="Archives"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-archive" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg> <span class="sr-only">Archives</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <a href="/en/search" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Search" title="Search"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-search" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg> <span class="sr-only">Search</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <div class="language-switcher relative" data-astro-cid-a2mxz4y6> <button id="language-toggle" class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" title="English" data-astro-cid-a2mxz4y6> <svg class="size-6 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <circle cx="12" cy="12" r="10" data-astro-cid-a2mxz4y6></circle> <line x1="2" y1="12" x2="22" y2="12" data-astro-cid-a2mxz4y6></line> <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-a2mxz4y6></path> </svg> <span class="sr-only" data-astro-cid-a2mxz4y6>English</span> </button> <ul id="language-menu" class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg" role="menu" data-astro-cid-a2mxz4y6> <li role="none" data-astro-cid-a2mxz4y6> <a href="/en/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent bg-muted/50 font-medium text-accent" role="menuitem" lang="en" hreflang="en" data-astro-cid-a2mxz4y6> English <svg class="ml-1 inline-block size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <polyline points="20 6 9 17 4 12" data-astro-cid-a2mxz4y6></polyline> </svg> </a> </li><li role="none" data-astro-cid-a2mxz4y6> <a href="/zh/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent text-foreground" role="menuitem" lang="zh" hreflang="zh" data-astro-cid-a2mxz4y6> 中文  </a> </li> </ul> </div> <script type="module">document.addEventListener("click",e=>{const t=document.querySelector("#language-toggle"),n=document.querySelector("#language-menu"),a=e.target;t&&n&&!t.contains(a)&&!n.contains(a)&&(n.classList.add("hidden"),t.setAttribute("aria-expanded","false"))});function s(){const e=document.querySelector("#language-toggle"),t=document.querySelector("#language-menu");!e||!t||e.dataset.lsInit||(e.dataset.lsInit="true",e.addEventListener("click",()=>{!t.classList.contains("hidden")?(t.classList.add("hidden"),e.setAttribute("aria-expanded","false")):(t.classList.remove("hidden"),e.setAttribute("aria-expanded","true"))}),e.addEventListener("keydown",n=>{const a=n;a.key==="Enter"||a.key===" "?(n.preventDefault(),e.click()):a.key==="Escape"&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}))}s();document.addEventListener("astro:after-swap",s);</script> </li> <li class="col-span-1 flex items-center justify-center"> <button id="theme-btn" class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent" title="Toggle theme" aria-label="auto" aria-live="polite"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg> </button> </li> </ul> </nav> </div> </div> <div class="mx-auto max-w-app px-4"> <hr class="border-border" aria-hidden="true"> </div> </header> <script type="module">function u(){const e=document.querySelector("#menu-btn"),t=document.querySelector("#menu-items"),n=document.querySelector("#menu-icon"),o=document.querySelector("#close-icon");!e||!t||!n||!o||e.dataset.navInit||(e.dataset.navInit="true",e.addEventListener("click",()=>{const s=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",s?"false":"true"),e.setAttribute("aria-label",s?"Close Menu":"Open Menu"),t.classList.toggle("hidden"),n.classList.toggle("hidden"),o.classList.toggle("hidden")}))}u();document.addEventListener("astro:after-swap",u);</script> <div class="mx-auto flex w-full max-w-app items-center justify-start px-2"><a id="back-button" href="/en" class="group inline-block hover:text-accent focus-outline mt-8 mb-2 flex hover:text-foreground/75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 6-6 6 6 6" /></svg><span>Back to home</span></a></div><script type="module">function o(){const t=document.querySelector("#back-button"),e=sessionStorage.getItem("backUrl");e&&t&&(t.href=e)}document.addEventListener("astro:page-load",o);o();</script> <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12" data-pagefind-body> <h1 class="inline-block text-2xl font-bold text-accent sm:text-3xl" data-astro-transition-scope="astro-pcwlacsx-1"> Built a Self‑Maintaining Personal Wiki with an LLM </h1> <ul class="my-2 flex flex-wrap items-center gap-y-1"> <li class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <div class="flex items-start gap-x-2 opacity-80 sm:items-center"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-muted-foreground inline-block flex-none size-6" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg> <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0"> <span class="text-sm break-keep whitespace-nowrap sm:text-base"> Updated on:
+</span> <time class="text-sm break-keep whitespace-nowrap sm:text-base" datetime="2026-04-08T12:30:15.000Z"> 8 Apr, 2026 </time> </span> </div> </li>  <li class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <span class="whitespace-nowrap"> 12 min read </span> </li> <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm"> <a href="/en/categories/tools/" class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"> Category: Tools </a> </li> </ul> <article id="article" class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"> <blockquote>
+<p>A knowledge base that keeps itself maintained as materials grow.</p>
+<p>Reference implementation: <a href="https://github.com/Vncntvx/Personal-Auto-Wiki">Personal-Auto-Wiki</a></p>
 </blockquote>
 <h2 id="table-of-contents">Table of contents</h2>
 <p></p><details><summary>Open Table of contents</summary><p></p>
 <ul>
 <li><a href="#1-motivation">1. Motivation</a>
 <ul>
-<li><a href="#option-1-store-it">Option 1: Store it</a></li>
-<li><a href="#option-2-rag-retrieval">Option 2: RAG retrieval</a></li>
+<li><a href="#approach-1-store-it">Approach 1: Store it</a></li>
+<li><a href="#approach-2-rag-retrieval">Approach 2: RAG retrieval</a></li>
 <li><a href="#a-third-approach">A third approach</a></li>
 </ul>
 </li>
 <li><a href="#2-architecture">2. Architecture</a>
 <ul>
-<li><a href="#21-layer-one-raw-sources">2.1 Layer one: Raw sources</a></li>
-<li><a href="#22-layer-two-the-wiki-knowledge-layer">2.2 Layer two: the Wiki (knowledge layer)</a>
+<li><a href="#21-layer-1-raw-sources">2.1 Layer 1: Raw sources</a></li>
+<li><a href="#22-layer-2-wiki-the-knowledge-layer">2.2 Layer 2: Wiki (the knowledge layer)</a>
 <ul>
 <li><a href="#221-sources">2.2.1 Sources</a></li>
 <li><a href="#222-concepts">2.2.2 Concepts</a></li>
@@ -138,30 +139,27 @@
 <li><a href="#225-indexmd-and-logmd">2.2.5 Index.md and Log.md</a></li>
 </ul>
 </li>
-<li><a href="#23-layer-three-schema-and-skills-instructions-for-the-llm">2.3 Layer three: Schema and Skills (instructions for the LLM)</a>
+<li><a href="#23-layer-3-schema-and-skills-instructions-for-the-llm">2.3 Layer 3: Schema and Skills (instructions for the LLM)</a>
 <ul>
 <li><a href="#231-agentsmd--claudemd">2.3.1 AGENTS.md / CLAUDE.md</a></li>
 <li><a href="#232-skills">2.3.2 Skills</a></li>
 </ul>
 </li>
+<li><a href="#32-workflow-1-detecting-resources-sync">3.2 Workflow 1: Detecting Resources Sync</a></li>
+<li><a href="#33-workflow-2-ingesting-resources">3.3 Workflow 2: Ingesting Resources</a></li>
+<li><a href="#34-workflow-3-querying-the-wiki">3.4 Workflow 3: Querying the Wiki</a></li>
+<li><a href="#35-workflow-4-checking-wiki-health">3.5 Workflow 4: Checking Wiki Health</a></li>
 </ul>
 </li>
-<li><a href="#3-four-core-workflows">3. Four core workflows</a>
+<li><a href="#4-typical-workflow-scenarios">4. Typical workflow scenarios</a>
 <ul>
-<li><a href="#31-workflow-1-detecting-resources-sync">3.1 Workflow 1: Detecting Resources Sync</a></li>
-<li><a href="#32-workflow-2-ingesting-resources">3.2 Workflow 2: Ingesting Resources</a></li>
-<li><a href="#33-workflow-3-querying-the-wiki">3.3 Workflow 3: Querying the Wiki</a></li>
-<li><a href="#34-workflow-4-health-checks">3.4 Workflow 4: Health checks</a></li>
+<li><a href="#scenario-1-first-time-setup">Scenario 1: First time setup</a></li>
+<li><a href="#scenario-2-routine-maintenance">Scenario 2: Routine maintenance</a></li>
+<li><a href="#scenario-3-detect-only-do-not-process">Scenario 3: Detect only, do not process</a></li>
+<li><a href="#scenario-4-knowledge-query">Scenario 4: Knowledge query</a></li>
 </ul>
 </li>
-<li><a href="#4-typical-workflows">4. Typical workflows</a>
-<ul>
-<li><a href="#scenario-1-first-time-setup">Scenario 1: First-time setup</a></li>
-<li><a href="#scenario-2-ongoing-maintenance">Scenario 2: Ongoing maintenance</a></li>
-<li><a href="#scenario-3-knowledge-query">Scenario 3: Knowledge query</a></li>
-</ul>
-</li>
-<li><a href="#5-notes">5. Notes</a>
+<li><a href="#5-additional-notes">5. Additional notes</a>
 <ul>
 <li><a href="#51-local-search-qmd">5.1 Local search: qmd</a></li>
 <li><a href="#52-contradiction-flags">5.2 Contradiction flags</a></li>
@@ -169,57 +167,57 @@
 <li><a href="#54-page-templates">5.4 Page templates</a></li>
 </ul>
 </li>
-<li><a href="#6-systematic-customizations-to-karpathys-design">6. Systematic customizations to Karpathy’s design</a></li>
+<li><a href="#6-systematic-tweaks-i-made-to-karpathys-proposal">6. Systematic tweaks I made to Karpathy’s proposal</a></li>
 <li><a href="#7-design-philosophy">7. Design philosophy</a>
 <ul>
-<li><a href="#71-llm-as-a-knowledge-bookkeeper">7.1 LLM as a knowledge bookkeeper</a></li>
+<li><a href="#71-llms-are-the-wikis-bookkeepers">7.1 LLMs are the Wiki’s “bookkeepers”</a></li>
 <li><a href="#72-knowledge-evolves">7.2 Knowledge evolves</a></li>
 <li><a href="#73-constraints-create-value">7.3 Constraints create value</a></li>
-<li><a href="#74-clear-humanllm-division">7.4 Clear human/LLM division</a></li>
-<li><a href="#75-composable-modifiable-workflows">7.5 Composable, modifiable workflows</a></li>
+<li><a href="#74-clear-humanai-division-of-labor">7.4 Clear human‑AI division of labor</a></li>
+<li><a href="#75-workflows-should-be-composable-and-editable">7.5 Workflows should be composable and editable</a></li>
 </ul>
 </li>
-<li><a href="#8-tooling">8. Tooling</a></li>
+<li><a href="#8-toolchain">8. Toolchain</a></li>
 <li><a href="#references">References</a></li>
 </ul>
 <p></p></details><p></p>
 <h2 id="1-motivation">1. Motivation</h2>
-<p>Knowledge workers face a large volume of information every day: articles, papers, reports, meeting notes. How to manage this information is an old problem.</p>
-<h3 id="option-1-store-it">Option 1: Store it</h3>
-<p>The most common approach is to use Obsidian, Notion, Bear, or Apple Notes to build a folder structure and store materials by category. Organizing feels good at the time. But months later, when you try to find a specific viewpoint, you often can’t remember which folder or which file it was in. Organizing didn’t create understanding — it only moved information around.</p>
-<p>An even bigger difficulty is that knowledge itself changes. The same concept may be phrased differently across articles. Different sources may present contradictory descriptions. A method in one field might be reinvented in another. To discover these connections and contradictions you need to remember the contents of many documents simultaneously — beyond a human brain’s capacity.</p>
-<h3 id="option-2-rag-retrieval">Option 2: RAG retrieval</h3>
-<p>RAG (Retrieval-Augmented Generation) solves the problem of not being able to find something. Store documents in a vector database, retrieve relevant passages when asked, and let an LLM synthesize an answer. But RAG starts from the raw documents each time rather than from an already-digested body of knowledge. It assumes the original text is the optimal vessel of knowledge, which is not true. Raw documents contain redundancy, bias, outdated information, and author-specific phrasing. Something answered last week has to be rediscovered this week. When two articles contradict each other, RAG will present both without proactively flagging the disagreement.</p>
+<p>Knowledge workers face a large volume of information every day: articles, papers, reports, meeting notes. How to handle this stream of information is a long‑standing problem.</p>
+<h3 id="approach-1-store-it">Approach 1: Store it</h3>
+<p>The most common approach is to use Obsidian, Notion, Bear, or Apple Notes to create a folder structure and file documents into categories. Organizing feels good in the moment. A few months later when you try to find a specific idea, you often can’t remember which folder or file it was in. Organization didn’t produce understanding — it just moved information to a different place.</p>
+<p>A bigger challenge is that knowledge itself changes. The same concept can be phrased differently across articles. Different sources may describe the same thing in conflicting ways. A methodology in one field can be reinvented in another. Discovering these connections and contradictions requires keeping all material contents in mind at once, which exceeds human cognitive capacity.</p>
+<h3 id="approach-2-rag-retrieval">Approach 2: RAG retrieval</h3>
+<p>Retrieval‑Augmented Generation (RAG) solves the “can’t find it” problem: store documents in a vector database, retrieve relevant passages at query time, and let the LLM synthesize an answer. But RAG starts from raw documents on every query rather than from knowledge that has already been digested. It assumes raw text is the best vessel for knowledge — which is not true. Raw documents contain redundancy, bias, outdated information, and an author’s personal phrasing. What was discovered last week must be rediscovered this week. Contradictions between two articles will both be shown by RAG without being explicitly flagged.</p>
 <h3 id="a-third-approach">A third approach</h3>
-<p>Andrej Karpathy proposed a different direction in his LLM Wiki gist:</p>
+<p>Andrej Karpathy proposed a different direction in his <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki</a>:</p>
 <blockquote>
-<p>Let the LLM act like a team of Wikipedia editors that continuously maintain a persistent Wiki.</p>
+<p>Let the LLM act like a Wikipedia editorial team that continuously maintains a persistent wiki.</p>
 </blockquote>
-<p>When new material arrives, the LLM reads and understands it, extracts concepts and entities, updates existing pages, flags contradictions, and maintains cross-references. Queries then search this Wiki rather than the raw source documents. The core insight is: LLMs excel at understanding, synthesizing, and generating text, not at on-the-fly reassembling of fragments. Move comprehension into the ingestion phase and let queries retrieve from an already-structured knowledge base. That improves both efficiency and accuracy.</p>
-<p>I built my own LLM Wiki workflow inspired by Karpathy and made many customizations. Below I describe the architecture, workflows, technical details, and design philosophy — what I did and why.</p>
+<p>When new material arrives, the LLM reads, understands, extracts concepts and entities, updates existing pages, flags contradictions, and maintains cross‑references. At query time the LLM retrieves from this wiki instead of the raw documents. The key insight is: LLMs excel at understanding, synthesizing, and generating text — not at reassembling fragmented pieces on every query. Move the work of understanding into the ingestion phase; the query phase then only needs to search already‑structured knowledge, which greatly improves efficiency and accuracy.</p>
+<p>I followed Karpathy’s idea and built my own LLM Wiki workflow, with extensive customizations. Below I explain what I built and why, from architecture and workflows to technical details and design philosophy.</p>
 <hr>
 <h2 id="2-architecture">2. Architecture</h2>
-<p>The system has three layers with clear separation of responsibilities:</p>
+<p>The system has three clearly separated layers:</p>
 <pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>PersonalAutoWiki/</span></span>
-<span class="line"><span>├── ObsidianRaw/          # Raw sources (read-only, curated by humans)</span></span>
-<span class="line"><span>│   ├── 00_Inbox/         # Temporary inbox, awaiting triage</span></span>
-<span class="line"><span>│   ├── 01_Projects/      # Active projects, action-oriented, time-sensitive</span></span>
-<span class="line"><span>│   ├── 02_Areas/         # Areas of responsibility, require maintenance</span></span>
-<span class="line"><span>│   ├── 03_Resources/     # Reusable reference materials ← only this is ingested by the LLM</span></span>
+<span class="line"><span>├── ObsidianRaw/          # Raw sources (read‑only, human‑curated)</span></span>
+<span class="line"><span>│   ├── 00_Inbox/         # Temporary inbox, to be categorized</span></span>
+<span class="line"><span>│   ├── 01_Projects/      # Active projects, action‑oriented, time‑bound</span></span>
+<span class="line"><span>│   ├── 02_Areas/         # Ongoing responsibility areas, require active maintenance</span></span>
+<span class="line"><span>│   ├── 03_Resources/     # Reusable reference materials ← the LLM's only ingestion source</span></span>
 <span class="line"><span>│   └── 04_Archive/       # Historical records</span></span>
-<span class="line"><span>├── Wiki/                 # Knowledge base (maintained entirely by the LLM)</span></span>
-<span class="line"><span>│   ├── Index.md          # Auto-maintained index</span></span>
-<span class="line"><span>│   ├── Log.md            # Machine-parsable operation log</span></span>
+<span class="line"><span>├── Wiki/                 # Knowledge base (fully maintained by the LLM)</span></span>
+<span class="line"><span>│   ├── Index.md          # Automatically maintained index</span></span>
+<span class="line"><span>│   ├── Log.md            # Machine‑parsable operation log</span></span>
 <span class="line"><span>│   ├── Concepts/         # Concept pages (methodologies, theoretical frameworks)</span></span>
 <span class="line"><span>│   ├── Entities/         # Entity pages (people, organizations, projects)</span></span>
-<span class="line"><span>│   ├── Sources/          # Summaries of original materials</span></span>
-<span class="line"><span>│   └── Outputs/          # Query outputs (high-value analysis persisted back)</span></span>
-<span class="line"><span>├── .claude/skills/       # Skills definitions (codified workflows)</span></span>
-<span class="line"><span>├── AGENTS.md             # The LLM's "employee handbook" (operational rules)</span></span>
-<span class="line"><span>└── CLAUDE.md             # Reference to AGENTS.md</span></span></code></pre>
-<h3 id="21-layer-one-raw-sources">2.1 Layer one: Raw sources</h3>
-<p>I organize raw materials using the PARA method. PARA divides information into Projects, Areas, Resources, and Archives, with an Inbox as a temporary intake.</p>
-<p>These five classes have distinct natures:</p>
+<span class="line"><span>│   ├── Sources/          # Source summaries</span></span>
+<span class="line"><span>│   └── Outputs/          # Query outputs (high‑value analyses backfilled)</span></span>
+<span class="line"><span>├── .claude/skills/       # Claude Skills definitions (workflow codified)</span></span>
+<span class="line"><span>├── AGENTS.md             # LLM "employee handbook" (complete collaboration spec)</span></span>
+<span class="line"><span>└── CLAUDE.md             # References AGENTS.md</span></span></code></pre>
+<h3 id="21-layer-1-raw-sources">2.1 Layer 1: Raw sources</h3>
+<p>I organize my materials using the PARA method (Projects, Areas, Resources, Archive). PARA divides information into four categories plus an Inbox as a temporary entry point.</p>
+<p>These five categories have different natures:</p>
 
 
 
@@ -261,27 +259,28 @@
 
 
 
-<table><thead><tr><th>Folder</th><th>Nature</th><th>Example</th><th>Fit for Wiki?</th></tr></thead><tbody><tr><td>Inbox</td><td>Temporary, needs triage</td><td>Newly clipped webpages, notes to be sorted</td><td>❌ No — unstable</td></tr><tr><td>Projects</td><td>Action-oriented, time-limited</td><td>Notes for “write annual report”</td><td>❌ No — tasks, not evergreen knowledge</td></tr><tr><td>Areas</td><td>Ongoing responsibilities</td><td>Team management notes</td><td>❌ No — personal and action-focused</td></tr><tr><td>Resources</td><td>Reusable reference materials</td><td>Papers, frameworks, industry reports</td><td>✅ Yes — target for ingestion</td></tr><tr><td>Archive</td><td>Completed or inactive items</td><td>Old project histories</td><td>❌ No — historical, low priority</td></tr></tbody></table>
-<p>Key rule: The LLM only ingests files from <code>Resources</code>.</p>
-<p>This is my first customization to Karpathy’s idea. Projects and Areas are action-oriented and require human execution; they should not be automatically ingested. The Inbox needs human selection before moving to Resources. Archives may contain useful material but have lower priority. Without this constraint, project notes and personal logs would pollute the Wiki. Resources are defined as “reference material likely to be useful in the future.” That matches the Wiki’s goal: build a reusable knowledge graph.</p>
-<h3 id="22-layer-two-the-wiki-knowledge-layer">2.2 Layer two: the Wiki (knowledge layer)</h3>
-<p>This is the system’s core. The Wiki contains four page types with clear responsibilities:</p>
+<table><thead><tr><th>Directory</th><th>Nature</th><th>Example</th><th>Suitable for Wiki?</th></tr></thead><tbody><tr><td>Inbox</td><td>Temporary, to be categorized</td><td>Newly saved web pages, rough notes</td><td>❌ Not stable</td></tr><tr><td>Projects</td><td>Action‑oriented, timebound</td><td>Notes for “write annual report”</td><td>❌ Actionable, not knowledge</td></tr><tr><td>Areas</td><td>Ongoing responsibilities</td><td>Notes about “team management”</td><td>❌ Personal, not reusable</td></tr><tr><td>Resources</td><td>Reusable reference material</td><td>Papers, frameworks, industry reports</td><td>✅ Target source</td></tr><tr><td>Archive</td><td>Completed or inactive</td><td>Historical project records</td><td>❌ Historical, low priority</td></tr></tbody></table>
+<p>Key: the LLM ingests only from the <code>Resources</code> directory.</p>
+<p>This constraint is my first modification to Karpathy’s scheme. LLMs should only ingest from <code>Resources</code>. Karpathy didn’t explicitly state this restriction.</p>
+<p>Projects and Areas are action oriented and require human execution; they are not content the LLM should automatically convert into wiki entries. The Inbox must be curated and moved into Resources before ingestion. Archive is historical and lower priority. Without this constraint, project notes or transient ideas could be fed to the LLM and pollute the Wiki. The Wiki’s goal is to build a reusable knowledge graph. “Resources” are defined as materials likely to be useful in the future — this aligns with the Wiki’s purpose.</p>
+<h3 id="22-layer-2-wiki-the-knowledge-layer">2.2 Layer 2: Wiki (the knowledge layer)</h3>
+<p>This is the system core. The Wiki consists of four page types, each with a clear responsibility and naming convention:</p>
 <h4 id="221-sources">2.2.1 Sources</h4>
-<p>For every ingested raw material, create a summary page under <code>Wiki/Sources/</code> that includes:</p>
+<p>For every ingested raw document, a summary page is created under <code>Wiki/Sources/</code>. A Sources page contains:</p>
 <ul>
-<li>Title, author, and source of the original document</li>
-<li>A concise 1–3 sentence core summary</li>
-<li>Key concepts and extracted entities</li>
-<li>Cross-references to other Sources</li>
+<li>The original document’s title, author, and source</li>
+<li>A concise summary of the core arguments</li>
+<li>Extracted key concepts and entities</li>
+<li>Cross‑references to other Sources</li>
 </ul>
-<p>Sources are the entry point to the knowledge layer. Raw documents are condensed into structured summaries; redundancy and noise are filtered out. Tracking is a unique feature of Sources pages: each Source frontmatter contains three tracking fields:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="yaml"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">---</span></span>
+<p>Sources are the entry points to the knowledge layer. Raw documents are compressed into structured summaries; redundancy and noise are filtered out. Sources pages include tracking metadata so the Wiki can detect changes to the original files. Each Sources page’s frontmatter includes three tracking fields:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="yaml"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">--- </span></span>
 <span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">title</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> Resilience</span></span>
 <span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">created</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08</span></span>
 <span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">updated</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08</span></span>
 <span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> source</span></span>
-<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">tags</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">systems theory</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ecology</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> resilience research</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span></span>
-<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_path</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> Academic/Research Notes/Theory/Terms/resilience.md</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">tags</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">systems theory</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ecology</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> resilience studies</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_path</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> Academic/Research Notes/Theory/Concepts/Resilience.md</span></span>
 <span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_hash</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> a1b2c3d4</span></span>
 <span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_mtime</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08T17:30:00Z</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">---</span></span></code></pre>
@@ -306,70 +305,71 @@
 
 
 
-<table><thead><tr><th>Field</th><th>Purpose</th></tr></thead><tbody><tr><td><code>source_path</code></td><td>Locate the original file and detect moves or deletions</td></tr><tr><td><code>source_hash</code></td><td>SHA256 first 8 hex digits to detect content changes</td></tr><tr><td><code>source_mtime</code></td><td>File modification time for quick checks to avoid hashing everything</td></tr></tbody></table>
-<p>These fields let the Wiki automatically detect changes in raw sources. When an original file is edited, the system compares the hash to detect differences and flags the Source for re-ingestion.</p>
+<table><thead><tr><th>Field</th><th>Purpose</th></tr></thead><tbody><tr><td><code>source_path</code></td><td>Locates the original file; detects moves or deletions</td></tr><tr><td><code>source_hash</code></td><td>First 8 characters of SHA256 of the file contents; detects content changes</td></tr><tr><td><code>source_mtime</code></td><td>File modification time for quick screening (avoids hashing every time)</td></tr></tbody></table>
+<p>These three fields let the Wiki automatically detect changes in raw sources. When an original file is modified, the system compares hashes and flags re‑ingestion if necessary.</p>
 <h4 id="222-concepts">2.2.2 Concepts</h4>
-<p><code>Wiki/Concepts/</code> stores abstract concepts and methodologies such as “resilience,” “percolation theory,” or “prospect theory.” Concept pages:</p>
+<p><code>Wiki/Concepts/</code> stores abstract concepts and methodologies, e.g. “resilience”, “percolation theory”, “prospect theory”. Characteristic features of concept pages:</p>
 <ul>
-<li>Present definitions synthesized from multiple Sources</li>
-<li>Flag contradictions when sources disagree</li>
-<li>Evolve as new Sources are ingested</li>
-<li>List all Sources that mention the concept</li>
+<li>Definitions are synthesized from multiple Sources</li>
+<li>When sources disagree on a definition, contradictions are explicitly flagged</li>
+<li>Definitions evolve as new Sources are ingested</li>
+<li>Each concept page lists all Sources that mention it</li>
 </ul>
-<p>Concepts act as abstract nodes in the knowledge graph. Single-source definitions are often incomplete; multiple sources together approximate a fuller understanding.</p>
+<p>Concepts are the abstract nodes of the knowledge graph and point to ideas. Single‑source definitions are often partial — synthesizing multiple sources gets closer to a robust definition.</p>
 <h4 id="223-entities">2.2.3 Entities</h4>
-<p><code>Wiki/Entities/</code> contains concrete entities: people, organizations, projects, tools, places. Unlike Concepts, Entities are concrete objects and include:</p>
+<p><code>Wiki/Entities/</code> stores concrete entities: people, organizations, projects, tools. Unlike Concepts, Entities refer to specific objects.</p>
+<p>An entity page contains:</p>
 <ul>
-<li>Basic facts about the entity</li>
-<li>Links to related Concepts (what ideas the entity engages with)</li>
+<li>Basic information about the entity</li>
+<li>Links to related Concepts (which concepts the entity is associated with)</li>
 <li>Links to Sources that mention the entity</li>
-<li>Relationships to other Entities (collaborations, hierarchies, competition)</li>
-<li>A timeline where applicable</li>
+<li>Relationships to other Entities (collaboration, hierarchy, competition)</li>
+<li>A timeline if applicable</li>
 </ul>
-<p>Entities are the concrete nodes of the knowledge graph — they ground abstract concepts in real contexts.</p>
+<p>Entities are the concrete nodes of the knowledge graph; they ground abstract concepts in real contexts.</p>
 <h4 id="224-outputs">2.2.4 Outputs</h4>
-<p><code>Wiki/Outputs/</code> holds high-value query results written back into the Wiki. When a query produces cross-source synthesis, comparison tables, or insightful analysis, the result can be saved here.</p>
-<p>Save-back criteria: Not every query should be persisted. Save only results that are:</p>
+<p><code>Wiki/Outputs/</code> stores the byproducts of queries and analyses. When a query produces a cross‑source synthesis, comparison table, or insight, the result can be backfilled as an Output page.</p>
+<p>Backfill criteria — not every query should be saved. Save outputs when they are:</p>
 <ul>
-<li>Reviews: cross-source syntheses</li>
-<li>Comparisons: structured compare tables of concepts or methods</li>
-<li>Analyses: discoveries of hidden relationships or insights</li>
-<li>Conclusions: reasoned judgments worth preserving</li>
+<li>Overviews: cross‑source syntheses</li>
+<li>Comparisons: structured comparison tables of concepts or methods</li>
+<li>Analyses: discoveries of hidden links or insights</li>
+<li>Conclusions: reasoning results worth preserving</li>
 </ul>
-<p>Simple lookups (“What are the three dimensions of framework X?”) shouldn’t be saved because the answer lives in Sources and Concepts already. Outputs are the synthesis layer: they are new knowledge produced by reasoning and merit persistence.</p>
+<p>Simple lookups (“What are the three dimensions of framework X?”) are not worth saving — that answer already exists in Sources and Concepts. Outputs are the synthesis layer: they are new knowledge produced by reasoning and are worth persisting.</p>
 <h4 id="225-indexmd-and-logmd">2.2.5 Index.md and Log.md</h4>
-<p><code>Index.md</code> is a directory of all pages organized by type with one-line summaries. It controls scale — without an index, browsing dozens or hundreds of pages is hard.</p>
-<p><code>Log.md</code> is the operation log in a machine-parsable format:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | Resilience assessment</span></span>
+<p><code>Index.md</code> is a directory of all pages, organized by type, with a one‑line summary per page. Its role is to control scale: when a Wiki grows to dozens or hundreds of pages, an index is necessary for navigation.</p>
+<p><code>Log.md</code> is an operation log in a machine‑parseable format:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | resilience assessment</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Source</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Impact</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">source</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">impact</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Sources</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: framework-summary.md</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Concepts</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: resilience.md</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Entities</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: some-institute.md</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Index.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">, </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Log.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Note</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: Added a system-performance definition of resilience</span></span></code></pre>
-<p>The format is designed to be queryable with Unix tools:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">^## \[</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> tail</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -5</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        # last 5 records</span></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| ingest</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">                 # all ingest operations</span></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| contradiction</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">         # all contradiction flags</span></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">resilience</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">              # all operations touching "resilience"</span></span></code></pre>
-<p>The log should be like git history for the Wiki. Without it, the Wiki is a black box; with it, every change is traceable and auditable.</p>
-<h3 id="23-layer-three-schema-and-skills-instructions-for-the-llm">2.3 Layer three: Schema and Skills (instructions for the LLM)</h3>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">notes</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: added a systems performance definition of resilience</span></span></code></pre>
+<p>The format is designed so Unix tools can query it directly:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">^## </span><span style="--shiki-light:#22863A;--shiki-dark:#F78C6C">\\</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">[</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> tail</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -5</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        # last 5 records</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| ingest</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">                  # all ingest operations</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| contradiction</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">          # all contradiction flags</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">resilience</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">               # all operations related to "resilience"</span></span></code></pre>
+<p>The operation log should be as queryable and auditable as a Git log.</p>
+<h3 id="23-layer-3-schema-and-skills-instructions-for-the-llm">2.3 Layer 3: Schema and Skills (instructions for the LLM)</h3>
 <h4 id="231-agentsmd--claudemd">2.3.1 AGENTS.md / CLAUDE.md</h4>
-<p><code>AGENTS.md</code> and <code>CLAUDE.md</code> are operational manuals covering:</p>
+<p><code>AGENTS.md</code> and <code>CLAUDE.md</code> are complete operational manuals. They cover:</p>
 <ul>
-<li>Directory responsibilities</li>
+<li>Directory structure and responsibilities</li>
 <li>Detailed steps for the four core workflows</li>
-<li>File formats, naming conventions, and referencing rules</li>
-<li>Impact analysis strategy</li>
-<li>Contradiction detection and handling</li>
+<li>File formats, naming conventions, and citation rules</li>
+<li>Strategies for impact analysis</li>
+<li>Methods for detecting and resolving contradictions</li>
 <li>Search tool invocation order and priorities</li>
 <li>Response style requirements</li>
 </ul>
-<p>The LLM reads these files at the start of each session so it knows its role and rules. Prompts alone are ephemeral and can be truncated; a stable handbook keeps behavior consistent.</p>
+<p>The LLM reads this file at the start of a session so it knows its role, rules, and step definitions. Instructions embedded in a conversational prompt get truncated or overridden; the handbook remains stable and keeps behavior consistent.</p>
 <h4 id="232-skills">2.3.2 Skills</h4>
-<p>AGENTS.md defines rules; <code>.claude/skills/</code> contains executable Skill modules. Each Skill encapsulates triggers, steps, output formats, and edge handling:</p>
+<p><code>AGENTS.md</code> specifies rules; <code>.claude/skills/</code> codifies them as executable modules. Each Skill is a self‑contained unit that includes trigger conditions, execution steps, output formats, and boundary handling:</p>
 
 
 
@@ -400,245 +400,284 @@
 
 
 
-<table><thead><tr><th>Skill</th><th>Purpose</th><th>Trigger</th></tr></thead><tbody><tr><td>ingesting-resources</td><td>Ingest resources</td><td>New files in Resources</td></tr><tr><td>querying-wiki</td><td>Answer queries</td><td>User questions</td></tr><tr><td>checking-wiki-health</td><td>Health checks</td><td>Periodic audits</td></tr><tr><td>detecting-resources-sync</td><td>Sync detection</td><td>File system changes</td></tr></tbody></table>
-<p>Each Skill contains a <code>reference/</code> folder with page templates, frontmatter formats, and checklists. Claude Code recognizes Skills automatically. Editing a Skill changes the LLM’s behavior without touching AGENTS.md.</p>
-<hr>
-<h2 id="3-four-core-workflows">3. Four core workflows</h2>
-<h3 id="31-workflow-1-detecting-resources-sync">3.1 Workflow 1: Detecting Resources Sync</h3>
-<p>Detecting sync addresses a straightforward problem: how does the Wiki know that a raw source has changed?</p>
-<p>Without a sync check, ingestion only runs when a human explicitly asks. Raw materials are frequently edited. Fixes, supplements, restructures. Without automated detection the Wiki drifts from sources.</p>
-<p>Process:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Scan ObsidianRaw/03_Resources/ for files</span></span>
-<span class="line"><span>        Record relative path, content hash (SHA256 first 8 hex), and mtime</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 2: Read all pages under Wiki/Sources/ and extract tracking fields</span></span>
-<span class="line"><span>        (source_path, source_hash, source_mtime)</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 3: Three-way comparison</span></span>
-<span class="line"><span>        ├─ New: In Resources but not in Sources → queued for ingestion</span></span>
-<span class="line"><span>        ├─ Changed: same path but hash differs → queued for re-ingestion</span></span>
-<span class="line"><span>        ├─ Deleted: in Sources but not in Resources → needs handling</span></span>
-<span class="line"><span>        └─ Synchronized: path and hash identical → no action</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 4: Generate a sync status report</span></span></code></pre>
-<p>Output example:</p>
+
+
+
+
+
+<table><thead><tr><th>Skill</th><th>Function</th><th>Trigger scenario</th></tr></thead><tbody><tr><td><code>syncing-wiki</code></td><td>Full sync</td><td>Detects and processes all changes</td></tr><tr><td><code>ingesting-resources</code></td><td>Resource ingest</td><td>Processes new files in Resources</td></tr><tr><td><code>querying-wiki</code></td><td>Knowledge query</td><td>User questions / knowledge retrieval</td></tr><tr><td><code>checking-wiki-health</code></td><td>Health checks</td><td>Detects wiki integrity issues</td></tr><tr><td><code>detecting-resources-sync</code></td><td>Sync detection</td><td>Only detects changed files</td></tr></tbody></table>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span></span></span>
+<span class="line"><span>Each Skill consists of a `SKILL.md` (triggers, steps, output format, edge cases) and a `reference/` directory (page templates, frontmatter formats, query patterns, checklists). Claude Code automatically recognizes the Skills directory. Modifying a Skill file changes LLM behavior without editing AGENTS.md.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>---</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>## 3. Five core workflows</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>### 3.1 Workflow 0: Full sync (Syncing Wiki)</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>Full sync is the recommended entry point for routine maintenance. A single command performs detection through processing.</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>When I say "sync and process", the LLM runs a six‑stage workflow:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>```text</span></span>
+<span class="line"><span>Stage 1: Detect sync state</span></span>
+<span class="line"><span>   Scan Resources and Wiki/Sources, perform a three‑way comparison</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>Stage 2: Confirm scope</span></span>
+<span class="line"><span>   Show the list of files to process, mark files to skip, ask user whether to continue</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>Stage 3: Execute processing</span></span>
+<span class="line"><span>   Call ingesting‑resources in batches (>10 files split into batches of 5)</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>Stage 4: Verify results</span></span>
+<span class="line"><span>   Check Sources pages are created, frontmatter completeness, Index.md updated, qmd index updated</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>Stage 5: Record log</span></span>
+<span class="line"><span>   Write structured operation records into Wiki/Log.md</span></span>
+<span class="line"><span>   ↓</span></span>
+<span class="line"><span>Stage 6: Output report</span></span>
+<span class="line"><span>   Produce processing statistics and verification results</span></span></code></pre>
+<p>Design considerations:</p>
+<ul>
+<li>Batch processing: if file count > 10, split into batches of 5 to avoid losing context</li>
+<li>Fault tolerance: record and continue on per‑file errors instead of blocking</li>
+<li>Mandatory logging: stage 5 must write to Log.md</li>
+<li>Composition: <code>syncing-wiki</code> internally calls <code>detecting-resources-sync</code> (stage 1) and <code>ingesting-resources</code> (stage 3)</li>
+</ul>
+<p><code>syncing-wiki</code> turns the previously manual chain of steps into an atomic operation. The user only confirms the scope; the rest is automatic.</p>
+<h3 id="32-workflow-1-detecting-resources-sync">3.2 Workflow 1: Detecting Resources Sync</h3>
+<p>Detecting sync answers a simple question: how does the Wiki know when raw sources have changed?</p>
+<p>Without detection, ingestion only runs when a human explicitly asks the LLM to process a file. Raw sources are frequently edited — corrections, additions, restructuring. Without automatic detection, the Wiki will become out of sync.</p>
+<p>The detection workflow:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Scan ObsidianRaw/03_Resources/</span></span>
+<span class="line"><span>  Record relative path, content hash (SHA256 first 8 chars), and mtime for each file</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 2: Read frontmatter of all Wiki/Sources pages</span></span>
+<span class="line"><span>  Extract tracking fields (source_path, source_hash, source_mtime)</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 3: Three‑way comparison</span></span>
+<span class="line"><span>  ├─ New: present in Resources, missing in Sources → needs ingestion</span></span>
+<span class="line"><span>  ├─ Changed: same path, different hash → needs re‑ingestion</span></span>
+<span class="line"><span>  ├─ Deleted: present in Sources, missing from Resources → needs handling</span></span>
+<span class="line"><span>  └─ Synced: path and hash match → no action</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 4: Generate sync status report</span></span></code></pre>
+<p>Sample output:</p>
 <pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Resources sync status [2026-04-08 10:30]</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### New files (2)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Path                   | Modified         | Size  |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/NewTopic.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | 2026-04-08 09:00 | 2.5KB |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Path                        | Modified time     | Size  |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">---------------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/NewTopic.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      | 2026-04-08 09:00  | 2.5KB |</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Changed (1)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Path                            | Old hash | New hash | Modified         |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------------------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/Theory/resilience.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | a1b2c3d4 | e5f6g7h8 | 2026-04-08 08:30 |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Path                               | Old hash | New hash | Modified time     |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/Theory/Resilience.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    | a1b2c3d4 | e5f6g7h8 | 2026-04-08 08:30  |</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Synchronized (43)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Synced (43)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">43 files are synchronized.</span></span></code></pre>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">43 files are in sync.</span></span></code></pre>
 <p>Design notes:</p>
 <ul>
-<li>Use <code>source_mtime</code> for quick filtering to avoid hashing everything each run</li>
-<li>SHA256 first 8 hex is usually enough to detect edits while keeping frontmatter compact</li>
-<li>Renames appear as “deleted + new” and require human confirmation</li>
+<li>Use <code>source_mtime</code> as a quick filter to avoid hashing everything every run</li>
+<li>SHA256 first 8 characters is sufficient for change detection while keeping frontmatter compact</li>
+<li>File renames are detected as “delete + new” and require user confirmation</li>
 </ul>
-<p>Sync detection is the Wiki’s change sensor. Without it the Wiki is a static snapshot; with it the Wiki stays live.</p>
-<h3 id="32-workflow-2-ingesting-resources">3.2 Workflow 2: Ingesting Resources</h3>
-<p>When sync detection finds new or changed files, ingestion runs. When I ask the system to “process this file,” the LLM executes a multi-step comprehension → association → update workflow:</p>
+<p>Sync detection is the system’s change sensor. Without it the Wiki is a static snapshot.</p>
+<h3 id="33-workflow-2-ingesting-resources">3.3 Workflow 2: Ingesting Resources</h3>
+<p>When detection finds new or changed files, the ingestion pipeline runs. “Process this article” means the LLM executes a multi‑step understanding → association → update process:</p>
 <pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Parse the original file structure: headings, sections, lists, tables, code blocks</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 2: Create a summary page in Wiki/Sources/</span></span>
-<span class="line"><span>        - 1–3 sentence core summary</span></span>
-<span class="line"><span>        - key points organized by original structure</span></span>
-<span class="line"><span>        - extract key concepts and entities</span></span>
-<span class="line"><span>        - write tracking fields</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 3: Extract concepts</span></span>
-<span class="line"><span>        ├─ If present in Concepts/ → update: add source and expand definition</span></span>
-<span class="line"><span>        ├─ If absent → create new concept page</span></span>
-<span class="line"><span>        └─ If definitions conflict with existing ones → flag contradiction</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 4: Extract entities</span></span>
-<span class="line"><span>        ├─ If present in Entities/ → update: add relations and attributes</span></span>
-<span class="line"><span>        ├─ If absent → create new entity page</span></span>
-<span class="line"><span>        └─ Add relationships to other entities and concepts</span></span>
-<span class="line"><span>        ↓</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 2: Create a summary page under Wiki/Sources/</span></span>
+<span class="line"><span>  - 1–3 sentence core summary</span></span>
+<span class="line"><span>  - Key points extracted following the original structure</span></span>
+<span class="line"><span>  - Extract key concepts and related entities</span></span>
+<span class="line"><span>  - Write tracking fields into frontmatter</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 3: Extract Concepts</span></span>
+<span class="line"><span>  ├─ If found in Concepts/ → update: add new references, augment definition</span></span>
+<span class="line"><span>  ├─ If not found → create new concept page</span></span>
+<span class="line"><span>  └─ If new definition conflicts with existing definitions → flag contradiction</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 4: Extract Entities</span></span>
+<span class="line"><span>  ├─ If found in Entities/ → update: add relations, events, attributes</span></span>
+<span class="line"><span>  ├─ If not found → create new entity page</span></span>
+<span class="line"><span>  └─ Establish relations to other entities and concepts</span></span>
+<span class="line"><span>  ↓</span></span>
 <span class="line"><span>Step 5: Impact analysis</span></span>
-<span class="line"><span>        ├─ Which Sources need cross-references updated?</span></span>
-<span class="line"><span>        ├─ Which Concepts require revision?</span></span>
-<span class="line"><span>        ├─ Which Entities’ relationships change?</span></span>
-<span class="line"><span>        └─ Which contradictions should be flagged?</span></span>
-<span class="line"><span>        ↓</span></span>
+<span class="line"><span>  ├─ Which Sources need cross‑references updated?</span></span>
+<span class="line"><span>  ├─ Which Concepts need revision?</span></span>
+<span class="line"><span>  ├─ Which Entities need relationship updates?</span></span>
+<span class="line"><span>  └─ Which contradictions must be flagged?</span></span>
+<span class="line"><span>  ↓</span></span>
 <span class="line"><span>Step 6: Update Wiki/Index.md</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 7: Record the operation in Wiki/Log.md</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 8: Run qmd update &#x26;&#x26; qmd embed to refresh the search index</span></span></code></pre>
-<p>Step 5 — impact analysis — is the crucial part. New material rarely affects only one page. A paper on infrastructure resilience could:</p>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 7: Record operation in Wiki/Log.md</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 8: Run `qmd update &#x26;&#x26; qmd embed` to refresh search indexes</span></span></code></pre>
+<p>The crucial part is Step 5 — association impact analysis. A new paper rarely affects a single page. For example, a paper on “infrastructure resilience” might:</p>
 <ul>
-<li>Define a model of resilience → update <code>Concepts/resilience.md</code></li>
+<li>Introduce a resilience model → update <code>Concepts/resilience.md</code></li>
 <li>Mention a research institute → update/create <code>Entities/some-institute.md</code></li>
-<li>Cite another ingested paper → create cross-references between Sources</li>
-<li>Provide a definition that conflicts with an existing one → flag a contradiction in <code>Concepts/resilience.md</code></li>
+<li>Cite another ingested paper → create cross references between Sources</li>
+<li>Provide a different definition of “resilience” → flag a contradiction in the concept page</li>
 </ul>
-<p>Without impact analysis ingestion degrades into isolated summaries. Each Source would exist alone and Concepts and Entities would not be updated; the knowledge graph wouldn’t grow. Impact analysis makes each ingestion a global update.</p>
-<p>LLMs are naturally good at this: a human reader rarely remembers all related concepts, entities, and sources at once. The LLM holds the Wiki context and can perform systematic association.</p>
-<h3 id="33-workflow-3-querying-the-wiki">3.3 Workflow 3: Querying the Wiki</h3>
-<p>When a user asks a question, the LLM follows this flow:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Use the qmd tool to search the Wiki</span></span>
-<span class="line"><span>        ├─ Lexical matches (exact keywords)</span></span>
-<span class="line"><span>        └─ Vector semantic matches (embedding-based)</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 2: Read the retrieved pages and synthesize an answer</span></span>
-<span class="line"><span>        ↓</span></span>
+<p>Without association analysis, ingestion degenerates into isolated summaries. Concepts and Entities wouldn’t be updated and the knowledge graph wouldn’t grow. LLMs excel at this step because they can consider the whole Wiki context while human readers often cannot remember all relevant connections.</p>
+<h3 id="34-workflow-3-querying-the-wiki">3.4 Workflow 3: Querying the Wiki</h3>
+<p>When a user asks a question, the LLM performs:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Use qmd to search relevant Wiki pages</span></span>
+<span class="line"><span>  ├─ lexical match (lex): exact keyword matches</span></span>
+<span class="line"><span>  └─ vector semantic match (vec): capture semantically related expressions</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 2: Read retrieval results and synthesize an answer</span></span>
+<span class="line"><span>  ↓</span></span>
 <span class="line"><span>Step 3: Cite sources with [[wiki-links]]</span></span>
-<span class="line"><span>        ↓</span></span>
-<span class="line"><span>Step 4: Evaluate whether the result should be saved to Outputs/</span></span></code></pre>
-<p>The core difference from RAG is the retrieval target. RAG searches raw documents. Wiki querying searches a pre-digested knowledge layer. Results are already condensed, contradictions flagged, and definitions synthesized across documents. Entity relations are already established.</p>
-<p>When a query produces high-value output (review, comparison, analysis, or conclusion), the LLM recommends saving it to <code>Wiki/Outputs/</code>. Final saving is a human decision, keeping Outputs high quality.</p>
-<p>The Skill <code>reference/query_patterns.md</code> defines five common query patterns and best practices, including lex/vec construction, intent disambiguation, and limits.</p>
-<p>Example concept-definition query:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span>  ↓</span></span>
+<span class="line"><span>Step 4: Assess whether the result should be backfilled into Outputs/</span></span></code></pre>
+<p>The fundamental difference from RAG is the retrieval target. RAG retrieves raw documents; Wiki queries retrieve already‑digested knowledge. Retrieval results are already refined — contradictions have been annotated and concept definitions are cross‑document syntheses. Entity relations are established.</p>
+<p>Backfilling decisions are human‑mediated. The LLM will suggest saving high‑value outputs to <code>Wiki/Outputs/</code>, but a human decides whether to persist them. Backfilled Outputs should be high quality.</p>
+<p><code>reference/query_patterns.md</code> defines five common query patterns and best practices. Each pattern prescribes lex/vec query construction, intent disambiguation, and limits.</p>
+<p>Example query patterns:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Concept definition</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">concept-name definition</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">What is concept-name, its meaning and explanation</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">what is concept-name; meaning and explanation of concept-name</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">concept-definition</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 3</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
-<p>Example comparison query:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// Concept comparison</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">conceptA conceptB comparison difference</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Differences and relationships between conceptA and conceptB</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">conceptA conceptB comparison differences</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">differences and relationships between conceptA and conceptB</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">concept-comparison</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
-<h3 id="34-workflow-4-health-checks">3.4 Workflow 4: Health checks</h3>
-<p>As the Wiki grows, maintenance becomes essential: outdated pages, unflagged contradictions, orphan pages, and frequently mentioned concepts lacking a canonical concept page are common problems.</p>
-<p>Health checks periodically scan the Wiki and produce a report:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Check item        | What it detects                    | Fix suggestion        | Priority</span></span>
-<span class="line"><span>------------------|-------------------------------------|-----------------------|--------</span></span>
-<span class="line"><span>Unsynced files    | New/changed files in Resources/     | Run ingestion         | P0</span></span>
-<span class="line"><span>Missing concepts  | Links that point to nonexistent concept pages | Create missing pages | P1</span></span>
-<span class="line"><span>Contradictions    | Pages with contradiction flags     | Human review          | P1</span></span>
-<span class="line"><span>Unindexed pages   | Pages not listed in Index.md       | Update Index.md       | P2</span></span>
-<span class="line"><span>Orphan pages      | Pages with no inbound links        | Add links or delete   | P3</span></span></code></pre>
-<p>Health reports are structured:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit"># Wiki health report</span></span>
+<h3 id="35-workflow-4-checking-wiki-health">3.5 Workflow 4: Checking Wiki Health</h3>
+<p>As the Wiki grows, pages multiply and links proliferate. Common issues: outdated pages, unflagged contradictions between sources, orphan pages, concepts referenced frequently without dedicated concept pages. Health checks scan the Wiki and produce a report:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Check item       | What it detects                          | Suggested fix           | Priority</span></span>
+<span class="line"><span>─────────────────┼──────────────────────────────────────────┼─────────────────────────┼────────</span></span>
+<span class="line"><span>Unsynced files   | New/changed files in Resources           | Run ingestion           | P0</span></span>
+<span class="line"><span>Missing concepts | Links to concepts whose page is missing | Create missing pages    | P1</span></span>
+<span class="line"><span>Contradiction flags | Presence of contradiction markers     | Human review required   | P1</span></span>
+<span class="line"><span>Unindexed pages  | Pages not listed in Index.md             | Update Index.md         | P2</span></span>
+<span class="line"><span>Isolated pages   | Pages with no inbound links              | Evaluate and link/remove| P3</span></span></code></pre>
+<p>Health check report (structured):</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit"># Wiki Health Check Report</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">Date: 2026-04-08</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Stats</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Statistics</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Type          | Count   |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Concept pages | 54      |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Entity pages  | 34      |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Source pages  | 45      |</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Output pages  | 0       |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Type      | Count |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">---------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Concept pages | 54 |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Entity pages  | 34 |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Source pages  | 45 |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Output pages  | 0  |</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Total</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">     | </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">133</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Problems</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Issues</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Missing concepts (2)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/adaptive-governance</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — referenced by [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/resilience-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] but missing</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/socio-ecological</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — referenced by [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Entities/some-institute</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] but missing</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/adaptive-governance</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — referenced by [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/resilience-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] but page missing</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/socio-ecology</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — referenced by [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Entities/some-institute</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] but page missing</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Contradictions (1)</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Contradiction flags (1)</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/resilience</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] has a dimensional definition conflict with [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/another-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]]</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/resilience</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — dimension definition differs from [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/another-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]]</span></span>
 <span class="line"></span>
 <span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Suggested actions</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">1.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> Ingest pages to create Concepts/adaptive-governance and Concepts/socio-ecological</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">2.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> Human review the contradiction in resilience</span></span></code></pre>
-<p>When a Wiki has dozens of pages, humans cannot maintain every association manually. The LLM’s periodic scans surface structural issues so humans only need to resolve flagged exceptions.</p>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">1.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> Ingest sources to create Concepts/adaptive-governance and Concepts/socio-ecology</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">2.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> Human review of the contradiction flagged for resilience</span></span></code></pre>
+<p>Once a Wiki reaches tens of pages, purely manual maintenance of all links and consistency is impractical. The LLM should scan regularly and surface structural issues; humans only handle exceptions.</p>
 <hr>
-<h2 id="4-typical-workflows">4. Typical workflows</h2>
-<p>The four workflows can be combined into end-to-end usage patterns.</p>
-<h3 id="scenario-1-first-time-setup">Scenario 1: First-time setup</h3>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>detecting-resources-sync  →  list files to ingest</span></span>
-<span class="line"><span>ingesting-resources       →  batch ingest</span></span>
-<span class="line"><span>checking-wiki-health      →  verify results</span></span></code></pre>
-<p>Detect Resources for intake, ingest them in batch, then run a health check to validate completeness.</p>
-<h3 id="scenario-2-ongoing-maintenance">Scenario 2: Ongoing maintenance</h3>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Weekly: detecting-resources-sync  → find changes</span></span>
-<span class="line"><span>As needed: ingesting-resources    → update Wiki</span></span>
-<span class="line"><span>Weekly: checking-wiki-health     → keep healthy</span></span></code></pre>
-<p>Detect changes, process them, and validate. The whole loop completes in minutes.</p>
-<h3 id="scenario-3-knowledge-query">Scenario 3: Knowledge query</h3>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>User asks a question → querying-wiki → answer → evaluate for Output</span></span></code></pre>
-<p>Simple queries answer quickly. High-value analyses are recommended to be saved as Outputs.</p>
+<h2 id="4-typical-workflow-scenarios">4. Typical workflow scenarios</h2>
+<p>The five workflows can be combined into practical usage patterns.</p>
+<h3 id="scenario-1-first-time-setup">Scenario 1: First time setup</h3>
+<p>Run <code>syncing-wiki</code> to initialize:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Sync and process</span></span></code></pre>
+<p>The system will detect changes → confirm scope → ingest updates → verify → log → report.</p>
+<h3 id="scenario-2-routine-maintenance">Scenario 2: Routine maintenance</h3>
+<p>Run <code>syncing-wiki</code> regularly to detect and handle changes, and run health checks weekly:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Sync and process</span></span></code></pre>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Health check</span></span></code></pre>
+<h3 id="scenario-3-detect-only-do-not-process">Scenario 3: Detect only, do not process</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>Detect new files</span></span></code></pre>
+<p>It outputs the sync status and asks whether to continue processing.</p>
+<h3 id="scenario-4-knowledge-query">Scenario 4: Knowledge query</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="plaintext"><code><span class="line"><span>What are the developmental stages of resilience theory?</span></span></code></pre>
+<p>The system retrieves and answers; if the result seems valuable for long‑term use it will suggest saving to Outputs/.</p>
 <hr>
-<h2 id="5-notes">5. Notes</h2>
+<h2 id="5-additional-notes">5. Additional notes</h2>
 <h3 id="51-local-search-qmd">5.1 Local search: qmd</h3>
-<p>The Wiki uses <code>qmd</code> as the local Markdown search engine.</p>
+<p>Search relies on <a href="https://github.com/nickthecat/qmd"><code>qmd</code></a>, a local Markdown search engine.</p>
 <p>Hybrid retrieval: lexical + vector</p>
 <pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">critical infrastructure</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // exact match</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">How to assess infrastructure resilience</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // semantic match</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">how to assess infrastructure resilience</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // semantic match</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">academic research methods</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">academic research methodology</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // disambiguation</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
-<p>Different phrasings mean lexical search can miss results; pure vector search can return semantically related but off-topic results. Hybrid search balances precision and recall. <code>intent</code> helps disambiguate multi-meaning queries.</p>
-<p>I chose <code>qmd</code> because all data stays local and it can be exposed to the LLM as an MCP tool. It supports path filters, document IDs, and glob patterns.</p>
+<p>When the Wiki contains different phrasings, pure lexical search misses results; pure vector search may return semantically related but imprecise results. Hybrid search balances precision and recall. The <code>intent</code> parameter helps disambiguate user intent when queries contain polysemous terms.</p>
+<p>Reasons to choose qmd: all data stays local (no external API), it can be exposed to LLMs via Model Context Protocol (MCP) as a tool, and it supports path/docid/glob retrieval modes.</p>
 <h3 id="52-contradiction-flags">5.2 Contradiction flags</h3>
-<p>When an ingested Source conflicts with existing content, the LLM does not decide which is correct. It explicitly flags the contradiction in the page:</p>
+<p>When newly ingested sources conflict with existing content, the LLM does not decide — it explicitly flags contradictions on page:</p>
 <pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098"> [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#D6DEEB;--shiki-dark-font-style:italic">!warning</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">]</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Contradiction</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> This page conflicts with [</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">[</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#D6DEEB;--shiki-dark-font-style:italic">Sources/another-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">]</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic">]:</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> This page’s view: resilience has three dimensions (engineering, ecological, social)</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Other source’s view: resilience has five dimensions (adds economic and governance)</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Possible reason: different application domains (natural hazards vs urban infrastructure)</span></span></code></pre>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> This page: resilience consists of three dimensions (engineering, ecological, social)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Other source: resilience consists of five dimensions (adds economic and governance)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Likely reason for discrepancy: different application domains (natural hazards vs urban infrastructure)</span></span></code></pre>
 <p>Design principles:</p>
 <ol>
-<li>The LLM is not the domain expert and should not unilaterally resolve contradictions. Flagging preserves transparency for human review.</li>
-<li>Contradictions are often about scope, context, or framing rather than simple right/wrong. Keeping both perspectives is valuable.</li>
-<li>A good contradiction flag attempts to analyze why the difference arises (different domain, different definition scope, time). That analysis itself is valuable.</li>
-<li>Use Obsidian-style callouts <code>> [!warning]</code> so they render clearly in Obsidian.</li>
+<li>The LLM is not the final domain expert; automatic adjudication risks error. Explicit flags keep contradictions visible and defer final judgment to humans.</li>
+<li>A contradiction is rarely a matter of right vs wrong; it often reflects scope, domain, or framing differences. Preserving both sides is more valuable than picking one.</li>
+<li>Good contradiction notes attempt to analyze causes: differing definitions, domains, or timeframes. That analysis itself is valuable.</li>
+<li>Use Obsidian’s standard callout format <code>> [!warning]</code> for visual prominence.</li>
 </ol>
 <h3 id="53-operation-log">5.3 Operation log</h3>
-<p><code>Log.md</code> follows log best practices:</p>
-<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | Infrastructure resilience framework</span></span>
+<p><code>Log.md</code> adopts software engineering log best practices:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | infrastructure resilience framework</span></span>
 <span class="line"></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Source</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Impact</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">source</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">impact</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Sources</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: framework-summary.md</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Concepts</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: resilience.md</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Entities</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: some-institute.md</span></span>
 <span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Index.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">, </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Log.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span></span>
-<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Note</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: Added three-dimension definition of resilience</span></span></code></pre>
-<p>Principles:</p>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">notes</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: added three‑dimension definition of resilience</span></span></code></pre>
+<p>Design goals:</p>
 <ol>
-<li>Machine-parsable: each record starts with <code>## [date] type | title</code> so regex queries work</li>
-<li>Traceable: each record lists sources and impacted pages to trace changes</li>
-<li>Quantifiable: <code>grep | wc -l</code> can count operation frequencies</li>
-<li>Readable: human-friendly format without extra tooling</li>
+<li>Machine‑parseable: header lines start with <code>## [date] type | title</code> for regex matching</li>
+<li>Traceable: each record includes source and impact for auditability</li>
+<li>Statable: <code>grep | wc -l</code> can count operation types</li>
+<li>Human‑readable: the format is easy to read without special tools</li>
 </ol>
-<p>The operation log is the Wiki’s git history — without it, the Wiki loses provenance.</p>
+<p>The operation log is the Wiki’s Git history. Without it, the Wiki becomes a black box.</p>
 <h3 id="54-page-templates">5.4 Page templates</h3>
-<p>Each Skill’s <code>reference/</code> folder contains page templates to ensure consistent outputs:</p>
+<p>Each Skill’s <code>reference/</code> directory includes page templates to ensure consistent generation:</p>
 <ul>
-<li>Sources template: summary → core points → key concepts → related entities → references</li>
-<li>Concepts template: definition → core features → related concepts → sources</li>
-<li>Entities template: overview → info table → related concepts → sources</li>
+<li>Sources template: summary → core content → key concepts → related entities → references</li>
+<li>Concepts template: definition → core characteristics → related concepts → sources</li>
+<li>Entities template: introduction → info table → related concepts → sources</li>
 <li>Outputs template: question → answer → sources → related concepts</li>
 </ul>
-<p>Templates make pages predictable so humans know where to look and automated tools can parse them reliably.</p>
+<p>Templates increase predictability. When all pages follow the same structure, humans know where to find information. LLMs have explicit format expectations, and automation scripts can reliably parse pages.</p>
 <hr>
-<h2 id="6-systematic-customizations-to-karpathys-design">6. Systematic customizations to Karpathy’s design</h2>
-<p>Karpathy’s gist described Raw Sources → Wiki → Schema and ingest/query/lint flows. I engineered enhancements:</p>
+<h2 id="6-systematic-tweaks-i-made-to-karpathys-proposal">6. Systematic tweaks I made to Karpathy’s proposal</h2>
+<p>Karpathy’s gist proposed the core framework: Raw Sources → Wiki → Schema and workflows Ingest / Query / Lint. My engineering customizations refine that framework:</p>
 
 
 
@@ -716,33 +755,40 @@
 
 
 
-<table><thead><tr><th>Dimension</th><th>Karpathy</th><th>My customization</th><th>Why</th></tr></thead><tbody><tr><td>Ingestion scope</td><td>unspecified</td><td>only ingest Resources directory</td><td>prevent noise</td></tr><tr><td>Contradiction handling</td><td>mentioned</td><td>explicit flags + logs + diff analysis</td><td>transparency</td></tr><tr><td>Operation log</td><td>simple timeline</td><td>machine-parsable, grep-friendly log</td><td>observability</td></tr><tr><td>Search tool</td><td>unspecified</td><td>qmd hybrid search (lex + vec + intent)</td><td>precision + recall</td></tr><tr><td>Output persistence</td><td>mentioned</td><td>clear criteria + human decision</td><td>quality control</td></tr><tr><td>Health checks</td><td>lint-like</td><td>extended checks with priorities</td><td>system maintenance</td></tr><tr><td>Collaboration rules</td><td>informal</td><td>full AGENTS.md handbook</td><td>reduce LLM randomness</td></tr><tr><td>Impact analysis</td><td>not detailed</td><td>explicit analysis step</td><td>global updates</td></tr><tr><td>Page types</td><td>Sources/Entities/Concepts</td><td>add Outputs for saved analyses</td><td>capture synthesis</td></tr><tr><td>Sync detection</td><td>none</td><td>three-way tracking fields</td><td>continuous sync</td></tr><tr><td>Workflows</td><td>conceptual</td><td>Skills modularization with refs</td><td>executable workflows</td></tr></tbody></table>
-<p>Karpathy’s gist is a design document; mine is an engineered runbook. AGENTS.md + Skills make the process executable. Changing a Skill changes behavior without editing the handbook.</p>
+
+
+
+
+
+
+<table><thead><tr><th>Dimension</th><th>Karpathy original</th><th>My customization</th><th>Why</th></tr></thead><tbody><tr><td>Ingestion range</td><td>Unspecified</td><td>Only PARA’s Resources directory</td><td>Prevent noise pollution</td></tr><tr><td>Contradiction handling</td><td>Mentioned, not detailed</td><td>Explicit flags + logs + difference analysis</td><td>Make contradictions visible</td></tr><tr><td>Operation logs</td><td>Simple timeline</td><td>Machine‑parseable format, grepable</td><td>Observability</td></tr><tr><td>Search tool</td><td>Unspecified</td><td>qmd hybrid search (lex + vec + intent)</td><td>Precision + recall</td></tr><tr><td>Backfilling outputs</td><td>Mentioned</td><td>Clear criteria + human decision</td><td>Ensure Output quality</td></tr><tr><td>Health checks</td><td>Lint</td><td>Five checks + priority + report</td><td>Systematic maintenance</td></tr><tr><td>Collaboration rules</td><td>Brief description</td><td>Full AGENTS.md</td><td>Reduce LLM unpredictability</td></tr><tr><td>Impact analysis</td><td>Unspecified</td><td>Explicit association analysis step</td><td>Ensure ingestion is global</td></tr><tr><td>Page types</td><td>Sources/Entities/Concepts</td><td>+ Outputs (query backfill)</td><td>Preserve high‑value analyses</td></tr><tr><td>Sync detection</td><td>None</td><td>New detection workflow with triple tracking</td><td>Keep Wiki synchronized</td></tr><tr><td>Full sync</td><td>None</td><td><code>syncing-wiki</code> six‑stage atomic operation</td><td>One‑click maintenance</td></tr><tr><td>Workflow modularity</td><td>Document only</td><td>Skills modularization (SKILL.md + ref)</td><td>From procedure to executable</td></tr></tbody></table>
+<p>Karpathy’s gist is a design doc; my AGENTS.md + Skills are runbooks and program modules. Each step has operational detail, error handling, and quality standards. Changing a Skill file changes LLM behavior without rewriting the core spec.</p>
 <hr>
 <h2 id="7-design-philosophy">7. Design philosophy</h2>
-<h3 id="71-llm-as-a-knowledge-bookkeeper">7.1 LLM as a knowledge bookkeeper</h3>
-<p>The tedious bookkeeping of knowledge maintenance is exactly what LLMs handle well:</p>
+<h3 id="71-llms-are-the-wikis-bookkeepers">7.1 LLMs are the Wiki’s “bookkeepers”</h3>
+<p>The most tedious parts of maintaining knowledge are bookkeeping tasks:</p>
 <ul>
-<li>Update concept definitions when new materials arrive</li>
-<li>Flag contradictions between sources</li>
-<li>Convert a good query answer into a reusable page</li>
-<li>Periodically scan for stale or missing pages</li>
-<li>Track whether raw sources have changed</li>
+<li>After reading a new paper, updating related concept definitions</li>
+<li>Noticing two papers say different things and flagging contradictions</li>
+<li>Turning a good Q&#x26;A into a reusable asset</li>
+<li>Regularly checking for outdated pages</li>
+<li>Tracking changes to original sources</li>
 </ul>
-<p>Humans focus on curating what to ingest, asking good questions, resolving contradictions, and deciding what to persist. LLMs handle repetitive, scale-limited bookkeeping.</p>
+<p>These tasks consume time but require little human judgment. LLMs can search all related pages, compare definitions, and flag contradictions. Humans should spend their time curating sources, asking good questions, resolving contradictions, and deciding what to persist.</p>
 <h3 id="72-knowledge-evolves">7.2 Knowledge evolves</h3>
-<p>Notes assume knowledge is static; real knowledge evolves:</p>
+<p>Traditional note systems assume knowledge is “write once, store forever.” In reality knowledge evolves:</p>
 <ul>
-<li>New concepts may force revisions of old definitions</li>
-<li>New evidence can overturn prior conclusions</li>
-<li>Cross-domain connections create novel understanding</li>
-<li>A concept can mean different things in different contexts</li>
+<li>New concepts change old definitions</li>
+<li>New evidence invalidates previous conclusions</li>
+<li>Cross‑disciplinary exchange produces new understanding</li>
+<li>The same concept may mean different things in different contexts</li>
 </ul>
-<p>The Wiki accepts evolution: contradictions coexist until human resolution; impact analysis updates related pages; sync detection tracks source edits; health checks surface issues.</p>
+<p>The Wiki acknowledges evolution. Contradiction flags allow multiple viewpoints to coexist. Association analysis lets knowledge update as new information arrives. Sync detection tracks original source changes. Health checks surface issues.</p>
 <h3 id="73-constraints-create-value">7.3 Constraints create value</h3>
-<p>AGENTS.md and Skills enforce constraints: only ingest Resources, use consistent templates, prefer <code>[[wiki-links]]</code>, never let the LLM unilaterally resolve contradictions, require criteria for Outputs, and include tracking fields.</p>
-<p>Constraints channel the LLM’s power into the right places. Without scope limits, the LLM ingests noise. Without formats, pages become inconsistent and hard to parse. Without persistence criteria, Outputs degenerate into low-value clutter.</p>
-<h3 id="74-clear-humanllm-division">7.4 Clear human/LLM division</h3>
+<p>AGENTS.md and Skills enforce constraints: only process Resources, require unified page formats, use <code>[[wiki-links]]</code>, contradictions cannot be auto‑resolved but must be flagged, backfills require standards, and tracking fields must be present.</p>
+<p>Constraints guide LLM behavior to the right work. Without ingestion limits, the LLM would process garbage. Without format constraints, pages become inconsistent and harder to parse. Without backfill standards, Outputs would be low value. Without tracking fields, the Wiki can’t detect source changes.</p>
+<p>Trade flexibility for consistency, quality, and maintainability.</p>
+<h3 id="74-clear-humanai-division-of-labor">7.4 Clear human‑AI division of labor</h3>
 
 
 
@@ -798,23 +844,19 @@
 
 
 
-
-
-
-
-
-<table><thead><tr><th>Task</th><th>Human</th><th>LLM</th></tr></thead><tbody><tr><td>Curate sources</td><td>✅</td><td>❌</td></tr><tr><td>Read &#x26; summarize</td><td>❌</td><td>✅</td></tr><tr><td>Association analysis</td><td>❌</td><td>✅</td></tr><tr><td>Change detection</td><td>❌</td><td>✅</td></tr><tr><td>Contradiction adjudication</td><td>✅</td><td>❌</td></tr><tr><td>Ask questions</td><td>✅</td><td>❌</td></tr><tr><td>Synthesize answers</td><td>❌</td><td>✅</td></tr><tr><td>Quality gating for Outputs</td><td>✅</td><td>❌</td></tr><tr><td>Periodic maintenance</td><td>❌</td><td>✅</td></tr><tr><td>Workflow definition</td><td>✅</td><td>❌</td></tr></tbody></table>
-<h3 id="75-composable-modifiable-workflows">7.5 Composable, modifiable workflows</h3>
-<p>Skills let workflows be tools that compose:</p>
+<table><thead><tr><th>Task</th><th>Human</th><th>LLM</th></tr></thead><tbody><tr><td>Curation</td><td>✅ Decide what to ingest</td><td>❌</td></tr><tr><td>Reading</td><td>❌</td><td>✅ Extract, summarize, associate</td></tr><tr><td>Global analysis</td><td>❌</td><td>✅ Systematic scans and updates</td></tr><tr><td>Change detection</td><td>❌</td><td>✅ Three‑way comparison and reports</td></tr><tr><td>Contradiction resolution</td><td>✅ Final judgment</td><td>❌ Flag only</td></tr><tr><td>Querying</td><td>✅ Ask good questions</td><td>✅ Retrieve, synthesize, cite</td></tr><tr><td>Quality control</td><td>✅ Decide whether to backfill</td><td>✅ Suggest backfills</td></tr><tr><td>Routine scans</td><td>❌</td><td>✅ Run checks and report</td></tr><tr><td>Workflow design</td><td>✅ Write AGENTS.md and Skills</td><td>❌</td></tr></tbody></table>
+<h3 id="75-workflows-should-be-composable-and-editable">7.5 Workflows should be composable and editable</h3>
+<p>Skills transform linear procedures into modular tools:</p>
 <ul>
-<li><code>detecting-resources-sync</code> can run standalone or inside <code>checking-wiki-health</code></li>
-<li><code>ingesting-resources</code> can be manual or triggered by sync detection</li>
-<li><code>querying-wiki</code> can answer or produce Outputs</li>
-<li><code>checking-wiki-health</code> can run post-ingest or periodically</li>
+<li><code>syncing-wiki</code> is the recommended daily entry point and composes detection and ingestion</li>
+<li><code>detecting-resources-sync</code> can run standalone or be embedded in other flows</li>
+<li><code>ingesting-resources</code> can be run manually or triggered by <code>syncing-wiki</code></li>
+<li><code>querying-wiki</code> results can be answered or backfilled as Outputs</li>
+<li><code>checking-wiki-health</code> can validate after ingestion or run on a schedule</li>
 </ul>
-<p>Humans choose which tools to run and when.</p>
+<p>Humans mix and match tools as needed. Each Skill encodes steps, fault tolerance, and outputs so users don’t recompose logic every time.</p>
 <hr>
-<h2 id="8-tooling">8. Tooling</h2>
+<h2 id="8-toolchain">8. Toolchain</h2>
 
 
 
@@ -855,14 +897,14 @@
 
 
 
-<table><thead><tr><th>Purpose</th><th>Tool</th><th>Notes</th></tr></thead><tbody><tr><td>Raw material management</td><td>Obsidian</td><td>Use PARA to organize</td></tr><tr><td>LLM operator</td><td>Claude Code / Qwen Code</td><td>Reads AGENTS.md and Skills</td></tr><tr><td>Local search</td><td>qmd</td><td>Hybrid lex+vec search</td></tr><tr><td>Wiki browsing</td><td>Obsidian</td><td>Supports <code>[[wiki-links]]</code> and callouts</td></tr><tr><td>Web clipping</td><td>Obsidian Web Clipper</td><td>Save pages to Inbox</td></tr><tr><td>Skill framework</td><td>Claude Code Skills</td><td>Modular workflow definitions</td></tr></tbody></table>
+<table><thead><tr><th>Purpose</th><th>Tool</th><th>Notes</th></tr></thead><tbody><tr><td>Raw source mgmt</td><td><a href="https://obsidian.md/">Obsidian</a></td><td>Organized with PARA</td></tr><tr><td>LLM editor</td><td><a href="https://claude.ai/code">Claude Code</a> / [Qwen Code]</td><td>Reads AGENTS.md and Skills to run flows</td></tr><tr><td>Local search</td><td><a href="https://github.com/nickthecat/qmd">qmd</a></td><td>Hybrid search (lex + vec)</td></tr><tr><td>Wiki browsing</td><td>Obsidian</td><td>Native support for <code>[[wiki-links]]</code> and callouts</td></tr><tr><td>Web clipping</td><td>Obsidian Web Clipper</td><td>Save web pages into Inbox</td></tr><tr><td>Skills framework</td><td>Claude Code Skills</td><td>Workflow modules</td></tr></tbody></table>
 <hr>
 <h2 id="references">References</h2>
 <ul>
-<li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy: LLM Wiki</a> — the original inspiration describing the three-layer architecture and workflows</li>
-<li><a href="https://fortelabs.com/blog/para/">PARA Method</a> — organization framework used for raw materials</li>
+<li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy: LLM Wiki</a> — original inspiration: three‑layer architecture and workflow design</li>
+<li><a href="https://fortelabs.com/blog/para/">PARA Method</a> — knowledge organization framework used for raw sources</li>
 <li><a href="https://obsidian.md/">Obsidian</a> — local Markdown knowledge tool used for storage and browsing</li>
-<li><a href="https://github.com/nickthecat/qmd">qmd</a> — local markdown search engine used for hybrid retrieval</li>
+<li><a href="https://github.com/nickthecat/qmd">qmd</a> — local Markdown search engine</li>
 </ul> </article> <hr class="my-8 border-dashed">  <ul class="mt-4 mb-8 sm:my-8"> <li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/configuration/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-67kewmjt-2"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block opacity-80 -me-3.5 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>
 &nbsp;<span>Configuration</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/typesetting/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-67kewmjt-3"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block opacity-80 -me-3.5 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>
 &nbsp;<span>Typesetting</span> </a> </li> </ul> <section data-pagefind-ignore class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50" data-astro-cid-74s6d3ud> <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between" data-astro-cid-74s6d3ud> <div class="min-w-0" data-astro-cid-74s6d3ud> <div class="flex flex-wrap items-center gap-2" data-astro-cid-74s6d3ud> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-sm" data-astro-cid-74s6d3ud> <span class="text-accent" data-astro-cid-74s6d3ud>CC</span> <span aria-hidden="true" class="text-muted-foreground" data-astro-cid-74s6d3ud>•</span> <span class="text-muted-foreground" data-astro-cid-74s6d3ud>BY-NC-SA</span> </a> <span class="text-muted-foreground text-xs" data-astro-cid-74s6d3ud>
