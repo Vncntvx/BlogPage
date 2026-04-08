@@ -1,0 +1,1053 @@
+<!DOCTYPE html><html dir="ltr" lang="en" class="scroll-smooth" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta name="generator" content="Astro v6.1.4"><!-- General Meta Tags --><title>Building a Self-Maintaining Personal Wiki with LLMs | Blog</title><meta name="title" content="Building a Self-Maintaining Personal Wiki with LLMs | Blog"><meta name="description" content="Design and workflows for an LLM-powered self-maintaining personal Wiki"><meta name="author" content="Wenjie Xu"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph / Facebook --><meta property="og:title" content="Building a Self-Maintaining Personal Wiki with LLMs | Blog"><meta property="og:description" content="Design and workflows for an LLM-powered self-maintaining personal Wiki"><meta property="og:url" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta property="og:image" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png"><!-- Article Published/Modified time --><meta property="article:published_time" content="2026-04-08T16:36:53.000Z"><meta property="article:modified_time" content="2026-04-08T16:36:53.000Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/"><meta property="twitter:title" content="Building a Self-Maintaining Personal Wiki with LLMs | Blog"><meta property="twitter:description" content="Design and workflows for an LLM-powered self-maintaining personal Wiki"><meta property="twitter:image" content="https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png"><!-- Google JSON-LD Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Building a Self-Maintaining Personal Wiki with LLMs | Blog","image":"https://blog.wenjiexu.site/en/posts/llm-personal-wiki/index.png","datePublished":"2026-04-08T16:36:53.000Z","dateModified":"2026-04-08T16:36:53.000Z","author":[{"@type":"Person","name":"Wenjie Xu","url":"https://wenjiexu.site/"}]}</script><!-- Enable RSS feed auto-discovery  --><!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery --><link rel="alternate" type="application/rss+xml" title="Blog" href="https://blog.wenjiexu.site/en/rss.xml"><meta name="theme-color" content=""><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.j56hQv-j.js"></script><script src="/toggle-theme.js"></script><link rel="stylesheet" href="/_astro/Footer.BG7QricC.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style>
+<link rel="stylesheet" href="/_astro/KatexStyles.HM2DiD67.css">
+<style>.animated-signature[data-astro-cid-74s6d3ud]{overflow:visible}.animated-signature[data-astro-cid-74s6d3ud] path{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2;fill:currentColor;fill-opacity:0;stroke-dasharray:1;stroke-dashoffset:1;animation:signature-draw 8s linear infinite both;will-change:stroke-dashoffset,fill-opacity}@keyframes signature-draw{0%{stroke-dashoffset:1;fill-opacity:0}15%{fill-opacity:0}35%,75%{stroke-dashoffset:0;fill-opacity:1}90%,to{stroke-dashoffset:1;fill-opacity:0}}@media(prefers-reduced-motion:reduce){.animated-signature[data-astro-cid-74s6d3ud] path{animation:none;stroke-dasharray:none;stroke-dashoffset:0;fill:currentColor;fill-opacity:1}}
+:where([data-astro-image]){height:auto}:where([data-astro-image=full-width]){width:100%}:where([data-astro-image=constrained]){max-width:100%}[data-astro-image-fit=fill]{object-fit:fill}[data-astro-image-fit=contain]{object-fit:contain}[data-astro-image-fit=cover]{object-fit:cover}[data-astro-image-fit=scale-down]{object-fit:scale-down}
+</style><style>[data-astro-transition-scope="astro-pcwlacsx-1"] { view-transition-name: building-a-self-maintaining-personal-wiki-with-ll-ms; }@layer astro { ::view-transition-old(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(building-a-self-maintaining-personal-wiki-with-ll-ms) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-67kewmjt-2"] { view-transition-name: configuration; }@layer astro { ::view-transition-old(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-67kewmjt-3"] { view-transition-name: typesetting; }@layer astro { ::view-transition-old(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body data-astro-cid-sckkx6r4> <header> <a id="skip-to-content" href="#main-content" class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"> Skip to content </a> <div id="nav-container" class="mx-auto flex max-w-app flex-col items-center justify-between sm:flex-row"> <div id="top-nav-wrap" class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"> <a href="/en" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"> Blog </a> <nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"> <button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="Open Menu" aria-expanded="false" aria-controls="menu-items"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg> </button> <ul id="menu-items" class="mt-4 grid w-44 grid-cols-2 place-content-center gap-2 [&#38;>li>a]:block [&#38;>li>a]:px-4 [&#38;>li>a]:py-3 [&#38;>li>a]:text-center [&#38;>li>a]:font-medium [&#38;>li>a]:hover:text-accent sm:[&#38;>li>a]:px-2 sm:[&#38;>li>a]:py-1 hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"> <li class="col-span-2"> <a href="/en/posts" class="active-nav"> Posts </a> </li> <li class="col-span-2"> <a href="/en/tags"> Tags </a> </li> <li class="col-span-2"> <a href="/en/categories"> Categories </a> </li>  <li class="col-span-1 flex items-center justify-center"> <a href="/en/archives" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Archives" title="Archives"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-archive" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg> <span class="sr-only">Archives</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <a href="/en/search" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="Search" title="Search"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-search" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg> <span class="sr-only">Search</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <div class="language-switcher relative" data-astro-cid-a2mxz4y6> <button id="language-toggle" class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" title="English" data-astro-cid-a2mxz4y6> <svg class="size-6 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <circle cx="12" cy="12" r="10" data-astro-cid-a2mxz4y6></circle> <line x1="2" y1="12" x2="22" y2="12" data-astro-cid-a2mxz4y6></line> <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-a2mxz4y6></path> </svg> <span class="sr-only" data-astro-cid-a2mxz4y6>English</span> </button> <ul id="language-menu" class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg" role="menu" data-astro-cid-a2mxz4y6> <li role="none" data-astro-cid-a2mxz4y6> <a href="/en/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent bg-muted/50 font-medium text-accent" role="menuitem" lang="en" hreflang="en" data-astro-cid-a2mxz4y6> English <svg class="ml-1 inline-block size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <polyline points="20 6 9 17 4 12" data-astro-cid-a2mxz4y6></polyline> </svg> </a> </li><li role="none" data-astro-cid-a2mxz4y6> <a href="/zh/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent text-foreground" role="menuitem" lang="zh" hreflang="zh" data-astro-cid-a2mxz4y6> 中文  </a> </li> </ul> </div> <script type="module">document.addEventListener("click",e=>{const t=document.querySelector("#language-toggle"),n=document.querySelector("#language-menu"),a=e.target;t&&n&&!t.contains(a)&&!n.contains(a)&&(n.classList.add("hidden"),t.setAttribute("aria-expanded","false"))});function s(){const e=document.querySelector("#language-toggle"),t=document.querySelector("#language-menu");!e||!t||e.dataset.lsInit||(e.dataset.lsInit="true",e.addEventListener("click",()=>{!t.classList.contains("hidden")?(t.classList.add("hidden"),e.setAttribute("aria-expanded","false")):(t.classList.remove("hidden"),e.setAttribute("aria-expanded","true"))}),e.addEventListener("keydown",n=>{const a=n;a.key==="Enter"||a.key===" "?(n.preventDefault(),e.click()):a.key==="Escape"&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}))}s();document.addEventListener("astro:after-swap",s);</script> </li> <li class="col-span-1 flex items-center justify-center"> <button id="theme-btn" class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent" title="Toggle theme" aria-label="auto" aria-live="polite"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg> </button> </li> </ul> </nav> </div> </div> <div class="mx-auto max-w-app px-4"> <hr class="border-border" aria-hidden="true"> </div> </header> <script type="module">function u(){const e=document.querySelector("#menu-btn"),t=document.querySelector("#menu-items"),n=document.querySelector("#menu-icon"),o=document.querySelector("#close-icon");!e||!t||!n||!o||e.dataset.navInit||(e.dataset.navInit="true",e.addEventListener("click",()=>{const s=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",s?"false":"true"),e.setAttribute("aria-label",s?"Close Menu":"Open Menu"),t.classList.toggle("hidden"),n.classList.toggle("hidden"),o.classList.toggle("hidden")}))}u();document.addEventListener("astro:after-swap",u);</script> <div class="mx-auto flex w-full max-w-app items-center justify-start px-2"><a id="back-button" href="/en" class="group inline-block hover:text-accent focus-outline mt-8 mb-2 flex hover:text-foreground/75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 6-6 6 6 6" /></svg><span>Back to home</span></a></div><script type="module">function o(){const t=document.querySelector("#back-button"),e=sessionStorage.getItem("backUrl");e&&t&&(t.href=e)}document.addEventListener("astro:page-load",o);o();</script> <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12" data-pagefind-body> <h1 class="inline-block text-2xl font-bold text-accent sm:text-3xl" data-astro-transition-scope="astro-pcwlacsx-1"> Building a Self-Maintaining Personal Wiki with LLMs </h1> <ul class="my-2 flex flex-wrap items-center gap-y-1"> <li class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <div class="flex items-start gap-x-2 opacity-80 sm:items-center"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-muted-foreground inline-block flex-none size-6" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg> <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0"> <span class="text-sm break-keep whitespace-nowrap sm:text-base"> Published on:
+</span> <time class="text-sm break-keep whitespace-nowrap sm:text-base" datetime="2026-04-08T16:36:53.000Z"> 9 Apr, 2026 </time> </span> </div> </li>  <li class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <span class="whitespace-nowrap"> 15 min read </span> </li> <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm"> <a href="/en/categories/tools/" class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"> Category: Tools </a> </li> </ul> <article id="article" class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"> <blockquote>
+<p>A personal knowledge base that continuously maintains itself as materials grow.</p>
+</blockquote>
+<h2 id="table-of-contents">Table of contents</h2>
+<p></p><details><summary>Open Table of contents</summary><p></p>
+<ul>
+<li><a href="#1-motivation">1. Motivation</a>
+<ul>
+<li><a href="#option-1-store-it">Option 1: Store it</a></li>
+<li><a href="#option-2-rag-retrieval">Option 2: RAG retrieval</a></li>
+<li><a href="#a-third-approach">A third approach</a></li>
+</ul>
+</li>
+<li><a href="#2-architecture">2. Architecture</a>
+<ul>
+<li><a href="#21-layer-one-raw-sources">2.1 Layer one: Raw sources</a></li>
+<li><a href="#22-layer-two-the-wiki-knowledge-layer">2.2 Layer two: the Wiki (knowledge layer)</a>
+<ul>
+<li><a href="#221-sources">2.2.1 Sources</a></li>
+<li><a href="#222-concepts">2.2.2 Concepts</a></li>
+<li><a href="#223-entities">2.2.3 Entities</a></li>
+<li><a href="#224-outputs">2.2.4 Outputs</a></li>
+<li><a href="#225-indexmd-and-logmd">2.2.5 Index.md and Log.md</a></li>
+</ul>
+</li>
+<li><a href="#23-layer-three-schema-and-skills-instructions-for-the-llm">2.3 Layer three: Schema and Skills (instructions for the LLM)</a>
+<ul>
+<li><a href="#231-agentsmd--claudemd">2.3.1 AGENTS.md / CLAUDE.md</a></li>
+<li><a href="#232-skills">2.3.2 Skills</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-four-core-workflows">3. Four core workflows</a>
+<ul>
+<li><a href="#31-workflow-1-detecting-resources-sync">3.1 Workflow 1: Detecting Resources Sync</a></li>
+<li><a href="#32-workflow-2-ingesting-resources">3.2 Workflow 2: Ingesting Resources</a></li>
+<li><a href="#33-workflow-3-querying-the-wiki">3.3 Workflow 3: Querying the Wiki</a></li>
+<li><a href="#34-workflow-4-health-checks">3.4 Workflow 4: Health checks</a></li>
+</ul>
+</li>
+<li><a href="#4-typical-workflows">4. Typical workflows</a>
+<ul>
+<li><a href="#scenario-1-first-time-setup">Scenario 1: First-time setup</a></li>
+<li><a href="#scenario-2-ongoing-maintenance">Scenario 2: Ongoing maintenance</a></li>
+<li><a href="#scenario-3-knowledge-query">Scenario 3: Knowledge query</a></li>
+</ul>
+</li>
+<li><a href="#5-notes">5. Notes</a>
+<ul>
+<li><a href="#51-local-search-qmd">5.1 Local search: qmd</a></li>
+<li><a href="#52-contradiction-flags">5.2 Contradiction flags</a></li>
+<li><a href="#53-operation-log">5.3 Operation log</a></li>
+<li><a href="#54-page-templates">5.4 Page templates</a></li>
+</ul>
+</li>
+<li><a href="#6-systematic-customizations-to-karpathys-design">6. Systematic customizations to Karpathy’s design</a></li>
+<li><a href="#7-design-philosophy">7. Design philosophy</a>
+<ul>
+<li><a href="#71-llm-as-a-knowledge-bookkeeper">7.1 LLM as a knowledge bookkeeper</a></li>
+<li><a href="#72-knowledge-evolves">7.2 Knowledge evolves</a></li>
+<li><a href="#73-constraints-create-value">7.3 Constraints create value</a></li>
+<li><a href="#74-clear-humanllm-division">7.4 Clear human/LLM division</a></li>
+<li><a href="#75-composable-modifiable-workflows">7.5 Composable, modifiable workflows</a></li>
+</ul>
+</li>
+<li><a href="#8-tooling">8. Tooling</a></li>
+<li><a href="#references">References</a></li>
+</ul>
+<p></p></details><p></p>
+<h2 id="1-motivation">1. Motivation</h2>
+<p>Knowledge workers face a large volume of information every day: articles, papers, reports, meeting notes. How to manage this information is an old problem.</p>
+<h3 id="option-1-store-it">Option 1: Store it</h3>
+<p>The most common approach is to use Obsidian, Notion, Bear, or Apple Notes to build a folder structure and store materials by category. Organizing feels good at the time. But months later, when you try to find a specific viewpoint, you often can’t remember which folder or which file it was in. Organizing didn’t create understanding — it only moved information around.</p>
+<p>An even bigger difficulty is that knowledge itself changes. The same concept may be phrased differently across articles. Different sources may present contradictory descriptions. A method in one field might be reinvented in another. To discover these connections and contradictions you need to remember the contents of many documents simultaneously — beyond a human brain’s capacity.</p>
+<h3 id="option-2-rag-retrieval">Option 2: RAG retrieval</h3>
+<p>RAG (Retrieval-Augmented Generation) solves the problem of not being able to find something. Store documents in a vector database, retrieve relevant passages when asked, and let an LLM synthesize an answer. But RAG starts from the raw documents each time rather than from an already-digested body of knowledge. It assumes the original text is the optimal vessel of knowledge, which is not true. Raw documents contain redundancy, bias, outdated information, and author-specific phrasing. Something answered last week has to be rediscovered this week. When two articles contradict each other, RAG will present both without proactively flagging the disagreement.</p>
+<h3 id="a-third-approach">A third approach</h3>
+<p>Andrej Karpathy proposed a different direction in his LLM Wiki gist:</p>
+<blockquote>
+<p>Let the LLM act like a team of Wikipedia editors that continuously maintain a persistent Wiki.</p>
+</blockquote>
+<p>When new material arrives, the LLM reads and understands it, extracts concepts and entities, updates existing pages, flags contradictions, and maintains cross-references. Queries then search this Wiki rather than the raw source documents. The core insight is: LLMs excel at understanding, synthesizing, and generating text, not at on-the-fly reassembling of fragments. Move comprehension into the ingestion phase and let queries retrieve from an already-structured knowledge base. That improves both efficiency and accuracy.</p>
+<p>I built my own LLM Wiki workflow inspired by Karpathy and made many customizations. Below I describe the architecture, workflows, technical details, and design philosophy — what I did and why.</p>
+<hr>
+<h2 id="2-architecture">2. Architecture</h2>
+<p>The system has three layers with clear separation of responsibilities:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>PersonalAutoWiki/</span></span>
+<span class="line"><span>├── ObsidianRaw/          # Raw sources (read-only, curated by humans)</span></span>
+<span class="line"><span>│   ├── 00_Inbox/         # Temporary inbox, awaiting triage</span></span>
+<span class="line"><span>│   ├── 01_Projects/      # Active projects, action-oriented, time-sensitive</span></span>
+<span class="line"><span>│   ├── 02_Areas/         # Areas of responsibility, require maintenance</span></span>
+<span class="line"><span>│   ├── 03_Resources/     # Reusable reference materials ← only this is ingested by the LLM</span></span>
+<span class="line"><span>│   └── 04_Archive/       # Historical records</span></span>
+<span class="line"><span>├── Wiki/                 # Knowledge base (maintained entirely by the LLM)</span></span>
+<span class="line"><span>│   ├── Index.md          # Auto-maintained index</span></span>
+<span class="line"><span>│   ├── Log.md            # Machine-parsable operation log</span></span>
+<span class="line"><span>│   ├── Concepts/         # Concept pages (methodologies, theoretical frameworks)</span></span>
+<span class="line"><span>│   ├── Entities/         # Entity pages (people, organizations, projects)</span></span>
+<span class="line"><span>│   ├── Sources/          # Summaries of original materials</span></span>
+<span class="line"><span>│   └── Outputs/          # Query outputs (high-value analysis persisted back)</span></span>
+<span class="line"><span>├── .claude/skills/       # Skills definitions (codified workflows)</span></span>
+<span class="line"><span>├── AGENTS.md             # The LLM's "employee handbook" (operational rules)</span></span>
+<span class="line"><span>└── CLAUDE.md             # Reference to AGENTS.md</span></span></code></pre>
+<h3 id="21-layer-one-raw-sources">2.1 Layer one: Raw sources</h3>
+<p>I organize raw materials using the PARA method. PARA divides information into Projects, Areas, Resources, and Archives, with an Inbox as a temporary intake.</p>
+<p>These five classes have distinct natures:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Folder</th><th>Nature</th><th>Example</th><th>Fit for Wiki?</th></tr></thead><tbody><tr><td>Inbox</td><td>Temporary, needs triage</td><td>Newly clipped webpages, notes to be sorted</td><td>❌ No — unstable</td></tr><tr><td>Projects</td><td>Action-oriented, time-limited</td><td>Notes for “write annual report”</td><td>❌ No — tasks, not evergreen knowledge</td></tr><tr><td>Areas</td><td>Ongoing responsibilities</td><td>Team management notes</td><td>❌ No — personal and action-focused</td></tr><tr><td>Resources</td><td>Reusable reference materials</td><td>Papers, frameworks, industry reports</td><td>✅ Yes — target for ingestion</td></tr><tr><td>Archive</td><td>Completed or inactive items</td><td>Old project histories</td><td>❌ No — historical, low priority</td></tr></tbody></table>
+<p>Key rule: The LLM only ingests files from <code>Resources</code>.</p>
+<p>This is my first customization to Karpathy’s idea. Projects and Areas are action-oriented and require human execution; they should not be automatically ingested. The Inbox needs human selection before moving to Resources. Archives may contain useful material but have lower priority. Without this constraint, project notes and personal logs would pollute the Wiki. Resources are defined as “reference material likely to be useful in the future.” That matches the Wiki’s goal: build a reusable knowledge graph.</p>
+<h3 id="22-layer-two-the-wiki-knowledge-layer">2.2 Layer two: the Wiki (knowledge layer)</h3>
+<p>This is the system’s core. The Wiki contains four page types with clear responsibilities:</p>
+<h4 id="221-sources">2.2.1 Sources</h4>
+<p>For every ingested raw material, create a summary page under <code>Wiki/Sources/</code> that includes:</p>
+<ul>
+<li>Title, author, and source of the original document</li>
+<li>A concise 1–3 sentence core summary</li>
+<li>Key concepts and extracted entities</li>
+<li>Cross-references to other Sources</li>
+</ul>
+<p>Sources are the entry point to the knowledge layer. Raw documents are condensed into structured summaries; redundancy and noise are filtered out. Tracking is a unique feature of Sources pages: each Source frontmatter contains three tracking fields:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="yaml"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">---</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">title</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> Resilience</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">created</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">updated</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> source</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">tags</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">systems theory</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> ecology</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> resilience research</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_path</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> Academic/Research Notes/Theory/Terms/resilience.md</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_hash</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> a1b2c3d4</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_mtime</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08T17:30:00Z</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">---</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Field</th><th>Purpose</th></tr></thead><tbody><tr><td><code>source_path</code></td><td>Locate the original file and detect moves or deletions</td></tr><tr><td><code>source_hash</code></td><td>SHA256 first 8 hex digits to detect content changes</td></tr><tr><td><code>source_mtime</code></td><td>File modification time for quick checks to avoid hashing everything</td></tr></tbody></table>
+<p>These fields let the Wiki automatically detect changes in raw sources. When an original file is edited, the system compares the hash to detect differences and flags the Source for re-ingestion.</p>
+<h4 id="222-concepts">2.2.2 Concepts</h4>
+<p><code>Wiki/Concepts/</code> stores abstract concepts and methodologies such as “resilience,” “percolation theory,” or “prospect theory.” Concept pages:</p>
+<ul>
+<li>Present definitions synthesized from multiple Sources</li>
+<li>Flag contradictions when sources disagree</li>
+<li>Evolve as new Sources are ingested</li>
+<li>List all Sources that mention the concept</li>
+</ul>
+<p>Concepts act as abstract nodes in the knowledge graph. Single-source definitions are often incomplete; multiple sources together approximate a fuller understanding.</p>
+<h4 id="223-entities">2.2.3 Entities</h4>
+<p><code>Wiki/Entities/</code> contains concrete entities: people, organizations, projects, tools, places. Unlike Concepts, Entities are concrete objects and include:</p>
+<ul>
+<li>Basic facts about the entity</li>
+<li>Links to related Concepts (what ideas the entity engages with)</li>
+<li>Links to Sources that mention the entity</li>
+<li>Relationships to other Entities (collaborations, hierarchies, competition)</li>
+<li>A timeline where applicable</li>
+</ul>
+<p>Entities are the concrete nodes of the knowledge graph — they ground abstract concepts in real contexts.</p>
+<h4 id="224-outputs">2.2.4 Outputs</h4>
+<p><code>Wiki/Outputs/</code> holds high-value query results written back into the Wiki. When a query produces cross-source synthesis, comparison tables, or insightful analysis, the result can be saved here.</p>
+<p>Save-back criteria: Not every query should be persisted. Save only results that are:</p>
+<ul>
+<li>Reviews: cross-source syntheses</li>
+<li>Comparisons: structured compare tables of concepts or methods</li>
+<li>Analyses: discoveries of hidden relationships or insights</li>
+<li>Conclusions: reasoned judgments worth preserving</li>
+</ul>
+<p>Simple lookups (“What are the three dimensions of framework X?”) shouldn’t be saved because the answer lives in Sources and Concepts already. Outputs are the synthesis layer: they are new knowledge produced by reasoning and merit persistence.</p>
+<h4 id="225-indexmd-and-logmd">2.2.5 Index.md and Log.md</h4>
+<p><code>Index.md</code> is a directory of all pages organized by type with one-line summaries. It controls scale — without an index, browsing dozens or hundreds of pages is hard.</p>
+<p><code>Log.md</code> is the operation log in a machine-parsable format:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | Resilience assessment</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Source</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Impact</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Sources</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: framework-summary.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Concepts</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: resilience.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Entities</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: some-institute.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Index.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">, </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Log.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Note</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: Added a system-performance definition of resilience</span></span></code></pre>
+<p>The format is designed to be queryable with Unix tools:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">^## \[</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> tail</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -5</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        # last 5 records</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| ingest</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">                 # all ingest operations</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| contradiction</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">         # all contradiction flags</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">resilience</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">              # all operations touching "resilience"</span></span></code></pre>
+<p>The log should be like git history for the Wiki. Without it, the Wiki is a black box; with it, every change is traceable and auditable.</p>
+<h3 id="23-layer-three-schema-and-skills-instructions-for-the-llm">2.3 Layer three: Schema and Skills (instructions for the LLM)</h3>
+<h4 id="231-agentsmd--claudemd">2.3.1 AGENTS.md / CLAUDE.md</h4>
+<p><code>AGENTS.md</code> and <code>CLAUDE.md</code> are operational manuals covering:</p>
+<ul>
+<li>Directory responsibilities</li>
+<li>Detailed steps for the four core workflows</li>
+<li>File formats, naming conventions, and referencing rules</li>
+<li>Impact analysis strategy</li>
+<li>Contradiction detection and handling</li>
+<li>Search tool invocation order and priorities</li>
+<li>Response style requirements</li>
+</ul>
+<p>The LLM reads these files at the start of each session so it knows its role and rules. Prompts alone are ephemeral and can be truncated; a stable handbook keeps behavior consistent.</p>
+<h4 id="232-skills">2.3.2 Skills</h4>
+<p>AGENTS.md defines rules; <code>.claude/skills/</code> contains executable Skill modules. Each Skill encapsulates triggers, steps, output formats, and edge handling:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Skill</th><th>Purpose</th><th>Trigger</th></tr></thead><tbody><tr><td>ingesting-resources</td><td>Ingest resources</td><td>New files in Resources</td></tr><tr><td>querying-wiki</td><td>Answer queries</td><td>User questions</td></tr><tr><td>checking-wiki-health</td><td>Health checks</td><td>Periodic audits</td></tr><tr><td>detecting-resources-sync</td><td>Sync detection</td><td>File system changes</td></tr></tbody></table>
+<p>Each Skill contains a <code>reference/</code> folder with page templates, frontmatter formats, and checklists. Claude Code recognizes Skills automatically. Editing a Skill changes the LLM’s behavior without touching AGENTS.md.</p>
+<hr>
+<h2 id="3-four-core-workflows">3. Four core workflows</h2>
+<h3 id="31-workflow-1-detecting-resources-sync">3.1 Workflow 1: Detecting Resources Sync</h3>
+<p>Detecting sync addresses a straightforward problem: how does the Wiki know that a raw source has changed?</p>
+<p>Without a sync check, ingestion only runs when a human explicitly asks. Raw materials are frequently edited. Fixes, supplements, restructures. Without automated detection the Wiki drifts from sources.</p>
+<p>Process:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Scan ObsidianRaw/03_Resources/ for files</span></span>
+<span class="line"><span>        Record relative path, content hash (SHA256 first 8 hex), and mtime</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 2: Read all pages under Wiki/Sources/ and extract tracking fields</span></span>
+<span class="line"><span>        (source_path, source_hash, source_mtime)</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 3: Three-way comparison</span></span>
+<span class="line"><span>        ├─ New: In Resources but not in Sources → queued for ingestion</span></span>
+<span class="line"><span>        ├─ Changed: same path but hash differs → queued for re-ingestion</span></span>
+<span class="line"><span>        ├─ Deleted: in Sources but not in Resources → needs handling</span></span>
+<span class="line"><span>        └─ Synchronized: path and hash identical → no action</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 4: Generate a sync status report</span></span></code></pre>
+<p>Output example:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Resources sync status [2026-04-08 10:30]</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### New files (2)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Path                   | Modified         | Size  |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/NewTopic.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | 2026-04-08 09:00 | 2.5KB |</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Changed (1)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Path                            | Old hash | New hash | Modified         |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------------------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/Theory/resilience.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | a1b2c3d4 | e5f6g7h8 | 2026-04-08 08:30 |</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Synchronized (43)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">43 files are synchronized.</span></span></code></pre>
+<p>Design notes:</p>
+<ul>
+<li>Use <code>source_mtime</code> for quick filtering to avoid hashing everything each run</li>
+<li>SHA256 first 8 hex is usually enough to detect edits while keeping frontmatter compact</li>
+<li>Renames appear as “deleted + new” and require human confirmation</li>
+</ul>
+<p>Sync detection is the Wiki’s change sensor. Without it the Wiki is a static snapshot; with it the Wiki stays live.</p>
+<h3 id="32-workflow-2-ingesting-resources">3.2 Workflow 2: Ingesting Resources</h3>
+<p>When sync detection finds new or changed files, ingestion runs. When I ask the system to “process this file,” the LLM executes a multi-step comprehension → association → update workflow:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Parse the original file structure: headings, sections, lists, tables, code blocks</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 2: Create a summary page in Wiki/Sources/</span></span>
+<span class="line"><span>        - 1–3 sentence core summary</span></span>
+<span class="line"><span>        - key points organized by original structure</span></span>
+<span class="line"><span>        - extract key concepts and entities</span></span>
+<span class="line"><span>        - write tracking fields</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 3: Extract concepts</span></span>
+<span class="line"><span>        ├─ If present in Concepts/ → update: add source and expand definition</span></span>
+<span class="line"><span>        ├─ If absent → create new concept page</span></span>
+<span class="line"><span>        └─ If definitions conflict with existing ones → flag contradiction</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 4: Extract entities</span></span>
+<span class="line"><span>        ├─ If present in Entities/ → update: add relations and attributes</span></span>
+<span class="line"><span>        ├─ If absent → create new entity page</span></span>
+<span class="line"><span>        └─ Add relationships to other entities and concepts</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 5: Impact analysis</span></span>
+<span class="line"><span>        ├─ Which Sources need cross-references updated?</span></span>
+<span class="line"><span>        ├─ Which Concepts require revision?</span></span>
+<span class="line"><span>        ├─ Which Entities’ relationships change?</span></span>
+<span class="line"><span>        └─ Which contradictions should be flagged?</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 6: Update Wiki/Index.md</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 7: Record the operation in Wiki/Log.md</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 8: Run qmd update &#x26;&#x26; qmd embed to refresh the search index</span></span></code></pre>
+<p>Step 5 — impact analysis — is the crucial part. New material rarely affects only one page. A paper on infrastructure resilience could:</p>
+<ul>
+<li>Define a model of resilience → update <code>Concepts/resilience.md</code></li>
+<li>Mention a research institute → update/create <code>Entities/some-institute.md</code></li>
+<li>Cite another ingested paper → create cross-references between Sources</li>
+<li>Provide a definition that conflicts with an existing one → flag a contradiction in <code>Concepts/resilience.md</code></li>
+</ul>
+<p>Without impact analysis ingestion degrades into isolated summaries. Each Source would exist alone and Concepts and Entities would not be updated; the knowledge graph wouldn’t grow. Impact analysis makes each ingestion a global update.</p>
+<p>LLMs are naturally good at this: a human reader rarely remembers all related concepts, entities, and sources at once. The LLM holds the Wiki context and can perform systematic association.</p>
+<h3 id="33-workflow-3-querying-the-wiki">3.3 Workflow 3: Querying the Wiki</h3>
+<p>When a user asks a question, the LLM follows this flow:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: Use the qmd tool to search the Wiki</span></span>
+<span class="line"><span>        ├─ Lexical matches (exact keywords)</span></span>
+<span class="line"><span>        └─ Vector semantic matches (embedding-based)</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 2: Read the retrieved pages and synthesize an answer</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 3: Cite sources with [[wiki-links]]</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 4: Evaluate whether the result should be saved to Outputs/</span></span></code></pre>
+<p>The core difference from RAG is the retrieval target. RAG searches raw documents. Wiki querying searches a pre-digested knowledge layer. Results are already condensed, contradictions flagged, and definitions synthesized across documents. Entity relations are already established.</p>
+<p>When a query produces high-value output (review, comparison, analysis, or conclusion), the LLM recommends saving it to <code>Wiki/Outputs/</code>. Final saving is a human decision, keeping Outputs high quality.</p>
+<p>The Skill <code>reference/query_patterns.md</code> defines five common query patterns and best practices, including lex/vec construction, intent disambiguation, and limits.</p>
+<p>Example concept-definition query:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">concept-name definition</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">What is concept-name, its meaning and explanation</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">concept-definition</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 3</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
+<p>Example comparison query:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">conceptA conceptB comparison difference</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    {</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">      query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">Differences and relationships between conceptA and conceptB</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">concept-comparison</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
+<h3 id="34-workflow-4-health-checks">3.4 Workflow 4: Health checks</h3>
+<p>As the Wiki grows, maintenance becomes essential: outdated pages, unflagged contradictions, orphan pages, and frequently mentioned concepts lacking a canonical concept page are common problems.</p>
+<p>Health checks periodically scan the Wiki and produce a report:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Check item        | What it detects                    | Fix suggestion        | Priority</span></span>
+<span class="line"><span>------------------|-------------------------------------|-----------------------|--------</span></span>
+<span class="line"><span>Unsynced files    | New/changed files in Resources/     | Run ingestion         | P0</span></span>
+<span class="line"><span>Missing concepts  | Links that point to nonexistent concept pages | Create missing pages | P1</span></span>
+<span class="line"><span>Contradictions    | Pages with contradiction flags     | Human review          | P1</span></span>
+<span class="line"><span>Unindexed pages   | Pages not listed in Index.md       | Update Index.md       | P2</span></span>
+<span class="line"><span>Orphan pages      | Pages with no inbound links        | Add links or delete   | P3</span></span></code></pre>
+<p>Health reports are structured:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit"># Wiki health report</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">Date: 2026-04-08</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Stats</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Type          | Count   |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Concept pages | 54      |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Entity pages  | 34      |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Source pages  | 45      |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| Output pages  | 0       |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Total</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">     | </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">133</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Problems</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Missing concepts (2)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/adaptive-governance</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — referenced by [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/resilience-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] but missing</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/socio-ecological</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — referenced by [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Entities/some-institute</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] but missing</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### Contradictions (1)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/resilience</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] has a dimensional definition conflict with [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/another-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]]</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Suggested actions</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">1.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> Ingest pages to create Concepts/adaptive-governance and Concepts/socio-ecological</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">2.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> Human review the contradiction in resilience</span></span></code></pre>
+<p>When a Wiki has dozens of pages, humans cannot maintain every association manually. The LLM’s periodic scans surface structural issues so humans only need to resolve flagged exceptions.</p>
+<hr>
+<h2 id="4-typical-workflows">4. Typical workflows</h2>
+<p>The four workflows can be combined into end-to-end usage patterns.</p>
+<h3 id="scenario-1-first-time-setup">Scenario 1: First-time setup</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>detecting-resources-sync  →  list files to ingest</span></span>
+<span class="line"><span>ingesting-resources       →  batch ingest</span></span>
+<span class="line"><span>checking-wiki-health      →  verify results</span></span></code></pre>
+<p>Detect Resources for intake, ingest them in batch, then run a health check to validate completeness.</p>
+<h3 id="scenario-2-ongoing-maintenance">Scenario 2: Ongoing maintenance</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Weekly: detecting-resources-sync  → find changes</span></span>
+<span class="line"><span>As needed: ingesting-resources    → update Wiki</span></span>
+<span class="line"><span>Weekly: checking-wiki-health     → keep healthy</span></span></code></pre>
+<p>Detect changes, process them, and validate. The whole loop completes in minutes.</p>
+<h3 id="scenario-3-knowledge-query">Scenario 3: Knowledge query</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>User asks a question → querying-wiki → answer → evaluate for Output</span></span></code></pre>
+<p>Simple queries answer quickly. High-value analyses are recommended to be saved as Outputs.</p>
+<hr>
+<h2 id="5-notes">5. Notes</h2>
+<h3 id="51-local-search-qmd">5.1 Local search: qmd</h3>
+<p>The Wiki uses <code>qmd</code> as the local Markdown search engine.</p>
+<p>Hybrid retrieval: lexical + vector</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">critical infrastructure</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // exact match</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">How to assess infrastructure resilience</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // semantic match</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">academic research methods</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
+<p>Different phrasings mean lexical search can miss results; pure vector search can return semantically related but off-topic results. Hybrid search balances precision and recall. <code>intent</code> helps disambiguate multi-meaning queries.</p>
+<p>I chose <code>qmd</code> because all data stays local and it can be exposed to the LLM as an MCP tool. It supports path filters, document IDs, and glob patterns.</p>
+<h3 id="52-contradiction-flags">5.2 Contradiction flags</h3>
+<p>When an ingested Source conflicts with existing content, the LLM does not decide which is correct. It explicitly flags the contradiction in the page:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098"> [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#D6DEEB;--shiki-dark-font-style:italic">!warning</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">]</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Contradiction</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> This page conflicts with [</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">[</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#D6DEEB;--shiki-dark-font-style:italic">Sources/another-framework</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">]</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic">]:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> This page’s view: resilience has three dimensions (engineering, ecological, social)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Other source’s view: resilience has five dimensions (adds economic and governance)</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> Possible reason: different application domains (natural hazards vs urban infrastructure)</span></span></code></pre>
+<p>Design principles:</p>
+<ol>
+<li>The LLM is not the domain expert and should not unilaterally resolve contradictions. Flagging preserves transparency for human review.</li>
+<li>Contradictions are often about scope, context, or framing rather than simple right/wrong. Keeping both perspectives is valuable.</li>
+<li>A good contradiction flag attempts to analyze why the difference arises (different domain, different definition scope, time). That analysis itself is valuable.</li>
+<li>Use Obsidian-style callouts <code>> [!warning]</code> so they render clearly in Obsidian.</li>
+</ol>
+<h3 id="53-operation-log">5.3 Operation log</h3>
+<p><code>Log.md</code> follows log best practices:</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | Infrastructure resilience framework</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Source</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Impact</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Sources</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: framework-summary.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Concepts</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: resilience.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Entities</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: some-institute.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Index.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">, </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Log.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Note</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: Added three-dimension definition of resilience</span></span></code></pre>
+<p>Principles:</p>
+<ol>
+<li>Machine-parsable: each record starts with <code>## [date] type | title</code> so regex queries work</li>
+<li>Traceable: each record lists sources and impacted pages to trace changes</li>
+<li>Quantifiable: <code>grep | wc -l</code> can count operation frequencies</li>
+<li>Readable: human-friendly format without extra tooling</li>
+</ol>
+<p>The operation log is the Wiki’s git history — without it, the Wiki loses provenance.</p>
+<h3 id="54-page-templates">5.4 Page templates</h3>
+<p>Each Skill’s <code>reference/</code> folder contains page templates to ensure consistent outputs:</p>
+<ul>
+<li>Sources template: summary → core points → key concepts → related entities → references</li>
+<li>Concepts template: definition → core features → related concepts → sources</li>
+<li>Entities template: overview → info table → related concepts → sources</li>
+<li>Outputs template: question → answer → sources → related concepts</li>
+</ul>
+<p>Templates make pages predictable so humans know where to look and automated tools can parse them reliably.</p>
+<hr>
+<h2 id="6-systematic-customizations-to-karpathys-design">6. Systematic customizations to Karpathy’s design</h2>
+<p>Karpathy’s gist described Raw Sources → Wiki → Schema and ingest/query/lint flows. I engineered enhancements:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Dimension</th><th>Karpathy</th><th>My customization</th><th>Why</th></tr></thead><tbody><tr><td>Ingestion scope</td><td>unspecified</td><td>only ingest Resources directory</td><td>prevent noise</td></tr><tr><td>Contradiction handling</td><td>mentioned</td><td>explicit flags + logs + diff analysis</td><td>transparency</td></tr><tr><td>Operation log</td><td>simple timeline</td><td>machine-parsable, grep-friendly log</td><td>observability</td></tr><tr><td>Search tool</td><td>unspecified</td><td>qmd hybrid search (lex + vec + intent)</td><td>precision + recall</td></tr><tr><td>Output persistence</td><td>mentioned</td><td>clear criteria + human decision</td><td>quality control</td></tr><tr><td>Health checks</td><td>lint-like</td><td>extended checks with priorities</td><td>system maintenance</td></tr><tr><td>Collaboration rules</td><td>informal</td><td>full AGENTS.md handbook</td><td>reduce LLM randomness</td></tr><tr><td>Impact analysis</td><td>not detailed</td><td>explicit analysis step</td><td>global updates</td></tr><tr><td>Page types</td><td>Sources/Entities/Concepts</td><td>add Outputs for saved analyses</td><td>capture synthesis</td></tr><tr><td>Sync detection</td><td>none</td><td>three-way tracking fields</td><td>continuous sync</td></tr><tr><td>Workflows</td><td>conceptual</td><td>Skills modularization with refs</td><td>executable workflows</td></tr></tbody></table>
+<p>Karpathy’s gist is a design document; mine is an engineered runbook. AGENTS.md + Skills make the process executable. Changing a Skill changes behavior without editing the handbook.</p>
+<hr>
+<h2 id="7-design-philosophy">7. Design philosophy</h2>
+<h3 id="71-llm-as-a-knowledge-bookkeeper">7.1 LLM as a knowledge bookkeeper</h3>
+<p>The tedious bookkeeping of knowledge maintenance is exactly what LLMs handle well:</p>
+<ul>
+<li>Update concept definitions when new materials arrive</li>
+<li>Flag contradictions between sources</li>
+<li>Convert a good query answer into a reusable page</li>
+<li>Periodically scan for stale or missing pages</li>
+<li>Track whether raw sources have changed</li>
+</ul>
+<p>Humans focus on curating what to ingest, asking good questions, resolving contradictions, and deciding what to persist. LLMs handle repetitive, scale-limited bookkeeping.</p>
+<h3 id="72-knowledge-evolves">7.2 Knowledge evolves</h3>
+<p>Notes assume knowledge is static; real knowledge evolves:</p>
+<ul>
+<li>New concepts may force revisions of old definitions</li>
+<li>New evidence can overturn prior conclusions</li>
+<li>Cross-domain connections create novel understanding</li>
+<li>A concept can mean different things in different contexts</li>
+</ul>
+<p>The Wiki accepts evolution: contradictions coexist until human resolution; impact analysis updates related pages; sync detection tracks source edits; health checks surface issues.</p>
+<h3 id="73-constraints-create-value">7.3 Constraints create value</h3>
+<p>AGENTS.md and Skills enforce constraints: only ingest Resources, use consistent templates, prefer <code>[[wiki-links]]</code>, never let the LLM unilaterally resolve contradictions, require criteria for Outputs, and include tracking fields.</p>
+<p>Constraints channel the LLM’s power into the right places. Without scope limits, the LLM ingests noise. Without formats, pages become inconsistent and hard to parse. Without persistence criteria, Outputs degenerate into low-value clutter.</p>
+<h3 id="74-clear-humanllm-division">7.4 Clear human/LLM division</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Task</th><th>Human</th><th>LLM</th></tr></thead><tbody><tr><td>Curate sources</td><td>✅</td><td>❌</td></tr><tr><td>Read &#x26; summarize</td><td>❌</td><td>✅</td></tr><tr><td>Association analysis</td><td>❌</td><td>✅</td></tr><tr><td>Change detection</td><td>❌</td><td>✅</td></tr><tr><td>Contradiction adjudication</td><td>✅</td><td>❌</td></tr><tr><td>Ask questions</td><td>✅</td><td>❌</td></tr><tr><td>Synthesize answers</td><td>❌</td><td>✅</td></tr><tr><td>Quality gating for Outputs</td><td>✅</td><td>❌</td></tr><tr><td>Periodic maintenance</td><td>❌</td><td>✅</td></tr><tr><td>Workflow definition</td><td>✅</td><td>❌</td></tr></tbody></table>
+<h3 id="75-composable-modifiable-workflows">7.5 Composable, modifiable workflows</h3>
+<p>Skills let workflows be tools that compose:</p>
+<ul>
+<li><code>detecting-resources-sync</code> can run standalone or inside <code>checking-wiki-health</code></li>
+<li><code>ingesting-resources</code> can be manual or triggered by sync detection</li>
+<li><code>querying-wiki</code> can answer or produce Outputs</li>
+<li><code>checking-wiki-health</code> can run post-ingest or periodically</li>
+</ul>
+<p>Humans choose which tools to run and when.</p>
+<hr>
+<h2 id="8-tooling">8. Tooling</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Purpose</th><th>Tool</th><th>Notes</th></tr></thead><tbody><tr><td>Raw material management</td><td>Obsidian</td><td>Use PARA to organize</td></tr><tr><td>LLM operator</td><td>Claude Code / Qwen Code</td><td>Reads AGENTS.md and Skills</td></tr><tr><td>Local search</td><td>qmd</td><td>Hybrid lex+vec search</td></tr><tr><td>Wiki browsing</td><td>Obsidian</td><td>Supports <code>[[wiki-links]]</code> and callouts</td></tr><tr><td>Web clipping</td><td>Obsidian Web Clipper</td><td>Save pages to Inbox</td></tr><tr><td>Skill framework</td><td>Claude Code Skills</td><td>Modular workflow definitions</td></tr></tbody></table>
+<hr>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy: LLM Wiki</a> — the original inspiration describing the three-layer architecture and workflows</li>
+<li><a href="https://fortelabs.com/blog/para/">PARA Method</a> — organization framework used for raw materials</li>
+<li><a href="https://obsidian.md/">Obsidian</a> — local Markdown knowledge tool used for storage and browsing</li>
+<li><a href="https://github.com/nickthecat/qmd">qmd</a> — local markdown search engine used for hybrid retrieval</li>
+</ul> </article> <hr class="my-8 border-dashed">  <ul class="mt-4 mb-8 sm:my-8"> <li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/configuration/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-67kewmjt-2"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block opacity-80 -me-3.5 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>
+&nbsp;<span>Configuration</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/en/tags/typesetting/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-67kewmjt-3"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block opacity-80 -me-3.5 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>
+&nbsp;<span>Typesetting</span> </a> </li> </ul> <section data-pagefind-ignore class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50" data-astro-cid-74s6d3ud> <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between" data-astro-cid-74s6d3ud> <div class="min-w-0" data-astro-cid-74s6d3ud> <div class="flex flex-wrap items-center gap-2" data-astro-cid-74s6d3ud> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-sm" data-astro-cid-74s6d3ud> <span class="text-accent" data-astro-cid-74s6d3ud>CC</span> <span aria-hidden="true" class="text-muted-foreground" data-astro-cid-74s6d3ud>•</span> <span class="text-muted-foreground" data-astro-cid-74s6d3ud>BY-NC-SA</span> </a> <span class="text-muted-foreground text-xs" data-astro-cid-74s6d3ud>
+© 2026 </span> </div> <p class="text-muted-foreground mt-3 text-sm leading-relaxed" data-astro-cid-74s6d3ud>This work is licensed under “<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent">CC BY-NC-SA 4.0</a>”. For commercial use, please <a href="mailto:wenjie.xu.cn@outlook.com" class="font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent">contact the site owner</a> for authorization. For non-commercial sharing, please keep attribution and the original link. If you remix, transform, or build upon this material, you must distribute your contributions under the <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent">same license</a>.</p> </div> <div class="shrink-0 self-end sm:self-start" data-astro-cid-74s6d3ud> <svg viewBox="0 0 347.2 94.013" class="animated-signature h-9 w-auto max-w-52 text-black dark:text-white" aria-hidden="true" focusable="false" data-astro-cid-74s6d3ud="true"><path fill-rule="evenodd" d="M90.3 68.113q-4.4 0-7.35-2.15T80 59.713q0-4.4 2.1-8.2t5.6-6.65 7.65-4.45 8.25-1.6 6.1 1.45 2 3.55q0 2-1.85 4.25t-5.35 3.95q-2.2 1-5.05 1.75t-4.95.75q-1.6 0-1.6-.5 0-.4 1.4-.4 1.3 0 4.05-.75t5.35-2.05q2.9-1.6 4.1-3.2t1.2-2.9q0-1.2-.95-2t-2.65-.8q-1.6 0-3.6.9-2.9 1.3-5.95 4.25t-5.05 6.45-2 6.7q0 2.2 1.25 3.7t3.75 1.5q2.6 0 6-1.65t6.9-4.1 6.5-4.95a172 172 0 0 0 1.425-1.2 121 121 0 0 0 .821-.705l.222-.203q1.649-1.515 3.482-3.242 3.45-3.25 5.05-6.65.5-1.2.5-2.2 0-1.3-.5-1.6-.4-.3-.4-.8 0-.9.9-.9.5 0 .8.2 1.1.5 2.1 1.9t1 4.2q0 1.6-.4 3.65t-1.4 4.65q1.5-2 3.05-3.9t2.85-3.4q2.7-3.1 5.45-4.45t4.95-1.35q2.6 0 4.2 1.5t1.6 3.9q0 1.9-1 3.9-.3.8-1.4 2.45t-2.4 3.55-2.4 3.4q-1.3 1.6-1.8 2.75t-.5 1.85q0 1 1.1 1 1.4 0 3.9-1.5 1.5-.9 3.45-2.45t3.9-3.2 3.15-2.75q.203-.203.38-.303a1 1 0 0 1 .083-.042l.296-.271q.779-.721 2.091-2.034 1.75-1.75 3.25-3.95t1.5-4q0-1.2-1.2-1.7-.2-.1-.2-.3 0-.7.8-.7 2 0 3.1 1.45t1.1 3.95q0 2.8-1.2 6.65t-3.2 8.05-4.3 8.2-4.45 7.15-3.75 4.85q-3.5 3.7-8.3 6.9t-10.15 5.1-10.65 1.9q-4.8 0-9.2-1.4t-7.2-4.55-2.8-8.35v-.2q0-.6.4-.6t.6.7q1.1 5.6 5.4 9.1t9.9 3.5q3.5 0 7.7-1.95t8.5-5.35 8.4-7.7 7.5-9q1.2-1.6 3.3-4.75t4.35-6.95 3.75-7.2q-.5.5-1.6 1.55t-2.1 2.05-1.6 1.5q-.043.044-.077.068l-.013.009a142 142 0 0 1-2.939 2.653q-1.784 1.569-3.821 3.27-3.95 3.3-7.75 5.1-3.1 1.5-5.7 1.5-2.2 0-3.5-1.15t-1.3-3.35q0-1.6.8-3.8 1-2.7 2.85-5.4t3.9-5.15 3.55-4.15q1.3-1.4 1.3-2.4 0-.9-1.2-.9t-3.55 1.35-5.25 4.35q-4.1 4.3-7.2 9.3t-7.1 9.4q-2.2 2.5-4.3 2.5-1 0-2.4-.45t-2.8-1.65q1.1-1.5 3.15-4.05t4.35-5.65 4.3-6.2q-1.6 1.6-3.5 3.4t-3.8 3.3a1.5 1.5 0 0 1-.331.253 330 330 0 0 1-2.719 2.347q-4.45 3.8-9.5 6.45t-10.55 2.75m-81.9 5.6q.7-1.3 2.45-4.8t4.15-8.45 5.05-10.8 5-12 4.05-11.95q.8-2.7 1.15-5.05t.35-4.35q0-4.7-1.8-7.2t-4.7-2.5q-3.3 0-7.55 3.45T8 20.913q-2.7 4.6-4.45 9.7t-2.05 9.9q-.1.9-.45 1.2t-.55-.4q-.5-1.5-.5-3.6 0-3 .75-6.7t2.15-7.35 3.2-6.35q2.6-3.8 6.4-6.8t8-4.7 8-1.7q4.7 0 7.8 3t3.1 10q0 4.3-1 9.85T35 39.613q4.5-6.7 10.35-12.8t11.35-10.1q4.1-3 7.1-4.35t5.1-1.35q3.2 0 4.55 2.75t1.35 7.15q0 4.3-1 9.75t-2.6 11.05-3.4 10.5q4.1-6.5 9.05-13.65t10.3-13.95 10.8-12.25 10.55-8.55q2.5-1.5 5.75-2.65t5.95-1.15q3 0 4.3 1.7l.2.4q0 .4-.5.4h-1q-4.2-.3-9.4 2.65t-10.85 8.25-11.3 11.9-11 13.65-9.9 13.6-7.95 11.65q-.2.4-2.15 1.3t-4.35 1.8-4.1 1.35-1.5.05q.7-1.7 2.4-5.55t3.95-9.35 4.45-12.1 4-13.8q.9-3.9.9-6.3 0-4.4-2.9-4.4-2.4 0-6.3 2.85t-8.5 7.65-9.35 10.8-8.95 12.3q-2.1 4.9-4.4 9.6t-4.8 8.8q-.3.4-2.35 1.3t-4.55 1.8-4.3 1.35-1.6.05m236.1 2.9q-.3 0-.3-.4 0-.7.7-1.7 4.5-6.1 11.4-14.5t15.2-17.3q-1.9-5-2.8-10.25t-.9-9.85q0-3.6.55-6.55t1.55-4.75q.5-.9 2-1.8t3.3-1.45 3-.55q1.6 0 1.6.9 0 .4-.5 1.2-1.3 2.1-1.95 5.4t-.65 7.3q0 6.3 1.4 13.5 7.1-7.2 14.75-13.7t15.4-11.55 15.3-7.9T338 .013q.4 0 .35.4t-.45.4q-4.2-.1-9.95 2.35t-12.45 6.75-13.8 10q-5.7 4.5-11.45 9.55T279 39.813q1.6 6.2 3.95 11.9t5.1 9.7 5.35 5.5q2.3 1.2 4.7 1.2 1.5 0 2.8-.5t2.1-1.5q.2-.2.4-.2t.35.25-.05.55q-1.5 1.9-3.3 2.35t-4.1.45q-4.4 0-8.75-3.25t-8.15-8.65-6.6-11.7q-6 5.9-11.25 11.5t-9.2 10.2-6.25 7.7q-.9 1.3-1.6 1.3m-67.3-9.4q-4.1 0-5.55-1.75t-1.45-3.95q0-1.8.6-3.45t1-2.35q.6-1 1.65-2.3t2.35-2.8q-2 1.7-3.75 3.3t-2.85 2.4q-.3.3-.6.3-.4 0-.4-.5 0-.8 1.1-1.6 2.6-2.2 5.05-4.8t4.65-4.85 3.9-3.15q1.8-1 2.9-1.3t1.8-.3q1.1 0 1.6.35t.2.75q-1.7 1.7-3.35 4.35t-3.05 5.55-2.25 5.5-.85 4.4q0 2.5 2 2.5 1.9 0 4.95-1.75t6.4-4.45a163 163 0 0 0 4.583-3.829l.685-.599a17 17 0 0 1 .682-1.372q2.1-3.8 5.6-6.65t7.65-4.45 8.25-1.6 6.1 1.45 2 3.55q0 2-1.85 4.25t-5.35 3.95q-2.2 1-5.05 1.75t-4.95.75q-1.6 0-1.6-.5 0-.4 1.4-.4 1.3 0 4.05-.75t5.35-2.05q2.9-1.6 4.1-3.2t1.2-2.9q0-1.2-.95-2t-2.65-.8q-1.6 0-3.6.9-2.9 1.3-5.95 4.25t-5.05 6.45-2 6.7q0 2.2 1.25 3.7t3.75 1.5q2.6 0 6-1.65t6.9-4.1 6.5-4.95 4.8-4.2q.6-.6.9-.6t.3.5q0 .7-.6 1.2-3.8 3.5-8.25 7.3t-9.5 6.45-10.55 2.75q-4.4 0-7.35-2.15t-2.95-6.25a16.7 16.7 0 0 1 .539-4.305 119 119 0 0 1-1.12.972 151 151 0 0 1-3.469 2.883q-4.15 3.35-8.3 5.65t-7.55 2.3m154.1 3.8q-1.3-.5-2.55-1.8t-1.25-4.5q0-2.7.9-5.65t2.3-5.85q-2.6 3.3-5.65 6.5t-6.1 5.25-5.65 2.05q-2.2 0-3.65-1.2t-1.45-3.7q0-1.8.7-3.9t2.5-4.7 3.95-5.15 3.75-4.35q1.1-1.3 1.1-2.1 0-1-1.1-1-1.2 0-3.4 1.6-2.3 1.7-4.9 4.15t-4.9 4.7-3.9 3.55q-.3.3-.6.3-.5 0-.5-.6 0-.5.9-1.3 4.4-3.8 7.3-6.95t5.7-5.35q1.5-1.2 3.1-1.75t3-.55q2.4 0 4 1.4t1.6 3.9q0 1.9-1 4-1.1 2.5-2.95 4.95t-3.55 4.75q-1.3 1.9-1.9 3.1t-.6 1.8q0 .8.8.8t2.3-.9 3.1-2.3q1.1-1 1.95-1.85l1.25-1.25q2.3-2.4 4.6-5.15t4-5.05q1.3-1.7 2.05-2.6t1.65-1.9q1.7-1.9 3.6-2 1.1 0 2.55.45t2.85 1.75q-1 1.4-2.95 3.85t-4.2 5.4-4.3 6.05-3.35 5.8-1.3 4.7q0 1.4.8 2.2.4.4 0 .45t-.6-.05m-138.8-34.5q-1.4 0-2.1-.9t-.7-1.9q0-2 1.9-3.95t4-1.95q1.4 0 2.1.9t.7 1.9q0 2.1-1.85 4t-4.05 1.9m-24.5 0q-1.4 0-2.1-.9t-.7-1.9q0-2 1.9-3.95t4-1.95q1.4 0 2.1.9t.7 1.9q0 2.1-1.85 4t-4.05 1.9" pathLength="1" /></svg> </div> </div> </section> <div id="btt-btn-container" class="fixed end-4 bottom-8 z-50 md:sticky md:end-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"> <button data-button="back-to-top" class="group relative bg-background px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"> <span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block rotate-90 md:hidden" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 6-6 6 6 6" /></svg> <span class="sr-only text-sm group-hover:text-accent md:not-sr-only"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 5v14M16 9l-4-4M8 9l4-4" /></svg> 返回顶部 </span> </button> </div> <script data-astro-rerun>
+  /** Scrolls the document to the top when
+   * the "Back to Top" button is clicked. */
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    // Attach click event handler for back-to-top button
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Handle button visibility according to scroll position
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    // Guard against duplicate scroll listeners across navigations
+    if (document.documentElement.dataset.bttScrollBound === "true") return;
+    document.documentElement.dataset.bttScrollBound = "true";
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script> <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">Share this post on:</span><div class="text-center"><a href="mailto:?subject=See%20this%20post&#38;body=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via email"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Share this post via email</span></a><a href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Weibo"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path d="M20 6c-1.5 0-3 1.2-3 3M21 9c-2.5 0-5 2-5 5M15 11.5c.6.9 1 1.9 1 3 0 3.3-3.1 6-7 6s-7-2.7-7-6 3.1-6 7-6c1.5 0 2.9.4 4 1" /><path d="M10 12.5c1.7 0 3 1 3 2.2S11.7 17 10 17s-3-1-3-2.3 1.3-2.2 3-2.2" /></svg><span class="sr-only">Share this post on Weibo</span></a><a href="https://wa.me/?text=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via WhatsApp"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9z" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></svg><span class="sr-only">Share this post via WhatsApp</span></a><a href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Facebook"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 10v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3V3h-3a5 5 0 0 0-5 5v2z" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on X"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m4 4 11.733 16H20L8.267 4zM4 20l6.768-6.768m2.46-2.46L20 4" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via Telegram"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 10-4 4 6 6 4-16-18 7 4 2 2 6 3-4" /></svg><span class="sr-only">Share this post via Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fblog.wenjiexu.site%2Fen%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Pinterest"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m8 20 4-9M10.7 14c.437 1.263 1.43 2 2.55 2 2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7" /><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a></div></div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZXVMh3" prefix="r1" component-url="/_astro/Comments.1rMV7L8O.js" component-export="default" renderer-url="/_astro/client.DyczpTbx.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;Comments&quot;,&quot;value&quot;:{&quot;rootMargin&quot;:&quot;200px&quot;}}" await-children><div class="mt-10 rounded-lg border border-border/70 bg-background/70 px-4 py-5 shadow-sm dark:border-border/60"></div><!--astro:end--></astro-island> <hr class="my-6 border-dashed"> <!-- Previous/Next Post Buttons --> <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">  <a href="/en/posts/low-spec-cloud-server-setup" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"> <div> <span>Next Post</span> <div class="text-sm text-accent/85">Configuration Guide for Low-Spec Cloud Servers</div> </div> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m9 6 6 6-6 6" /></svg> </a> </div> </main> <footer class="w-full mt-auto"> <div class="mx-auto max-w-app px-0"> <hr class="border-border" aria-hidden="true"> </div> <div class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"> <div class="flex-wrap justify-center gap-1 flex"> <a href="https://github.com/Vncntvx" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on GitHub"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 opacity-90 sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg> <span class="sr-only">Blog on GitHub</span> </a><a href="mailto:wenjie.xu.cn@outlook.com" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Send an email to Blog"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 opacity-90 sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg> <span class="sr-only">Send an email to Blog</span> </a><a href="https://www.zhihu.com/people/wayne-67-86-29" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on Zhihu"> <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="inline-block size-6 scale-125 opacity-90 sm:scale-110"><path d="M6 4 4.5 8M5 7h7M3 11.5h10M9 7v4.5q0 5-4 8.5M9 11.5l3.5 5.5M15.5 7h5v10h-5Z" /></svg> <span class="sr-only">Blog on Zhihu</span> </a><a href="https://weibo.com/u/6577473146" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on Weibo"> <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="inline-block size-6 scale-125 opacity-90 sm:scale-110"><path d="M20 6c-1.5 0-3 1.2-3 3M21 9c-2.5 0-5 2-5 5M15 11.5c.6.9 1 1.9 1 3 0 3.3-3.1 6-7 6s-7-2.7-7-6 3.1-6 7-6c1.5 0 2.9.4 4 1" /><path d="M10 12.5c1.7 0 3 1 3 2.2S11.7 17 10 17s-3-1-3-2.3 1.3-2.2 3-2.2" /></svg> <span class="sr-only">Blog on Weibo</span> </a> </div> <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"> <span>Copyright &#169; 2026</span> <span class="hidden sm:inline">&nbsp;|&nbsp;</span> <span>All rights reserved</span> </div> </div> </footer> </body></html> <script data-astro-rerun>
+  /** Create a progress indicator
+   *  at the top */
+  function createProgressBar() {
+    const existingBar = document.getElementById("myBar");
+    if (existingBar) return existingBar;
+
+    // Create the main container div
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    // Create the progress bar div
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    // Append the progress bar to the progress container
+    progressContainer.appendChild(progressBar);
+
+    // Append the progress container to the document body or any other desired parent element
+    document.body.appendChild(progressContainer);
+
+    return progressBar;
+  }
+  createProgressBar();
+
+  /** Update the progress bar
+   *  when user scrolls */
+  function updateScrollProgress() {
+    const myBar = document.getElementById("myBar");
+    if (!myBar) return;
+
+    const winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
+    const height =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    myBar.style.width = scrolled + "%";
+  }
+  if (document.documentElement.dataset.postScrollBound !== "true") {
+    document.addEventListener("scroll", updateScrollProgress, {
+      passive: true,
+    });
+    document.documentElement.dataset.postScrollBound = "true";
+  }
+  updateScrollProgress();
+
+  /** Attaches links to headings in the document,
+   *  allowing sharing of sections easily */
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      if (!heading.id || heading.querySelector(".heading-link")) continue;
+
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  /** Attaches copy buttons to code blocks in the document,
+   * allowing users to copy code easily. */
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      if (codeBlock.parentElement?.classList.contains("code-copy-wrapper")) {
+        continue;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-copy-wrapper relative";
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className =
+        "copy-code absolute right-3 top-3 rounded-md border border-border/70 bg-background/85 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-muted/70 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed";
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+
+      // wrap codeblock with relative parent element to host the button
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+      wrapper.appendChild(copyButton);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      // visual feedback that task is completed
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /* Go to page start after page swap */
+  if (document.documentElement.dataset.postAfterSwapBound !== "true") {
+    document.addEventListener("astro:after-swap", () =>
+      window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+    );
+    document.documentElement.dataset.postAfterSwapBound = "true";
+  }
+</script>

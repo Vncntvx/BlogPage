@@ -1,0 +1,1064 @@
+<!DOCTYPE html><html dir="ltr" lang="zh-CN" class="scroll-smooth" data-astro-cid-sckkx6r4> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://blog.wenjiexu.site/zh/posts/llm-personal-wiki/"><meta name="generator" content="Astro v6.1.4"><!-- General Meta Tags --><title>使用 LLM 构建了一个会自我维护的个人 Wiki | Blog</title><meta name="title" content="使用 LLM 构建了一个会自我维护的个人 Wiki | Blog"><meta name="description" content="基于 LLM 的可自我维护个人知识库的设计与工作流"><meta name="author" content="徐文杰"><link rel="sitemap" href="/sitemap-index.xml"><!-- Open Graph / Facebook --><meta property="og:title" content="使用 LLM 构建了一个会自我维护的个人 Wiki | Blog"><meta property="og:description" content="基于 LLM 的可自我维护个人知识库的设计与工作流"><meta property="og:url" content="https://blog.wenjiexu.site/zh/posts/llm-personal-wiki/"><meta property="og:image" content="https://blog.wenjiexu.site/zh/posts/llm-personal-wiki/index.png"><!-- Article Published/Modified time --><meta property="article:published_time" content="2026-04-08T16:36:53.000Z"><meta property="article:modified_time" content="2026-04-08T16:36:53.000Z"><!-- Twitter --><meta property="twitter:card" content="summary_large_image"><meta property="twitter:url" content="https://blog.wenjiexu.site/zh/posts/llm-personal-wiki/"><meta property="twitter:title" content="使用 LLM 构建了一个会自我维护的个人 Wiki | Blog"><meta property="twitter:description" content="基于 LLM 的可自我维护个人知识库的设计与工作流"><meta property="twitter:image" content="https://blog.wenjiexu.site/zh/posts/llm-personal-wiki/index.png"><!-- Google JSON-LD Structured data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"使用 LLM 构建了一个会自我维护的个人 Wiki | Blog","image":"https://blog.wenjiexu.site/zh/posts/llm-personal-wiki/index.png","datePublished":"2026-04-08T16:36:53.000Z","dateModified":"2026-04-08T16:36:53.000Z","author":[{"@type":"Person","name":"徐文杰","url":"https://wenjiexu.site/"}]}</script><!-- Enable RSS feed auto-discovery  --><!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery --><link rel="alternate" type="application/rss+xml" title="Blog" href="https://blog.wenjiexu.site/zh/rss.xml"><meta name="theme-color" content=""><meta name="astro-view-transitions-enabled" content="true"><meta name="astro-view-transitions-fallback" content="animate"><script type="module" src="/_astro/ClientRouter.astro_astro_type_script_index_0_lang.j56hQv-j.js"></script><script src="/toggle-theme.js"></script><link rel="stylesheet" href="/_astro/Footer.BG7QricC.css">
+<style>@keyframes astroFadeInOut{0%{opacity:1}to{opacity:0}}@keyframes astroFadeIn{0%{opacity:0;mix-blend-mode:plus-lighter}to{opacity:1;mix-blend-mode:plus-lighter}}@keyframes astroFadeOut{0%{opacity:1;mix-blend-mode:plus-lighter}to{opacity:0;mix-blend-mode:plus-lighter}}@keyframes astroSlideFromRight{0%{transform:translate(100%)}}@keyframes astroSlideFromLeft{0%{transform:translate(-100%)}}@keyframes astroSlideToRight{to{transform:translate(100%)}}@keyframes astroSlideToLeft{to{transform:translate(-100%)}}@media(prefers-reduced-motion){::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}[data-astro-transition-scope]{animation:none!important}}
+</style>
+<link rel="stylesheet" href="/_astro/KatexStyles.HM2DiD67.css">
+<style>.animated-signature[data-astro-cid-74s6d3ud]{overflow:visible}.animated-signature[data-astro-cid-74s6d3ud] path{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2;fill:currentColor;fill-opacity:0;stroke-dasharray:1;stroke-dashoffset:1;animation:signature-draw 8s linear infinite both;will-change:stroke-dashoffset,fill-opacity}@keyframes signature-draw{0%{stroke-dashoffset:1;fill-opacity:0}15%{fill-opacity:0}35%,75%{stroke-dashoffset:0;fill-opacity:1}90%,to{stroke-dashoffset:1;fill-opacity:0}}@media(prefers-reduced-motion:reduce){.animated-signature[data-astro-cid-74s6d3ud] path{animation:none;stroke-dasharray:none;stroke-dashoffset:0;fill:currentColor;fill-opacity:1}}
+:where([data-astro-image]){height:auto}:where([data-astro-image=full-width]){width:100%}:where([data-astro-image=constrained]){max-width:100%}[data-astro-image-fit=fill]{object-fit:fill}[data-astro-image-fit=contain]{object-fit:contain}[data-astro-image-fit=cover]{object-fit:cover}[data-astro-image-fit=scale-down]{object-fit:scale-down}
+</style><style>[data-astro-transition-scope="astro-pcwlacsx-1"] { view-transition-name: \4F7F\7528-llm-\6784\5EFA\4E86\4E00\4E2A\4F1A\81EA\6211\7EF4\62A4\7684\4E2A\4EBA-wiki; }@layer astro { ::view-transition-old(\4F7F\7528-llm-\6784\5EFA\4E86\4E00\4E2A\4F1A\81EA\6211\7EF4\62A4\7684\4E2A\4EBA-wiki) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(\4F7F\7528-llm-\6784\5EFA\4E86\4E00\4E2A\4F1A\81EA\6211\7EF4\62A4\7684\4E2A\4EBA-wiki) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(\4F7F\7528-llm-\6784\5EFA\4E86\4E00\4E2A\4F1A\81EA\6211\7EF4\62A4\7684\4E2A\4EBA-wiki) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(\4F7F\7528-llm-\6784\5EFA\4E86\4E00\4E2A\4F1A\81EA\6211\7EF4\62A4\7684\4E2A\4EBA-wiki) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-pcwlacsx-1"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-pcwlacsx-1"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-67kewmjt-2"] { view-transition-name: configuration; }@layer astro { ::view-transition-old(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(configuration) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-2"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-2"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style><style>[data-astro-transition-scope="astro-67kewmjt-3"] { view-transition-name: typesetting; }@layer astro { ::view-transition-old(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }::view-transition-new(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back]::view-transition-old(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back]::view-transition-new(typesetting) { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; } }[data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }[data-astro-transition=back][data-astro-transition-fallback="old"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="old"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeOut; }[data-astro-transition=back][data-astro-transition-fallback="new"] [data-astro-transition-scope="astro-67kewmjt-3"],
+			[data-astro-transition=back][data-astro-transition-fallback="new"][data-astro-transition-scope="astro-67kewmjt-3"] { 
+	animation-duration: 180ms;
+	animation-timing-function: cubic-bezier(0.76, 0, 0.24, 1);
+	animation-fill-mode: both;
+	animation-name: astroFadeIn; }</style></head> <body data-astro-cid-sckkx6r4> <header> <a id="skip-to-content" href="#main-content" class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"> 跳转到内容 </a> <div id="nav-container" class="mx-auto flex max-w-app flex-col items-center justify-between sm:flex-row"> <div id="top-nav-wrap" class="relative flex w-full items-baseline justify-between bg-background p-4 sm:items-center sm:py-6"> <a href="/zh" class="absolute py-1 text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"> Blog </a> <nav id="nav-menu" class="flex w-full flex-col items-center sm:ms-2 sm:flex-row sm:justify-end sm:space-x-4 sm:py-0"> <button id="menu-btn" class="focus-outline self-end p-2 sm:hidden" aria-label="打开菜单" aria-expanded="false" aria-controls="menu-items"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="hidden" viewBox="0 0 24 24" id="close-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M18 6 6 18M6 6l12 12" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-menu-deep" viewBox="0 0 24 24" id="menu-icon"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 6h16M7 12h13M10 18h10" /></svg> </button> <ul id="menu-items" class="mt-4 grid w-44 grid-cols-2 place-content-center gap-2 [&#38;>li>a]:block [&#38;>li>a]:px-4 [&#38;>li>a]:py-3 [&#38;>li>a]:text-center [&#38;>li>a]:font-medium [&#38;>li>a]:hover:text-accent sm:[&#38;>li>a]:px-2 sm:[&#38;>li>a]:py-1 hidden sm:mt-0 sm:flex sm:w-auto sm:gap-x-5 sm:gap-y-0"> <li class="col-span-2"> <a href="/zh/posts" class="active-nav"> 文章 </a> </li> <li class="col-span-2"> <a href="/zh/tags"> 标签 </a> </li> <li class="col-span-2"> <a href="/zh/categories"> 分类 </a> </li>  <li class="col-span-1 flex items-center justify-center"> <a href="/zh/archives" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="归档" title="归档"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-archive" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8M10 12h4" /></svg> <span class="sr-only">归档</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <a href="/zh/search" class="group inline-block hover:text-accent focus-outline flex p-3 sm:p-1" aria-label="搜索" title="搜索"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="icon icon-tabler icons-tabler-outline icon-tabler-search" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 10a7 7 0 1 0 14 0 7 7 0 1 0-14 0M21 21l-6-6" /></svg> <span class="sr-only">搜索</span> </a> </li> <li class="col-span-1 flex items-center justify-center"> <div class="language-switcher relative" data-astro-cid-a2mxz4y6> <button id="language-toggle" class="focus-outline flex items-center justify-center p-3 transition-colors sm:p-1 hover:[&>svg]:stroke-accent" aria-label="Select language" aria-expanded="false" aria-haspopup="true" title="中文" data-astro-cid-a2mxz4y6> <svg class="size-6 sm:size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <circle cx="12" cy="12" r="10" data-astro-cid-a2mxz4y6></circle> <line x1="2" y1="12" x2="22" y2="12" data-astro-cid-a2mxz4y6></line> <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" data-astro-cid-a2mxz4y6></path> </svg> <span class="sr-only" data-astro-cid-a2mxz4y6>中文</span> </button> <ul id="language-menu" class="absolute right-0 z-50 mt-1 hidden min-w-[120px] rounded-md border border-border bg-background shadow-lg" role="menu" data-astro-cid-a2mxz4y6> <li role="none" data-astro-cid-a2mxz4y6> <a href="/en/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent text-foreground" role="menuitem" lang="en" hreflang="en" data-astro-cid-a2mxz4y6> English  </a> </li><li role="none" data-astro-cid-a2mxz4y6> <a href="/zh/posts/llm-personal-wiki" class="block px-3 py-2 text-sm transition-colors hover:bg-muted hover:text-accent bg-muted/50 font-medium text-accent" role="menuitem" lang="zh" hreflang="zh" data-astro-cid-a2mxz4y6> 中文 <svg class="ml-1 inline-block size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-a2mxz4y6> <polyline points="20 6 9 17 4 12" data-astro-cid-a2mxz4y6></polyline> </svg> </a> </li> </ul> </div> <script type="module">document.addEventListener("click",e=>{const t=document.querySelector("#language-toggle"),n=document.querySelector("#language-menu"),a=e.target;t&&n&&!t.contains(a)&&!n.contains(a)&&(n.classList.add("hidden"),t.setAttribute("aria-expanded","false"))});function s(){const e=document.querySelector("#language-toggle"),t=document.querySelector("#language-menu");!e||!t||e.dataset.lsInit||(e.dataset.lsInit="true",e.addEventListener("click",()=>{!t.classList.contains("hidden")?(t.classList.add("hidden"),e.setAttribute("aria-expanded","false")):(t.classList.remove("hidden"),e.setAttribute("aria-expanded","true"))}),e.addEventListener("keydown",n=>{const a=n;a.key==="Enter"||a.key===" "?(n.preventDefault(),e.click()):a.key==="Escape"&&(t.classList.add("hidden"),e.setAttribute("aria-expanded","false"))}))}s();document.addEventListener("astro:after-swap",s);</script> </li> <li class="col-span-1 flex items-center justify-center"> <button id="theme-btn" class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent" title="切换主题" aria-label="auto" aria-live="polite"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z" /></svg> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M14.828 14.828a4 4 0 1 0-5.656-5.656 4 4 0 0 0 5.656 5.656M6.343 17.657l-1.414 1.414M6.343 6.343 4.929 4.929M17.657 6.343l1.414-1.414M17.657 17.657l1.414 1.414M4 12H2M12 4V2M20 12h2M12 20v2" /></svg> </button> </li> </ul> </nav> </div> </div> <div class="mx-auto max-w-app px-4"> <hr class="border-border" aria-hidden="true"> </div> </header> <script type="module">function u(){const e=document.querySelector("#menu-btn"),t=document.querySelector("#menu-items"),n=document.querySelector("#menu-icon"),o=document.querySelector("#close-icon");!e||!t||!n||!o||e.dataset.navInit||(e.dataset.navInit="true",e.addEventListener("click",()=>{const s=e.getAttribute("aria-expanded")==="true";e.setAttribute("aria-expanded",s?"false":"true"),e.setAttribute("aria-label",s?"Close Menu":"Open Menu"),t.classList.toggle("hidden"),n.classList.toggle("hidden"),o.classList.toggle("hidden")}))}u();document.addEventListener("astro:after-swap",u);</script> <div class="mx-auto flex w-full max-w-app items-center justify-start px-2"><a id="back-button" href="/zh" class="group inline-block hover:text-accent focus-outline mt-8 mb-2 flex hover:text-foreground/75"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 6-6 6 6 6" /></svg><span>返回首页</span></a></div><script type="module">function o(){const t=document.querySelector("#back-button"),e=sessionStorage.getItem("backUrl");e&&t&&(t.href=e)}document.addEventListener("astro:page-load",o);o();</script> <main id="main-content" class="mx-auto w-full max-w-app px-4 pb-12" data-pagefind-body> <h1 class="inline-block text-2xl font-bold text-accent sm:text-3xl" data-astro-transition-scope="astro-pcwlacsx-1"> 使用 LLM 构建了一个会自我维护的个人 Wiki </h1> <ul class="my-2 flex flex-wrap items-center gap-y-1"> <li class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <div class="flex items-start gap-x-2 opacity-80 sm:items-center"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="text-muted-foreground inline-block flex-none size-6" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M4 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zM16 3v4M8 3v4M4 11h16M7 14h.013M10.01 14h.005M13.01 14h.005M16.015 14h.005M13.015 17h.005M7.01 17h.005M10.01 17h.005" /></svg> <span class="flex min-w-0 flex-col gap-y-0.5 sm:flex-row sm:items-baseline sm:gap-x-1 sm:gap-y-0"> <span class="text-sm break-keep whitespace-nowrap sm:text-base"> 发布于:
+</span> <time class="text-sm break-keep whitespace-nowrap sm:text-base" datetime="2026-04-08T16:36:53.000Z"> 2026年4月9日 </time> </span> </div> </li>  <li class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"> <span class="whitespace-nowrap"> 23 分钟阅读 </span> </li> <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm"> <a href="/zh/categories/tools/" class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"> 分类: Tools </a> </li> </ul> <article id="article" class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"> <blockquote>
+<p>一个会随资料增长持续维护的知识库。</p>
+<p>参考实现：<a href="https://github.com/Vncntvx/Personal-Auto-Wiki">Personal-Auto-Wiki</a></p>
+</blockquote>
+<h2 id="目录">目录</h2>
+<p></p><details><summary>Open 目录</summary><p></p>
+<ul>
+<li><a href="#1-%E5%8A%A8%E6%9C%BA">1. 动机</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%A1%88%E4%B8%80%E5%AD%98%E8%B5%B7%E6%9D%A5">方案一：存起来</a></li>
+<li><a href="#%E6%96%B9%E6%A1%88%E4%BA%8Crag-%E6%A3%80%E7%B4%A2">方案二：RAG 检索</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E7%A7%8D%E6%80%9D%E8%B7%AF">第三种思路</a></li>
+</ul>
+</li>
+<li><a href="#2-%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1">2. 架构设计</a>
+<ul>
+<li><a href="#21-%E7%AC%AC%E4%B8%80%E5%B1%82%E5%8E%9F%E5%A7%8B%E8%B5%84%E6%96%99raw-sources">2.1 第一层：原始资料（Raw Sources）</a></li>
+<li><a href="#22-%E7%AC%AC%E4%BA%8C%E5%B1%82wiki%E7%9F%A5%E8%AF%86%E5%B1%82">2.2 第二层：Wiki（知识层）</a>
+<ul>
+<li><a href="#221-sources%E6%9D%A5%E6%BA%90">2.2.1 Sources（来源）</a></li>
+<li><a href="#222-concepts%E6%A6%82%E5%BF%B5">2.2.2 Concepts（概念）</a></li>
+<li><a href="#223-entities%E5%AE%9E%E4%BD%93">2.2.3 Entities（实体）</a></li>
+<li><a href="#224-outputs%E4%BA%A7%E5%87%BA">2.2.4 Outputs（产出）</a></li>
+<li><a href="#225-indexmd-%E5%92%8C-logmd">2.2.5 Index.md 和 Log.md</a></li>
+</ul>
+</li>
+<li><a href="#23-%E7%AC%AC%E4%B8%89%E5%B1%82schema-%E5%92%8C-skills%E7%BB%99-llm-%E7%9A%84%E6%8C%87%E4%BB%A4">2.3 第三层：Schema 和 Skills（给 LLM 的指令）</a>
+<ul>
+<li><a href="#231-agentsmd--claudemd">2.3.1 AGENTS.md / CLAUDE.md</a></li>
+<li><a href="#232-skills">2.3.2 Skills</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E5%9B%9B%E4%B8%AA%E6%A0%B8%E5%BF%83%E5%B7%A5%E4%BD%9C%E6%B5%81">3. 四个核心工作流</a>
+<ul>
+<li><a href="#31-%E5%B7%A5%E4%BD%9C%E6%B5%81%E4%B8%80%E5%90%8C%E6%AD%A5%E6%A3%80%E6%B5%8Bdetecting-resources-sync">3.1 工作流一：同步检测（Detecting Resources Sync）</a></li>
+<li><a href="#32-%E5%B7%A5%E4%BD%9C%E6%B5%81%E4%BA%8C%E6%91%84%E5%8F%96ingesting-resources">3.2 工作流二：摄取（Ingesting Resources）</a></li>
+<li><a href="#33-%E5%B7%A5%E4%BD%9C%E6%B5%81%E4%B8%89%E6%9F%A5%E8%AF%A2querying-wiki">3.3 工作流三：查询（Querying Wiki）</a></li>
+<li><a href="#34-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%9B%9B%E5%81%A5%E5%BA%B7%E6%A3%80%E6%9F%A5checking-wiki-health">3.4 工作流四：健康检查（Checking Wiki Health）</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%85%B8%E5%9E%8B%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%9C%BA%E6%99%AF">4. 典型工作流场景</a>
+<ul>
+<li><a href="#%E5%9C%BA%E6%99%AF-1%E9%A6%96%E6%AC%A1%E4%BD%BF%E7%94%A8">场景 1：首次使用</a></li>
+<li><a href="#%E5%9C%BA%E6%99%AF-2%E6%97%A5%E5%B8%B8%E7%BB%B4%E6%8A%A4">场景 2：日常维护</a></li>
+<li><a href="#%E5%9C%BA%E6%99%AF-3%E7%9F%A5%E8%AF%86%E6%9F%A5%E8%AF%A2">场景 3：知识查询</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%85%B6%E4%BB%96%E8%AF%B4%E6%98%8E">5. 其他说明</a>
+<ul>
+<li><a href="#51-%E6%9C%AC%E5%9C%B0%E6%90%9C%E7%B4%A2qmd">5.1 本地搜索：qmd</a></li>
+<li><a href="#52-%E7%9F%9B%E7%9B%BE%E6%A0%87%E6%B3%A8">5.2 矛盾标注</a></li>
+<li><a href="#53-%E6%93%8D%E4%BD%9C%E6%97%A5%E5%BF%97">5.3 操作日志</a></li>
+<li><a href="#54-%E9%A1%B5%E9%9D%A2%E6%A8%A1%E6%9D%BF">5.4 页面模板</a></li>
+</ul>
+</li>
+<li><a href="#6-%E6%88%91%E5%AF%B9-karpathy-%E6%96%B9%E6%A1%88%E7%9A%84%E7%B3%BB%E7%BB%9F%E6%80%A7%E5%BE%AE%E8%B0%83">6. 我对 Karpathy 方案的系统性微调</a></li>
+<li><a href="#7%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6">7.设计哲学</a>
+<ul>
+<li><a href="#71-llm-%E6%98%AF%E7%9F%A5%E8%AF%86%E7%AE%A1%E7%90%86%E7%9A%84%E7%B0%BF%E8%AE%B0%E5%91%98">7.1 LLM 是知识管理的”簿记员”</a></li>
+<li><a href="#72-%E7%9F%A5%E8%AF%86%E6%98%AF%E6%BC%94%E8%BF%9B%E7%9A%84">7.2 知识是演进的</a></li>
+<li><a href="#73-%E7%BA%A6%E6%9D%9F%E5%88%9B%E9%80%A0%E4%BB%B7%E5%80%BC">7.3 约束创造价值</a></li>
+<li><a href="#74-%E4%BA%BA%E6%9C%BA%E5%88%86%E5%B7%A5%E8%A6%81%E6%B8%85%E6%99%B0">7.4 人机分工要清晰</a></li>
+<li><a href="#75-%E5%B7%A5%E4%BD%9C%E6%B5%81%E5%BA%94%E8%AF%A5%E5%8F%AF%E7%BB%84%E5%90%88%E5%8F%AF%E4%BF%AE%E6%94%B9">7.5 工作流应该可组合、可修改</a></li>
+</ul>
+</li>
+<li><a href="#8-%E5%B7%A5%E5%85%B7%E9%93%BE">8. 工具链</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+</ul>
+<p></p></details><p></p>
+<h2 id="1-动机">1. 动机</h2>
+<p>知识工作者每天面对大量信息。文章、论文、报告、会议笔记。如何处理这些信息，是个老问题。</p>
+<h3 id="方案一存起来">方案一：存起来</h3>
+<p>最常见的做法是用 Obsidian、Notion、Bear 或 Apple Notes 建一个文件夹结构，把资料分门别类存进去。整理的时候感觉不错。过几个月再想找某个具体的观点，往往记不清它藏在哪个文件夹的哪个文件里。整理没有产生理解，只是把信息换了个位置。</p>
+<p>更大的困难在于知识本身在变化。同一个概念在不同文章里有不同的表述。不同来源对同一件事的描述可能互相矛盾。一个领域的方法论可能被另一个领域重新发明。要发现这些关联和矛盾，需要同时记住所有资料的内容。这超出了人脑的能力。</p>
+<h3 id="方案二rag-检索">方案二：RAG 检索</h3>
+<p>RAG（检索增强生成）解决了找不到的问题。把文档存入向量数据库，提问时检索相关片段，让 LLM 综合回答。但 RAG 每次查询都从原始文档重新开始，而不是一个已经被消化过的知识。它假设原始文本就是知识的最佳载体，但事实并非如此。原始文档有冗余、有偏见、有过时的信息、有作者个人的表达方式。上周回答过的观点，这周要重新发现。两篇文章之间的矛盾，RAG 会同时呈现出来，不会主动标注。</p>
+<h3 id="第三种思路">第三种思路</h3>
+<p>Andrej Karpathy 在 <a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">LLM Wiki</a> 中提出了一个不同的方向：</p>
+<blockquote>
+<p><strong>让 LLM 像维基百科的编辑团队一样，持续维护一个持久化的 Wiki。</strong></p>
+</blockquote>
+<p>新资料进来后，LLM 阅读、理解、提取概念和实体，更新已有页面，标注矛盾，维护交叉引用。查询时，LLM 检索的是这个 Wiki，而非原始文档。这个方案的核心理解是：<strong>LLM 真正擅长的是理解、综合和生成文本，而不是在查询瞬间检索和重组碎片</strong>。把理解的工作前置到摄取阶段，查询阶段只需要检索已经被结构化的知识，效率和准确度都会大幅提升。</p>
+<p>我参考 Karpathy 的方案，构建了自己的 LLM Wiki 工作流，并做了大量定制。下面从架构、工作流、技术细节到设计哲学，完整说明我做了什么，以及为什么这么做。</p>
+<hr>
+<h2 id="2-架构设计">2. 架构设计</h2>
+<p>整个系统由三层组成，职责清晰分离：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>PersonalAutoWiki/</span></span>
+<span class="line"><span>├── ObsidianRaw/          # 原始资料（只读，由人类策展）</span></span>
+<span class="line"><span>│   ├── 00_Inbox/         # 临时收件箱，待分类</span></span>
+<span class="line"><span>│   ├── 01_Projects/      # 当前项目，行动导向，有时效性</span></span>
+<span class="line"><span>│   ├── 02_Areas/         # 持续责任区域，需主动维护</span></span>
+<span class="line"><span>│   ├── 03_Resources/     # 可复用的参考资料 ← LLM 唯一摄取源</span></span>
+<span class="line"><span>│   └── 04_Archive/       # 历史记录</span></span>
+<span class="line"><span>├── Wiki/                 # 知识库（由 LLM 全权维护）</span></span>
+<span class="line"><span>│   ├── Index.md          # 自动维护的目录</span></span>
+<span class="line"><span>│   ├── Log.md            # 可解析的操作日志</span></span>
+<span class="line"><span>│   ├── Concepts/         # 概念页面（方法论、理论框架）</span></span>
+<span class="line"><span>│   ├── Entities/         # 实体页面（人物、组织、项目）</span></span>
+<span class="line"><span>│   ├── Sources/          # 原始资料摘要</span></span>
+<span class="line"><span>│   └── Outputs/          # 查询产出（高价值分析的回填）</span></span>
+<span class="line"><span>├── .claude/skills/       # Claude Skills 定义（工作流的代码化）</span></span>
+<span class="line"><span>├── AGENTS.md             # 给 LLM 的"员工手册"（完整协作规范）</span></span>
+<span class="line"><span>└── CLAUDE.md             # 引用 AGENTS.md</span></span></code></pre>
+<h3 id="21-第一层原始资料raw-sources">2.1 第一层：原始资料（Raw Sources）</h3>
+<p>我的知识库采用 <a href="https://fortelabs.com/blog/para/">PARA 方法</a>组织。PARA 将信息分为四类：Projects（项目）、Areas（领域）、Resources（资源）、Archive（归档），加上一个 Inbox（收件箱）作为临时入口。</p>
+<p>这五类信息的性质截然不同：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>目录</th><th>性质</th><th>举例</th><th>适合 Wiki？</th></tr></thead><tbody><tr><td>Inbox</td><td>临时、待分类</td><td>刚保存的网页、待整理的笔记</td><td>❌ 不稳定</td></tr><tr><td>Projects</td><td>行动导向、有时效性</td><td>”写年度报告”的项目笔记</td><td>❌ 行动性而非知识性</td></tr><tr><td>Areas</td><td>持续责任、需主动维护</td><td>”团队管理”的工作笔记</td><td>❌ 个人化而非可复用</td></tr><tr><td>Resources</td><td>可复用的参考资料</td><td>论文、框架、行业报告</td><td>✅ 目标</td></tr><tr><td>Archive</td><td>已完成或不再活跃</td><td>旧项目的历史记录</td><td>❌ 历史而非当前知识</td></tr></tbody></table>
+<p><strong>关键：LLM 只从 <code>Resources</code> 目录摄取。</strong></p>
+<p>这是我对 Karpathy 方案的第一个定制。LLM 只从 <code>Resources</code> 目录摄取。Karpathy 原文没有明确这个约束。</p>
+<p>Projects 和 Areas 的内容具有行动属性，需要人去执行，不属于 LLM 应该自动处理的知识。Inbox 是临时的，需要先经人工筛选再移入 Resources。Archive 是历史的，可能仍有价值但优先级低。不加限制的话，项目笔记、临时想法都可能被喂给 LLM，Wiki 里会混入行动项和个人工作日志。Wiki 的目标是构建可复用的知识图谱。Resources 的定义是”未来可能有用的参考资料”。两者定位一致。</p>
+<h3 id="22-第二层wiki知识层">2.2 第二层：Wiki（知识层）</h3>
+<p>这是系统的核心。Wiki 由四类页面组成，每类有明确的职责和命名规范：</p>
+<h4 id="221-sources来源">2.2.1 Sources（来源）</h4>
+<p>每摄取一份原始资料，就在 <code>Wiki/Sources/</code> 下创建一个摘要页面。页面包含：</p>
+<ul>
+<li>原始资料的标题、作者、来源</li>
+<li>核心论点的精炼摘要</li>
+<li>关键概念和实体的提取</li>
+<li>与其他 Sources 的交叉引用</li>
+</ul>
+<p>Sources 是知识层的入口。原始文档经过理解后被压缩为结构化摘要，冗余和噪声被过滤。<strong>追踪机制</strong>是 Sources 页面的独特设计。每个 Sources 页面的 frontmatter 中包含三个追踪字段：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="yaml"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">---</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">title</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> 韧性</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">created</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">updated</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> source</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">tags</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D">系统理论</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> 生态学</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> 韧性研究</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_path</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> Academic/Research Notes/Theory/名词概念/韧性.md</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_hash</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D"> a1b2c3d4</span></span>
+<span class="line"><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA">source_mtime</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#82AAFF"> 2026-04-08T17:30:00Z</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">---</span></span></code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>字段</th><th>用途</th></tr></thead><tbody><tr><td><code>source_path</code></td><td>定位原始文件，检测是否被移动或删除</td></tr><tr><td><code>source_hash</code></td><td>文件内容 SHA256 前 8 位，检测内容变更</td></tr><tr><td><code>source_mtime</code></td><td>文件最后修改时间，快速筛选，避免全量计算哈希</td></tr></tbody></table>
+<p>这三个字段让 Wiki 能自动检测原始资料的变更。原始文件被修改后，系统通过对比 hash 值发现差异，提示重新摄取。</p>
+<h4 id="222-concepts概念">2.2.2 Concepts（概念）</h4>
+<p><code>Wiki/Concepts/</code> 存储抽象概念和方法论，比如”韧性”、“渗流理论”、“前景理论”。概念页面的特征是：</p>
+<ul>
+<li>定义来自多个 Sources 的共识</li>
+<li>当不同来源对同一概念有不同定义时，标注矛盾</li>
+<li>概念的定义随新 Sources 的摄取而演进</li>
+<li>每个概念页面列出所有提及它的 Sources</li>
+</ul>
+<p>Concepts 是知识图谱的抽象节点，指向思想。单一来源对概念的描述往往片面。多个来源的叠加才能逼近完整理解。</p>
+<h4 id="223-entities实体">2.2.3 Entities（实体）</h4>
+<p><code>Wiki/Entities/</code> 存储具体的实体：人物、组织、项目、工具、地点。与 Concepts 的区别在于：Entities 指向<strong>具体的事物</strong>，Concepts 指向<strong>抽象的思想</strong>。</p>
+<p>实体页面包含：</p>
+<ul>
+<li>实体的基本信息</li>
+<li>与 Concepts 的关联（该实体涉及哪些概念）</li>
+<li>与 Sources 的关联（哪些来源提及了该实体）</li>
+<li>与其他 Entities 的关系（合作、从属、竞争等）</li>
+<li>时间线（如适用）</li>
+</ul>
+<p>Entities 是知识图谱的<strong>具体节点</strong>，它们让抽象的概念落地到具体的情境中。</p>
+<h4 id="224-outputs产出">2.2.4 Outputs（产出）</h4>
+<p><code>Wiki/Outputs/</code> 是查询和分析的副产品。当一次查询产生了跨多个来源的综合分析、对比表或洞察时，结果可以回填保存为 Output 页面。</p>
+<p><strong>回填标准</strong>：不是所有查询都值得保存。值得保存的结果类型：</p>
+<ul>
+<li><strong>综述</strong>：跨多个来源的综合分析</li>
+<li><strong>对比</strong>：概念、实体、方法的对比表</li>
+<li><strong>分析</strong>：发现隐藏的联系或洞察</li>
+<li><strong>结论</strong>：需要记录的推理结果</li>
+</ul>
+<p>而简单的信息检索（“某某框架的三维度是什么？“）不值得保存：答案已经存在于 Sources 和 Concepts 中，重复存储没有价值。</p>
+<p>Outputs 是知识图谱的<strong>合成层</strong>：它不是原始信息的再现，而是经过推理后产生的新知识。好的分析本身就是有价值的知识资产，值得持久化。</p>
+<h4 id="225-indexmd-和-logmd">2.2.5 Index.md 和 Log.md</h4>
+<p><code>Index.md</code> 是所有页面的目录，按类型组织，每个页面附一句话摘要。它的作用是控制规模：当 Wiki 增长到几十上百个页面时，没有索引就无法导航。</p>
+<p><code>Log.md</code> 是操作日志，采用可解析的格式：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | 韧性评估</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">来源</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">影响</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Sources</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 框架摘要.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Concepts</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 韧性.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Entities</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 某机构.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Index.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">, </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Log.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">备注</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 新增系统性能的韧性定义</span></span></code></pre>
+<p>格式的设计目标是<strong>可以用 Unix 工具直接查询</strong>：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="bash"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">^## \[</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#D32F2F;--shiki-dark:#7FDBCA"> |</span><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic"> tail</span><span style="--shiki-light:#2B5581;--shiki-dark:#82AAFF"> -5</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">        # 最近5条记录</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| ingest</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">                 # 所有摄取操作</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">| 矛盾</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">                   # 所有矛盾标注</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">grep</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">韧性</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#2B5581;--shiki-dark:#ECC48D"> Log.md</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">                     # 所有与"韧性"相关的操作</span></span></code></pre>
+<p>Wiki 的操作日志应该像 Git log 一样可查询、可过滤、可统计。</p>
+<h3 id="23-第三层schema-和-skills给-llm-的指令">2.3 第三层：Schema 和 Skills（给 LLM 的指令）</h3>
+<h4 id="231-agentsmd--claudemd">2.3.1 AGENTS.md / CLAUDE.md</h4>
+<p><code>AGENTS.md  / CLAUDE.md</code> 是一份完整的操作手册，覆盖了：</p>
+<ul>
+<li>目录结构和每个目录的职责</li>
+<li>四个核心工作流的详细步骤</li>
+<li>文件格式、命名规范、引用约定</li>
+<li>关联影响分析的策略</li>
+<li>矛盾检测和处理的方法</li>
+<li>搜索工具的调用方式和优先级</li>
+<li>响应风格的要求</li>
+</ul>
+<p>LLM 在每次对话开始时读取这个文件，就知道自己扮演什么角色、遵循什么规则、每个操作执行什么步骤。在对话中给指令会随上下文被截断、被后续对话覆盖。文件不变，LLM 的行为就不变。</p>
+<h4 id="232-skills">2.3.2 Skills</h4>
+<p>AGENTS.md 定义了规则，而 <code>.claude/skills/</code> 目录中的 Skill 文件则是规则的可执行封装。每个 Skill 是一个独立模块，包含完整的触发条件、执行步骤、输出格式和边界情况处理：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Skill</th><th>功能</th><th>触发场景</th></tr></thead><tbody><tr><td><code>ingesting-resources</code></td><td>资源摄取</td><td>处理 Resources 新文件</td></tr><tr><td><code>querying-wiki</code></td><td>知识库查询</td><td>用户提问、知识检索</td></tr><tr><td><code>checking-wiki-health</code></td><td>健康检查</td><td>检测 Wiki 完整性</td></tr><tr><td><code>detecting-resources-sync</code></td><td>同步检测</td><td>检测新文件、变更文件</td></tr></tbody></table>
+<p>每个 Skill 配有 <code>reference/</code> 目录，包含页面模板、frontmatter 格式、查询模式、检查清单等详细参考。Claude Code 会自动识别 Skills 目录，无需手动指定。修改 Skill 文件就修改了 LLM 的行为，不需要修改 AGENTS.md 的核心规范。</p>
+<hr>
+<h2 id="3-四个核心工作流">3. 四个核心工作流</h2>
+<h3 id="31-工作流一同步检测detecting-resources-sync">3.1 工作流一：同步检测（Detecting Resources Sync）</h3>
+<p>同步检测解决的问题很直接。<strong>原始资料变了，Wiki 怎么知道？</strong></p>
+<p>没有同步检测，摄取流程只能在人类明确告诉 LLM”处理这个文件”时才触发。原始资料经常被修改。修正错误、补充内容、调整结构。没有自动检测机制，Wiki 很快就会与原始资料不同步。</p>
+<p>工作流程：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: 扫描 ObsidianRaw/03_Resources/ 目录</span></span>
+<span class="line"><span>        对每个文件记录相对路径、内容哈希（SHA256 前 8 位）、修改时间</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 2: 读取 Wiki/Sources/ 所有页面的 frontmatter</span></span>
+<span class="line"><span>        提取追踪字段（source_path, source_hash, source_mtime）</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 3: 三路比对</span></span>
+<span class="line"><span>        ├─ 新增：Resources 有，Sources 无 → 待摄取</span></span>
+<span class="line"><span>        ├─ 变更：path 相同，hash 不同 → 待重新摄取</span></span>
+<span class="line"><span>        ├─ 删除：Sources 有，Resources 无 → 待处理</span></span>
+<span class="line"><span>        └─ 同步：path 和 hash 都相同 → 无需操作</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 4: 生成同步状态报告</span></span></code></pre>
+<p>输出格式：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## Resources 同步状态 [2026-04-08 10:30]</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### 新增文件 (2)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 路径                   | 修改时间         | 大小  |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-----</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/NewTopic.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | 2026-04-08 09:00 | 2.5KB |</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### 已变更 (1)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 路径                      | 旧哈希   | 新哈希   | 修改时间         |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------------------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">----------------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#2B5581;--shiki-dark:#C5E478">`Academic/Theory/韧性.md`</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | a1b2c3d4 | e5f6g7h8 | 2026-04-08 08:30 |</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### 已同步 (43)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">共 43 个文件处于同步状态。</span></span></code></pre>
+<p>设计考虑：</p>
+<ul>
+<li>source_mtime 作为快速筛选。避免每次都计算全量文件的 SHA256。只有当 mtime 变化时才计算 hash</li>
+<li>SHA256 前 8 位足够检测变更。同时保持 frontmatter 简洁</li>
+<li>文件重命名被识别为”删除 + 新增”，需用户确认</li>
+</ul>
+<p>同步检测是系统的变化感知器。没有它，Wiki 是静态快照。有了它，Wiki 持续同步。</p>
+<h3 id="32-工作流二摄取ingesting-resources">3.2 工作流二：摄取（Ingesting Resources）</h3>
+<p>同步检测发现新文件或变更后，触发摄取流程。当我说”处理这篇文章”时，LLM 执行多步骤的理解-关联-更新过程：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: 读取原始文件，识别结构：标题层级、章节划分、列表和表格、代码块</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 2: 在 Wiki/Sources/ 创建摘要页面</span></span>
+<span class="line"><span>        - 1-3 句话核心摘要</span></span>
+<span class="line"><span>        - 按原文结构提炼关键内容</span></span>
+<span class="line"><span>        - 提取关键概念和相关实体</span></span>
+<span class="line"><span>        - 写入追踪字段</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 3: 提取概念</span></span>
+<span class="line"><span>        ├─ Concepts/ 中已有 → 更新：添加新引用来源、补充定义</span></span>
+<span class="line"><span>        ├─ 没有 → 创建新概念页面</span></span>
+<span class="line"><span>        └─ 新定义与现有定义矛盾 → 标注矛盾</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 4: 提取实体</span></span>
+<span class="line"><span>        ├─ Entities/ 中已有 → 更新：添加关系、事件、属性</span></span>
+<span class="line"><span>        ├─ 没有 → 创建新实体页面</span></span>
+<span class="line"><span>        └─ 建立与其他实体和概念的关系</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 5: 关联影响分析</span></span>
+<span class="line"><span>        ├─ 是否有 Sources 需要更新交叉引用？</span></span>
+<span class="line"><span>        ├─ 是否有 Concepts 的定义需要修订？</span></span>
+<span class="line"><span>        ├─ 是否有 Entities 的关系需要调整？</span></span>
+<span class="line"><span>        └─ 是否有矛盾需要标注？</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 6: 更新 Wiki/Index.md</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 7: 在 Wiki/Log.md 记录操作</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 8: 执行 qmd update &#x26;&#x26; qmd embed 更新搜索索引</span></span></code></pre>
+<p>关键是 Step 5 的关联影响分析。一份新资料很少只影响一个页面。以一篇关于”基础设施韧性评估”的论文为例：</p>
+<ul>
+<li>定义了”韧性”的模型 → 更新 <code>Concepts/韧性.md</code></li>
+<li>提到了某个研究机构 → 更新或创建 <code>Entities/该机构.md</code></li>
+<li>引用了另一篇已摄取的论文 → 在两个 Sources 页面之间建立交叉引用</li>
+<li>对”韧性”的定义与已有来源不同 → 在 <code>Concepts/韧性.md</code> 中标注矛盾</li>
+</ul>
+<p>不做关联影响分析，摄取就退化为简单的摘要生成。每个 Sources 页面孤立存在，Concepts 和 Entities 不会更新，知识图谱不会增长。关联影响分析让每次摄取成为一次全局更新。</p>
+<p>LLM 在这一步有优势。人类阅读一篇新论文时，很难同时想起它与自己知识库中已有的5个概念、3个实体、2个来源的关系。LLM 持有整个 Wiki 的上下文，可以系统性地进行关联分析。</p>
+<h3 id="33-工作流三查询querying-wiki">3.3 工作流三：查询（Querying Wiki）</h3>
+<p>当用户提出问题时，LLM 执行以下流程：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>Step 1: 使用 qmd 工具搜索 Wiki 中的相关页面</span></span>
+<span class="line"><span>        ├─ 词汇匹配（lex）：精确匹配关键词</span></span>
+<span class="line"><span>        └─ 向量语义匹配（vec）：捕捉语义相关的不同表述</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 2: 阅读检索结果，综合形成回答</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 3: 用 [[wiki-links]] 标注来源</span></span>
+<span class="line"><span>        ↓</span></span>
+<span class="line"><span>Step 4: 评估结果价值，是否建议回填到 Outputs/？</span></span></code></pre>
+<p>查询与 RAG 的根本区别在于检索的对象。RAG 检索原始文档。Wiki 查询检索的是已经被理解过的知识层。搜索结果已经是精炼后的概念定义和实体信息。矛盾已经被标注。概念的定义是跨文档综合后的版本。实体关系已经被建立。</p>
+<p>结果回填机制处理高价值查询。一次查询产生了以下类型的结果时，建议保存到 <code>Wiki/Outputs/</code>：</p>
+<ul>
+<li><strong>综述</strong>：比如”总结所有关于基础设施韧性的评估方法”，综合了多个 Sources 和 Concepts 的分析</li>
+<li><strong>对比</strong>：比如”对比 A 框架和 B 框架的异同”，结构化的对比表</li>
+<li><strong>分析</strong>：比如”这些方法论之间有什么隐藏联系”，发现了之前未被注意到的关联</li>
+<li><strong>结论</strong>：比如”基于现有资料，某论断的证据强度如何”，推理结论</li>
+</ul>
+<p>回填的决策权在人类手中。LLM 会评估并建议，最终由人类决定是否保存。Outputs/ 的质量因此得到保证。</p>
+<p>Skill 的 <code>reference/query_patterns.md</code> 定义了五种常用查询模式及其最佳实践。每种模式都规定了 lex/vec 的查询词构造方式、intent 消歧义策略和 limit 数量：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 概念定义查询</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">概念名 定义</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">什么是概念名，概念名的含义和解释</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">概念定义</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 3</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic">// 对比查询</span></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">概念A 概念B 对比 区别</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">概念A和概念B的区别与联系</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">概念对比</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
+<h3 id="34-工作流四健康检查checking-wiki-health">3.4 工作流四：健康检查（Checking Wiki Health）</h3>
+<p>Wiki 随时间增长。页面越来越多，关联越来越复杂。旧的信息没有更新、不同来源的矛盾没有被发现、一些页面变成了”孤儿”、概念被频繁提及但没有对应的概念页面。这些问题都会出现。</p>
+<p>健康检查定期扫描整个 Wiki，生成报告：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>检查项          | 检测什么                     | 修复建议             | 优先级</span></span>
+<span class="line"><span>───────────────┼──────────────────────────────┼──────────────────────┼──────</span></span>
+<span class="line"><span>未同步文件      | Resources 中新增或变更的文件    | 调用摄取流程          | P0</span></span>
+<span class="line"><span>概念缺口        | 被引用但目标页面不存在的链接     | 创建缺失页面          | P1</span></span>
+<span class="line"><span>矛盾标注        | > [!warning] 矛盾标注         | 人工审核解决          | P1</span></span>
+<span class="line"><span>未索引页面      | 存在但未被 Index.md 列出的页面   | 更新 Index.md        | P2</span></span>
+<span class="line"><span>孤立页面        | 没有入链的页面                  | 评估后添加引用或删除    | P3</span></span></code></pre>
+<p>健康检查报告采用结构化格式：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit"># Wiki 健康检查报告</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">日期：2026-04-08</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## 统计</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 类型     | 数量    |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">--------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">-------</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 概念页面 | 54      |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 实体页面 | 34      |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 来源页面 | 45      |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| 产出页面 | 0       |</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">| </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">总计</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> | </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">133</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> |</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## 问题列表</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### 概念缺口 (2)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/自适应治理</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — 被 [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/韧性框架</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] 引用但不存在</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/社会生态</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] — 被 [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Entities/某机构</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] 引用但不存在</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">### 矛盾标注 (1)</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Concepts/韧性</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] 与 [[</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">Sources/另一框架</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">]] 存在维度定义差异</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## 建议操作</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">1.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> 摄取 Concepts/自适应治理 和 Concepts/社会生态 的概念页面</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">2.</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> 人工审核韧性概念的矛盾标注</span></span></code></pre>
+<p>Wiki 增长到几十个页面后，靠人工维护所有关联和一致性不现实。LLM 定期扫描，自动发现结构性问题。人类只需要处理 LLM 标记的异常。</p>
+<hr>
+<h2 id="4-典型工作流场景">4. 典型工作流场景</h2>
+<p>四个工作流可以组合成完整的使用场景。</p>
+<h3 id="场景-1首次使用">场景 1：首次使用</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>detecting-resources-sync  →  获取待处理文件列表</span></span>
+<span class="line"><span>ingesting-resources       →  批量摄取</span></span>
+<span class="line"><span>checking-wiki-health      →  验证结果</span></span></code></pre>
+<p>先检测 Resources 目录中有哪些待处理文件。确认后批量摄取。最后运行健康检查验证摄取结果的完整性。</p>
+<h3 id="场景-2日常维护">场景 2：日常维护</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>每周运行 detecting-resources-sync  → 检测变更</span></span>
+<span class="line"><span>按需调用 ingesting-resources       → 更新 Wiki</span></span>
+<span class="line"><span>每周运行 checking-wiki-health      → 保持健康</span></span></code></pre>
+<p>检测变更。处理变更。验证健康。整个过程在几分钟内完成。</p>
+<h3 id="场景-3知识查询">场景 3：知识查询</h3>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="text"><code><span class="line"><span>用户提出问题 → querying-wiki 检索并回答 → 评估是否回填</span></span></code></pre>
+<p>简单的查询即时回答。高价值的分析回填保存为 Output。</p>
+<hr>
+<h2 id="5-其他说明">5. 其他说明</h2>
+<h3 id="51-本地搜索qmd">5.1 本地搜索：qmd</h3>
+<p>Wiki 的检索依赖 <a href="https://github.com/nickthecat/qmd"><code>qmd</code></a>，一个本地 Markdown 搜索引擎。</p>
+<p><strong>混合检索：词汇 + 向量</strong></p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="javascript"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-style:inherit;--shiki-dark:#82AAFF;--shiki-dark-font-style:italic">mcp__qmd__query</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">({</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  searches</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> [</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">lex</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">critical infrastructure</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // 精确匹配</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">    { type</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">vec</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> query</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">如何评估基础设施的韧性</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB"> }</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // 语义匹配</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  ]</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  intent</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD"> "</span><span style="--shiki-light:#22863A;--shiki-dark:#ECC48D">学术研究方法论</span><span style="--shiki-light:#22863A;--shiki-dark:#D9F5DD">"</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span><span style="--shiki-light:#C2C3C5;--shiki-light-font-style:inherit;--shiki-dark:#637777;--shiki-dark-font-style:italic"> // 消歧义</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">  limit</span><span style="--shiki-light:#D32F2F;--shiki-dark:#D6DEEB">:</span><span style="--shiki-light:#1976D2;--shiki-dark:#F78C6C"> 5</span><span style="--shiki-light:#212121;--shiki-dark:#D6DEEB">,</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">});</span></span></code></pre>
+<p>Wiki 中使用了不同的表述时，纯词汇匹配检索不到。纯向量检索可能返回语义相关但主题不精确的结果。混合检索兼顾两者。词汇匹配保证精确度，向量检索保证召回率。</p>
+<p><code>intent</code> 参数帮助消歧义。查询包含多义词时，intent 让搜索引擎理解用户真正关心的是什么。</p>
+<p>选择 qmd 的其他原因：所有数据留在本地，不发送到外部 API。通过 MCP（Model Context Protocol）暴露为工具，LLM 可以直接调用。支持按路径、docid、glob 模式等多种获取模式。</p>
+<h3 id="52-矛盾标注">5.2 矛盾标注</h3>
+<p>新摄取的资料与现有内容冲突时，LLM 不会自行裁决。在页面中显式标注：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098"> [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#D6DEEB;--shiki-dark-font-style:italic">!warning</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">]</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> 矛盾标注</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> 本页面与 [</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">[</span><span style="--shiki-light:#D32F2F;--shiki-light-font-style:inherit;--shiki-dark:#D6DEEB;--shiki-dark-font-style:italic">Sources/另一框架</span><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">]</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic">] 存在矛盾：</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> 本页面观点：韧性包含三个维度（工程、生态、社会）</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> 另一来源观点：韧性包含五个维度（增加了经济和治理）</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#697098">></span><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD"> -</span><span style="--shiki-light:#24292EFF;--shiki-light-font-style:inherit;--shiki-dark:#697098;--shiki-dark-font-style:italic"> 差异原因可能是应用领域不同（自然灾害 vs 城市基础设施）</span></span></code></pre>
+<p>设计考虑：</p>
+<ol>
+<li>LLM 不是领域专家，自行裁决可能引入错误。显式标注让矛盾透明化，由人类做最终判断</li>
+<li>矛盾往往不是”谁对谁错”。是定义范围、应用场景、理论框架的不同。保留双方信息比选择一方更有价值</li>
+<li>好的矛盾标注会尝试分析为什么有冲突。不同的定义、不同的应用场景、不同的时间。这本身就是有价值的分析</li>
+<li>使用 Obsidian 的标准警告格式 <code>> [!warning]</code>，在 Obsidian 中会以醒目的样式渲染</li>
+</ol>
+<h3 id="53-操作日志">5.3 操作日志</h3>
+<p><code>Log.md</code> 的格式参考了软件工程中日志的最佳实践：</p>
+<pre class="astro-code astro-code-themes min-light night-owl" style="--shiki-light:#24292eff;--shiki-dark:#d6deeb;--shiki-light-bg:#ffffff;--shiki-dark-bg:#011627; overflow-x: auto;--file-name-offset: -0.75rem;" tabindex="0" data-language="markdown"><code><span class="line"><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">## [</span><span style="--shiki-light:#D32F2F;--shiki-light-font-weight:bold;--shiki-dark:#D6DEEB;--shiki-dark-font-weight:inherit">2026-04-08</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#82B1FF;--shiki-dark-font-weight:inherit">] ingest | 基础设施韧性评估框架</span></span>
+<span class="line"></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">来源</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: ObsidianRaw/03_Resources/resilience-framework.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">影响</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">:</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Sources</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 框架摘要.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Concepts</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 韧性.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Entities</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 某机构.md</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">  -</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Index.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">, </span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">Log.md</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span></span>
+<span class="line"><span style="--shiki-light:#24292EFF;--shiki-dark:#D9F5DD">-</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit"> **</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:bold">备注</span><span style="--shiki-light:#6F42C1;--shiki-light-font-weight:bold;--shiki-dark:#C5E478;--shiki-dark-font-weight:inherit">**</span><span style="--shiki-light:#24292EFF;--shiki-dark:#D6DEEB">: 新增韧性三维度定义</span></span></code></pre>
+<p>设计原则：</p>
+<ol>
+<li><strong>可解析</strong>：每行以 <code>## [日期] 类型 | 标题</code> 开头，可以用正则表达式精确匹配</li>
+<li><strong>可追溯</strong>：每条记录包含来源和影响，可以追溯每个页面的变更历史</li>
+<li><strong>可统计</strong>：通过 <code>grep | wc -l</code> 可以统计某类操作的频率</li>
+<li><strong>可读</strong>：格式对人类友好，不需要工具就能阅读</li>
+</ol>
+<p>操作日志是 Wiki 的 Git history。没有日志，Wiki 是黑盒。存了东西但不知道什么时候变的、为什么变的。有了日志，Wiki 的整个生命周期可追溯、可审计。</p>
+<h3 id="54-页面模板">5.4 页面模板</h3>
+<p>每个 Skill 的 <code>reference/</code> 目录中包含了详细的页面模板，确保 LLM 生成的页面格式一致：</p>
+<ul>
+<li><strong>Sources 模板</strong>：摘要 → 核心内容 → 关键概念 → 相关实体 → 参考文献</li>
+<li><strong>Concepts 模板</strong>：定义 → 核心特征 → 相关概念 → 来源</li>
+<li><strong>Entities 模板</strong>：简介 → 基本信息表 → 相关概念 → 来源</li>
+<li><strong>Outputs 模板</strong>：问题 → 回答 → 来源 → 相关概念</li>
+</ul>
+<p>模板的价值在于可预测性。所有页面遵循相同的结构时，人类浏览 Wiki 时知道在哪里找什么信息。LLM 处理页面时有明确的格式预期。自动化脚本可以可靠地解析页面内容。</p>
+<hr>
+<h2 id="6-我对-karpathy-方案的系统性微调">6. 我对 Karpathy 方案的系统性微调</h2>
+<p>arpathy 的 gist 提出了核心框架：Raw Sources → Wiki → Schema 的三层架构，以及 Ingest / Query / Lint 三个工作流。我的定制主要在这个框架内做工程化增强：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>维度</th><th>Karpathy 原版</th><th>我的定制</th><th>为什么</th></tr></thead><tbody><tr><td><strong>摄取范围</strong></td><td>未明确限制</td><td>仅限 PARA 的 Resources 目录</td><td>防止噪声污染</td></tr><tr><td><strong>矛盾处理</strong></td><td>提及但未详述</td><td>显式标注 + 日志记录 + 差异分析</td><td>让矛盾透明化</td></tr><tr><td><strong>操作日志</strong></td><td>简单时间线</td><td>可解析格式，支持 grep</td><td>可观测性</td></tr><tr><td><strong>搜索工具</strong></td><td>未指定</td><td>qmd 混合检索（lex + vec + intent）</td><td>精确度 + 召回率</td></tr><tr><td><strong>结果回填</strong></td><td>提及概念</td><td>明确标准 + 人类决策</td><td>保证 Outputs 质量</td></tr><tr><td><strong>健康检查</strong></td><td>称为 Lint</td><td>扩展为5项检查 + 优先级分级 + 报告生成</td><td>系统性维护</td></tr><tr><td><strong>协作规范</strong></td><td>简单描述</td><td>完整的 AGENTS.md</td><td>降低 LLM 行为的随意性</td></tr><tr><td><strong>关联影响分析</strong></td><td>未明确</td><td>独立的分析步骤</td><td>确保每次摄取都是全局更新</td></tr><tr><td><strong>页面类型</strong></td><td>Sources/Entities/Concepts</td><td>增加 Outputs（查询回填）</td><td>高价值分析成为知识资产</td></tr><tr><td><strong>同步检测</strong></td><td>无</td><td>新增第四个工作流，三重追踪</td><td>Wiki 持续同步</td></tr><tr><td><strong>工作流封装</strong></td><td>文档描述</td><td>Skills 模块化，配参考文档和模板</td><td>从规程变成可执行程序</td></tr></tbody></table>
+<p>Karpathy 的 gist 像 design doc。提出方向，留给读者自由发挥。我的 AGENTS.md + Skills 像 runbook + 程序模块。每个步骤都有详细的操作指南、异常处理、质量标准。可以通过修改 Skill 文件直接调整 LLM 的行为。Karpathy 写的是”做什么”。我需要的是”怎么做”和”怎么改”。</p>
+<hr>
+<h2 id="7设计哲学">7.设计哲学</h2>
+<h3 id="71-llm-是知识管理的簿记员">7.1 LLM 是知识管理的”簿记员”</h3>
+<p>维护知识库最累的部分是那些琐碎的”簿记”工作：</p>
+<ul>
+<li>读了新文章后，更新之前相关的概念定义</li>
+<li>发现两篇文章说法不同，去标注矛盾</li>
+<li>有人问了个好问题，把回答整理成可复用的格式</li>
+<li>定期检查有没有过时的页面需要更新</li>
+<li>追踪原始资料是否发生了变更</li>
+</ul>
+<p>这些工作消耗时间和精力，不需要判断力和创造力。LLM 可以同时检索所有相关页面、比对所有定义、标注所有矛盾。人类的时间用在决定什么资料值得摄取、提出好的问题、对矛盾做最终判断。</p>
+<h3 id="72-知识是演进的">7.2 知识是演进的</h3>
+<p>传统的笔记系统假设知识是”写一次，存永久”。真实的知识在演进：</p>
+<ul>
+<li>新概念出现时，旧概念的定义可能需要修正</li>
+<li>新证据出现时，旧的结论可能需要推翻</li>
+<li>不同领域的交叉可能产生新的理解</li>
+<li>同一个概念在不同语境下有不同的含义</li>
+</ul>
+<p>Wiki 的设计承认这种演进性。矛盾标注允许不同观点共存。关联影响分析允许知识随新信息更新。同步检测允许原始资料的变更被追踪。健康检查允许发现问题并修复。</p>
+<h3 id="73-约束创造价值">7.3 约束创造价值</h3>
+<p>AGENTS.md 和 Skills 中充满了约束：只处理 Resources 目录、页面必须遵循统一的格式、链接必须用 <code>[[wiki-links]]</code> 格式、矛盾不能自行裁决必须显式标注、回填需要满足标准、追踪字段必须写入 frontmatter。</p>
+<p>这些约束引导 LLM 的能力用在正确的地方。没有摄取范围的限制，LLM 会把垃圾也处理掉。没有格式约束，页面风格五花八门，后续解析和浏览都困难。没有回填标准，Outputs 会充斥低价值内容。没有追踪字段，Wiki 无法检测原始资料的变更。</p>
+<p>牺牲灵活性，换取一致性、质量和可维护性。</p>
+<h3 id="74-人机分工要清晰">7.4 人机分工要清晰</h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>环节</th><th>人类</th><th>LLM</th></tr></thead><tbody><tr><td>资料策展</td><td>✅ 决定什么值得摄取</td><td>❌</td></tr><tr><td>阅读理解</td><td>❌</td><td>✅ 提取、摘要、关联</td></tr><tr><td>关联分析</td><td>❌</td><td>✅ 系统性扫描和更新</td></tr><tr><td>变更检测</td><td>❌</td><td>✅ 三路比对，生成报告</td></tr><tr><td>矛盾裁决</td><td>✅ 做最终判断</td><td>❌ 只标注</td></tr><tr><td>查询提问</td><td>✅ 提出好问题</td><td>❌</td></tr><tr><td>综合回答</td><td>❌</td><td>✅ 检索、综合、引用</td></tr><tr><td>质量把关</td><td>✅ 决定是否回填</td><td>❌ 只建议</td></tr><tr><td>定期维护</td><td>❌</td><td>✅ 扫描和报告</td></tr><tr><td>工作流定义</td><td>✅ 编写 AGENTS.md 和 Skills</td><td>❌</td></tr></tbody></table>
+<h3 id="75-工作流应该可组合可修改">7.5 工作流应该可组合、可修改</h3>
+<p>Skills 让工作流从线性流程变成工具集：</p>
+<ul>
+<li><code>detecting-resources-sync</code> 可以独立运行，也可以作为 <code>checking-wiki-health</code> 的一部分</li>
+<li><code>ingesting-resources</code> 可以被手动触发，也可以被同步检测的结果自动触发</li>
+<li><code>querying-wiki</code> 的结果可以即时回答，也可以回填为永久资产</li>
+<li><code>checking-wiki-health</code> 可以在摄取后验证，也可以定期独立运行</li>
+</ul>
+<p>人类根据需要选择使用哪些工具，以什么顺序使用。</p>
+<hr>
+<h2 id="8-工具链">8. 工具链</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>用途</th><th>工具</th><th>备注</th></tr></thead><tbody><tr><td>原始资料管理</td><td><a href="https://obsidian.md/">Obsidian</a></td><td>配合 PARA 方法组织</td></tr><tr><td>LLM 编辑器</td><td><a href="https://claude.ai/code">Claude Code</a> / <a href="https://github.com/QwenLM">Qwen Code</a></td><td>读取 AGENTS.md 和 Skills 执行工作流</td></tr><tr><td>本地搜索</td><td><a href="https://github.com/nickthecat/qmd">qmd</a></td><td>混合检索（词汇+向量）</td></tr><tr><td>Wiki 浏览</td><td>Obsidian</td><td>天然支持 <code>[[wiki-links]]</code> 和 callout 格式</td></tr><tr><td>Web 剪藏</td><td>Obsidian Web Clipper</td><td>网页内容直接保存到 Inbox</td></tr><tr><td>Skills 框架</td><td>Claude Code Skills</td><td>工作流模块化定义</td></tr></tbody></table>
+<hr>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f">Karpathy: LLM Wiki</a> — 原始灵感，三层架构和工作流设计</li>
+<li><a href="https://fortelabs.com/blog/para/">PARA Method</a> — 知识组织框架，用于原始资料管理</li>
+<li><a href="https://obsidian.md/">Obsidian</a> — 本地 Markdown 知识库工具，用于资料存储和 Wiki 浏览</li>
+<li><a href="https://github.com/nickthecat/qmd">qmd</a> — 本地 Markdown 搜索引擎</li>
+</ul> </article> <hr class="my-8 border-dashed">  <ul class="mt-4 mb-8 sm:my-8"> <li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/zh/tags/configuration/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-67kewmjt-2"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block opacity-80 -me-3.5 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>
+&nbsp;<span>Configuration</span> </a> </li><li class="group inline-block group-hover:cursor-pointer my-1 underline-offset-4"> <a href="/zh/tags/typesetting/" class="relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline text-sm" data-astro-transition-scope="astro-67kewmjt-3"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block opacity-80 -me-3.5 size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M5 9h14M5 15h14M11 4 7 20M17 4l-4 16" /></svg>
+&nbsp;<span>Typesetting</span> </a> </li> </ul> <section data-pagefind-ignore class="mb-12 rounded-xl border border-border/60 bg-muted/30 px-5 py-4 shadow-sm backdrop-blur dark:border-border/50" data-astro-cid-74s6d3ud> <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between" data-astro-cid-74s6d3ud> <div class="min-w-0" data-astro-cid-74s6d3ud> <div class="flex flex-wrap items-center gap-2" data-astro-cid-74s6d3ud> <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/70 px-3 py-1 text-xs font-medium text-foreground shadow-sm" data-astro-cid-74s6d3ud> <span class="text-accent" data-astro-cid-74s6d3ud>CC</span> <span aria-hidden="true" class="text-muted-foreground" data-astro-cid-74s6d3ud>•</span> <span class="text-muted-foreground" data-astro-cid-74s6d3ud>BY-NC-SA</span> </a> <span class="text-muted-foreground text-xs" data-astro-cid-74s6d3ud>
+© 2026 </span> </div> <p class="text-muted-foreground mt-3 text-sm leading-relaxed" data-astro-cid-74s6d3ud>本文使用“<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent">CC BY-NC-SA 4.0</a>”进行许可。商业转载请<a href="mailto:wenjie.xu.cn@outlook.com" class="font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent">联系站长</a>获得授权。非商业转载请注明本文出处及文章链接。如果您混合、转换或者基于本作品进行创作，您必须基于<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noreferrer" class="font-semibold text-foreground underline decoration-dashed underline-offset-4 hover:text-accent">相同的协议</a>分发您贡献的作品。</p> </div> <div class="shrink-0 self-end sm:self-start" data-astro-cid-74s6d3ud> <svg viewBox="0 0 347.2 94.013" class="animated-signature h-9 w-auto max-w-52 text-black dark:text-white" aria-hidden="true" focusable="false" data-astro-cid-74s6d3ud="true"><path fill-rule="evenodd" d="M90.3 68.113q-4.4 0-7.35-2.15T80 59.713q0-4.4 2.1-8.2t5.6-6.65 7.65-4.45 8.25-1.6 6.1 1.45 2 3.55q0 2-1.85 4.25t-5.35 3.95q-2.2 1-5.05 1.75t-4.95.75q-1.6 0-1.6-.5 0-.4 1.4-.4 1.3 0 4.05-.75t5.35-2.05q2.9-1.6 4.1-3.2t1.2-2.9q0-1.2-.95-2t-2.65-.8q-1.6 0-3.6.9-2.9 1.3-5.95 4.25t-5.05 6.45-2 6.7q0 2.2 1.25 3.7t3.75 1.5q2.6 0 6-1.65t6.9-4.1 6.5-4.95a172 172 0 0 0 1.425-1.2 121 121 0 0 0 .821-.705l.222-.203q1.649-1.515 3.482-3.242 3.45-3.25 5.05-6.65.5-1.2.5-2.2 0-1.3-.5-1.6-.4-.3-.4-.8 0-.9.9-.9.5 0 .8.2 1.1.5 2.1 1.9t1 4.2q0 1.6-.4 3.65t-1.4 4.65q1.5-2 3.05-3.9t2.85-3.4q2.7-3.1 5.45-4.45t4.95-1.35q2.6 0 4.2 1.5t1.6 3.9q0 1.9-1 3.9-.3.8-1.4 2.45t-2.4 3.55-2.4 3.4q-1.3 1.6-1.8 2.75t-.5 1.85q0 1 1.1 1 1.4 0 3.9-1.5 1.5-.9 3.45-2.45t3.9-3.2 3.15-2.75q.203-.203.38-.303a1 1 0 0 1 .083-.042l.296-.271q.779-.721 2.091-2.034 1.75-1.75 3.25-3.95t1.5-4q0-1.2-1.2-1.7-.2-.1-.2-.3 0-.7.8-.7 2 0 3.1 1.45t1.1 3.95q0 2.8-1.2 6.65t-3.2 8.05-4.3 8.2-4.45 7.15-3.75 4.85q-3.5 3.7-8.3 6.9t-10.15 5.1-10.65 1.9q-4.8 0-9.2-1.4t-7.2-4.55-2.8-8.35v-.2q0-.6.4-.6t.6.7q1.1 5.6 5.4 9.1t9.9 3.5q3.5 0 7.7-1.95t8.5-5.35 8.4-7.7 7.5-9q1.2-1.6 3.3-4.75t4.35-6.95 3.75-7.2q-.5.5-1.6 1.55t-2.1 2.05-1.6 1.5q-.043.044-.077.068l-.013.009a142 142 0 0 1-2.939 2.653q-1.784 1.569-3.821 3.27-3.95 3.3-7.75 5.1-3.1 1.5-5.7 1.5-2.2 0-3.5-1.15t-1.3-3.35q0-1.6.8-3.8 1-2.7 2.85-5.4t3.9-5.15 3.55-4.15q1.3-1.4 1.3-2.4 0-.9-1.2-.9t-3.55 1.35-5.25 4.35q-4.1 4.3-7.2 9.3t-7.1 9.4q-2.2 2.5-4.3 2.5-1 0-2.4-.45t-2.8-1.65q1.1-1.5 3.15-4.05t4.35-5.65 4.3-6.2q-1.6 1.6-3.5 3.4t-3.8 3.3a1.5 1.5 0 0 1-.331.253 330 330 0 0 1-2.719 2.347q-4.45 3.8-9.5 6.45t-10.55 2.75m-81.9 5.6q.7-1.3 2.45-4.8t4.15-8.45 5.05-10.8 5-12 4.05-11.95q.8-2.7 1.15-5.05t.35-4.35q0-4.7-1.8-7.2t-4.7-2.5q-3.3 0-7.55 3.45T8 20.913q-2.7 4.6-4.45 9.7t-2.05 9.9q-.1.9-.45 1.2t-.55-.4q-.5-1.5-.5-3.6 0-3 .75-6.7t2.15-7.35 3.2-6.35q2.6-3.8 6.4-6.8t8-4.7 8-1.7q4.7 0 7.8 3t3.1 10q0 4.3-1 9.85T35 39.613q4.5-6.7 10.35-12.8t11.35-10.1q4.1-3 7.1-4.35t5.1-1.35q3.2 0 4.55 2.75t1.35 7.15q0 4.3-1 9.75t-2.6 11.05-3.4 10.5q4.1-6.5 9.05-13.65t10.3-13.95 10.8-12.25 10.55-8.55q2.5-1.5 5.75-2.65t5.95-1.15q3 0 4.3 1.7l.2.4q0 .4-.5.4h-1q-4.2-.3-9.4 2.65t-10.85 8.25-11.3 11.9-11 13.65-9.9 13.6-7.95 11.65q-.2.4-2.15 1.3t-4.35 1.8-4.1 1.35-1.5.05q.7-1.7 2.4-5.55t3.95-9.35 4.45-12.1 4-13.8q.9-3.9.9-6.3 0-4.4-2.9-4.4-2.4 0-6.3 2.85t-8.5 7.65-9.35 10.8-8.95 12.3q-2.1 4.9-4.4 9.6t-4.8 8.8q-.3.4-2.35 1.3t-4.55 1.8-4.3 1.35-1.6.05m236.1 2.9q-.3 0-.3-.4 0-.7.7-1.7 4.5-6.1 11.4-14.5t15.2-17.3q-1.9-5-2.8-10.25t-.9-9.85q0-3.6.55-6.55t1.55-4.75q.5-.9 2-1.8t3.3-1.45 3-.55q1.6 0 1.6.9 0 .4-.5 1.2-1.3 2.1-1.95 5.4t-.65 7.3q0 6.3 1.4 13.5 7.1-7.2 14.75-13.7t15.4-11.55 15.3-7.9T338 .013q.4 0 .35.4t-.45.4q-4.2-.1-9.95 2.35t-12.45 6.75-13.8 10q-5.7 4.5-11.45 9.55T279 39.813q1.6 6.2 3.95 11.9t5.1 9.7 5.35 5.5q2.3 1.2 4.7 1.2 1.5 0 2.8-.5t2.1-1.5q.2-.2.4-.2t.35.25-.05.55q-1.5 1.9-3.3 2.35t-4.1.45q-4.4 0-8.75-3.25t-8.15-8.65-6.6-11.7q-6 5.9-11.25 11.5t-9.2 10.2-6.25 7.7q-.9 1.3-1.6 1.3m-67.3-9.4q-4.1 0-5.55-1.75t-1.45-3.95q0-1.8.6-3.45t1-2.35q.6-1 1.65-2.3t2.35-2.8q-2 1.7-3.75 3.3t-2.85 2.4q-.3.3-.6.3-.4 0-.4-.5 0-.8 1.1-1.6 2.6-2.2 5.05-4.8t4.65-4.85 3.9-3.15q1.8-1 2.9-1.3t1.8-.3q1.1 0 1.6.35t.2.75q-1.7 1.7-3.35 4.35t-3.05 5.55-2.25 5.5-.85 4.4q0 2.5 2 2.5 1.9 0 4.95-1.75t6.4-4.45a163 163 0 0 0 4.583-3.829l.685-.599a17 17 0 0 1 .682-1.372q2.1-3.8 5.6-6.65t7.65-4.45 8.25-1.6 6.1 1.45 2 3.55q0 2-1.85 4.25t-5.35 3.95q-2.2 1-5.05 1.75t-4.95.75q-1.6 0-1.6-.5 0-.4 1.4-.4 1.3 0 4.05-.75t5.35-2.05q2.9-1.6 4.1-3.2t1.2-2.9q0-1.2-.95-2t-2.65-.8q-1.6 0-3.6.9-2.9 1.3-5.95 4.25t-5.05 6.45-2 6.7q0 2.2 1.25 3.7t3.75 1.5q2.6 0 6-1.65t6.9-4.1 6.5-4.95 4.8-4.2q.6-.6.9-.6t.3.5q0 .7-.6 1.2-3.8 3.5-8.25 7.3t-9.5 6.45-10.55 2.75q-4.4 0-7.35-2.15t-2.95-6.25a16.7 16.7 0 0 1 .539-4.305 119 119 0 0 1-1.12.972 151 151 0 0 1-3.469 2.883q-4.15 3.35-8.3 5.65t-7.55 2.3m154.1 3.8q-1.3-.5-2.55-1.8t-1.25-4.5q0-2.7.9-5.65t2.3-5.85q-2.6 3.3-5.65 6.5t-6.1 5.25-5.65 2.05q-2.2 0-3.65-1.2t-1.45-3.7q0-1.8.7-3.9t2.5-4.7 3.95-5.15 3.75-4.35q1.1-1.3 1.1-2.1 0-1-1.1-1-1.2 0-3.4 1.6-2.3 1.7-4.9 4.15t-4.9 4.7-3.9 3.55q-.3.3-.6.3-.5 0-.5-.6 0-.5.9-1.3 4.4-3.8 7.3-6.95t5.7-5.35q1.5-1.2 3.1-1.75t3-.55q2.4 0 4 1.4t1.6 3.9q0 1.9-1 4-1.1 2.5-2.95 4.95t-3.55 4.75q-1.3 1.9-1.9 3.1t-.6 1.8q0 .8.8.8t2.3-.9 3.1-2.3q1.1-1 1.95-1.85l1.25-1.25q2.3-2.4 4.6-5.15t4-5.05q1.3-1.7 2.05-2.6t1.65-1.9q1.7-1.9 3.6-2 1.1 0 2.55.45t2.85 1.75q-1 1.4-2.95 3.85t-4.2 5.4-4.3 6.05-3.35 5.8-1.3 4.7q0 1.4.8 2.2.4.4 0 .45t-.6-.05m-138.8-34.5q-1.4 0-2.1-.9t-.7-1.9q0-2 1.9-3.95t4-1.95q1.4 0 2.1.9t.7 1.9q0 2.1-1.85 4t-4.05 1.9m-24.5 0q-1.4 0-2.1-.9t-.7-1.9q0-2 1.9-3.95t4-1.95q1.4 0 2.1.9t.7 1.9q0 2.1-1.85 4t-4.05 1.9" pathLength="1" /></svg> </div> </div> </section> <div id="btt-btn-container" class="fixed end-4 bottom-8 z-50 md:sticky md:end-auto md:float-end md:me-1 translate-y-14 opacity-0 transition duration-500"> <button data-button="back-to-top" class="group relative bg-background px-2 py-1 size-14 rounded-full shadow-xl md:h-8 md:w-fit md:rounded-md md:shadow-none md:focus-visible:rounded-none md:bg-background/35 md:bg-clip-padding md:backdrop-blur-lg"> <span id="progress-indicator" class="absolute inset-0 -z-10 block size-14 scale-110 rounded-full bg-transparent md:hidden md:h-8 md:rounded-md"></span> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block rotate-90 md:hidden" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 6-6 6 6 6" /></svg> <span class="sr-only text-sm group-hover:text-accent md:not-sr-only"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-4" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M12 5v14M16 9l-4-4M8 9l4-4" /></svg> 返回顶部 </span> </button> </div> <script data-astro-rerun>
+  /** Scrolls the document to the top when
+   * the "Back to Top" button is clicked. */
+  function backToTop() {
+    const rootElement = document.documentElement;
+    const btnContainer = document.querySelector("#btt-btn-container");
+    const backToTopBtn = document.querySelector("[data-button='back-to-top']");
+    const progressIndicator = document.querySelector("#progress-indicator");
+
+    if (!rootElement || !btnContainer || !backToTopBtn || !progressIndicator)
+      return;
+
+    // Attach click event handler for back-to-top button
+    backToTopBtn.addEventListener("click", () => {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    });
+
+    // Handle button visibility according to scroll position
+    let lastVisible = null;
+    function handleScroll() {
+      const scrollTotal = rootElement.scrollHeight - rootElement.clientHeight;
+      const scrollTop = rootElement.scrollTop;
+      const scrollPercent = Math.floor((scrollTop / scrollTotal) * 100);
+
+      progressIndicator.style.setProperty(
+        "background-image",
+        `conic-gradient(var(--accent), var(--accent) ${scrollPercent}%, transparent ${scrollPercent}%)`
+      );
+
+      const isVisible = scrollTop / scrollTotal > 0.3;
+
+      if (isVisible !== lastVisible) {
+        btnContainer.classList.toggle("opacity-100", isVisible);
+        btnContainer.classList.toggle("translate-y-0", isVisible);
+        btnContainer.classList.toggle("opacity-0", !isVisible);
+        btnContainer.classList.toggle("translate-y-14", !isVisible);
+        lastVisible = isVisible;
+      }
+    }
+
+    // Guard against duplicate scroll listeners across navigations
+    if (document.documentElement.dataset.bttScrollBound === "true") return;
+    document.documentElement.dataset.bttScrollBound = "true";
+
+    let ticking = false;
+    document.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+  }
+  backToTop();
+</script> <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start"><span class="italic">分享这篇文章到：</span><div class="text-center"><a href="mailto:?subject=See%20this%20post&#38;body=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via email"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg><span class="sr-only">Share this post via email</span></a><a href="https://service.weibo.com/share/share.php?url=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Weibo"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110"><path d="M20 6c-1.5 0-3 1.2-3 3M21 9c-2.5 0-5 2-5 5M15 11.5c.6.9 1 1.9 1 3 0 3.3-3.1 6-7 6s-7-2.7-7-6 3.1-6 7-6c1.5 0 2.9.4 4 1" /><path d="M10 12.5c1.7 0 3 1 3 2.2S11.7 17 10 17s-3-1-3-2.3 1.3-2.2 3-2.2" /></svg><span class="sr-only">Share this post on Weibo</span></a><a href="https://wa.me/?text=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via WhatsApp"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m3 21 1.65-3.8a9 9 0 1 1 3.4 2.9z" /><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0za5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" /></svg><span class="sr-only">Share this post via WhatsApp</span></a><a href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Facebook"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 10v4h3v7h4v-7h3l1-4h-4V8a1 1 0 0 1 1-1h3V3h-3a5 5 0 0 0-5 5v2z" /></svg><span class="sr-only">Share this post on Facebook</span></a><a href="https://x.com/intent/post?url=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on X"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m4 4 11.733 16H20L8.267 4zM4 20l6.768-6.768m2.46-2.46L20 4" /></svg><span class="sr-only">Share this post on X</span></a><a href="https://t.me/share/url?url=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post via Telegram"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m15 10-4 4 6 6 4-16-18 7 4 2 2 6 3-4" /></svg><span class="sr-only">Share this post via Telegram</span></a><a href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fblog.wenjiexu.site%2Fzh%2Fposts%2Fllm-personal-wiki%2F" class="group inline-block hover:text-accent scale-90 p-2 hover:rotate-6 sm:p-1" title="Share this post on Pinterest"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 opacity-90 group-hover:fill-transparent sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m8 20 4-9M10.7 14c.437 1.263 1.43 2 2.55 2 2.071 0 3.75-1.554 3.75-4a5 5 0 1 0-9.7 1.7" /><path d="M3 12a9 9 0 1 0 18 0 9 9 0 1 0-18 0" /></svg><span class="sr-only">Share this post on Pinterest</span></a></div></div> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var a=(s,i,o)=>{let r=async()=>{await(await s())()},t=typeof i.value=="object"?i.value:void 0,c={rootMargin:t==null?void 0:t.rootMargin},n=new IntersectionObserver(e=>{for(let l of e)if(l.isIntersecting){n.disconnect(),r();break}},c);for(let e of o.children)n.observe(e)};(self.Astro||(self.Astro={})).visible=a;window.dispatchEvent(new Event("astro:visible"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>Number.POSITIVE_INFINITY*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="ZXVMh3" prefix="r1" component-url="/_astro/Comments.1rMV7L8O.js" component-export="default" renderer-url="/_astro/client.DyczpTbx.js" props="{}" ssr client="visible" opts="{&quot;name&quot;:&quot;Comments&quot;,&quot;value&quot;:{&quot;rootMargin&quot;:&quot;200px&quot;}}" await-children><div class="mt-10 rounded-lg border border-border/70 bg-background/70 px-4 py-5 shadow-sm dark:border-border/60"></div><!--astro:end--></astro-island> <hr class="my-6 border-dashed"> <!-- Previous/Next Post Buttons --> <div data-pagefind-ignore class="grid grid-cols-1 gap-6 sm:grid-cols-2">  <a href="/zh/posts/low-spec-cloud-server-setup" class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"> <div> <span>下一篇</span> <div class="text-sm text-accent/85">低性能云服务器配置记录</div> </div> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block flex-none rtl:rotate-180" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="m9 6 6 6-6 6" /></svg> </a> </div> </main> <footer class="w-full mt-auto"> <div class="mx-auto max-w-app px-0"> <hr class="border-border" aria-hidden="true"> </div> <div class="flex flex-col items-center justify-between py-6 sm:flex-row-reverse sm:py-4"> <div class="flex-wrap justify-center gap-1 flex"> <a href="https://github.com/Vncntvx" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on GitHub"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 opacity-90 sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" /></svg> <span class="sr-only">Blog on GitHub</span> </a><a href="mailto:wenjie.xu.cn@outlook.com" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Send an email to Blog"> <svg width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="inline-block size-6 scale-125 opacity-90 sm:scale-110" viewBox="0 0 24 24"><path stroke="none" d="M0 0h24v24H0z" /><path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="m3 7 9 6 9-6" /></svg> <span class="sr-only">Send an email to Blog</span> </a><a href="https://www.zhihu.com/people/wayne-67-86-29" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on Zhihu"> <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="inline-block size-6 scale-125 opacity-90 sm:scale-110"><path d="M6 4 4.5 8M5 7h7M3 11.5h10M9 7v4.5q0 5-4 8.5M9 11.5l3.5 5.5M15.5 7h5v10h-5Z" /></svg> <span class="sr-only">Blog on Zhihu</span> </a><a href="https://weibo.com/u/6577473146" class="group inline-block hover:text-accent p-2 hover:rotate-6 sm:p-1" title="Blog on Weibo"> <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" class="inline-block size-6 scale-125 opacity-90 sm:scale-110"><path d="M20 6c-1.5 0-3 1.2-3 3M21 9c-2.5 0-5 2-5 5M15 11.5c.6.9 1 1.9 1 3 0 3.3-3.1 6-7 6s-7-2.7-7-6 3.1-6 7-6c1.5 0 2.9.4 4 1" /><path d="M10 12.5c1.7 0 3 1 3 2.2S11.7 17 10 17s-3-1-3-2.3 1.3-2.2 3-2.2" /></svg> <span class="sr-only">Blog on Weibo</span> </a> </div> <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row"> <span>版权 &#169; 2026</span> <span class="hidden sm:inline">&nbsp;|&nbsp;</span> <span>保留所有权利</span> </div> </div> </footer> </body></html> <script data-astro-rerun>
+  /** Create a progress indicator
+   *  at the top */
+  function createProgressBar() {
+    const existingBar = document.getElementById("myBar");
+    if (existingBar) return existingBar;
+
+    // Create the main container div
+    const progressContainer = document.createElement("div");
+    progressContainer.className =
+      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+
+    // Create the progress bar div
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar h-1 w-0 bg-accent";
+    progressBar.id = "myBar";
+
+    // Append the progress bar to the progress container
+    progressContainer.appendChild(progressBar);
+
+    // Append the progress container to the document body or any other desired parent element
+    document.body.appendChild(progressContainer);
+
+    return progressBar;
+  }
+  createProgressBar();
+
+  /** Update the progress bar
+   *  when user scrolls */
+  function updateScrollProgress() {
+    const myBar = document.getElementById("myBar");
+    if (!myBar) return;
+
+    const winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
+    const height =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+    myBar.style.width = scrolled + "%";
+  }
+  if (document.documentElement.dataset.postScrollBound !== "true") {
+    document.addEventListener("scroll", updateScrollProgress, {
+      passive: true,
+    });
+    document.documentElement.dataset.postScrollBound = "true";
+  }
+  updateScrollProgress();
+
+  /** Attaches links to headings in the document,
+   *  allowing sharing of sections easily */
+  function addHeadingLinks() {
+    const headings = Array.from(
+      document.querySelectorAll("h2, h3, h4, h5, h6")
+    );
+    for (const heading of headings) {
+      if (!heading.id || heading.querySelector(".heading-link")) continue;
+
+      heading.classList.add("group");
+      const link = document.createElement("a");
+      link.className =
+        "heading-link ms-2 no-underline opacity-75 md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+      link.href = "#" + heading.id;
+
+      const span = document.createElement("span");
+      span.ariaHidden = "true";
+      span.innerText = "#";
+      link.appendChild(span);
+      heading.appendChild(link);
+    }
+  }
+  addHeadingLinks();
+
+  /** Attaches copy buttons to code blocks in the document,
+   * allowing users to copy code easily. */
+  function attachCopyButtons() {
+    const copyButtonLabel = "Copy";
+    const codeBlocks = Array.from(document.querySelectorAll("pre"));
+
+    for (const codeBlock of codeBlocks) {
+      if (codeBlock.parentElement?.classList.contains("code-copy-wrapper")) {
+        continue;
+      }
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "code-copy-wrapper relative";
+
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className =
+        "copy-code absolute right-3 top-3 rounded-md border border-border/70 bg-background/85 px-2.5 py-1 text-xs font-medium text-foreground shadow-sm backdrop-blur transition hover:-translate-y-0.5 hover:bg-muted/70 focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed";
+      copyButton.innerHTML = copyButtonLabel;
+      codeBlock.setAttribute("tabindex", "0");
+
+      // wrap codeblock with relative parent element to host the button
+      codeBlock?.parentNode?.insertBefore(wrapper, codeBlock);
+      wrapper.appendChild(codeBlock);
+      wrapper.appendChild(copyButton);
+
+      copyButton.addEventListener("click", async () => {
+        await copyCode(codeBlock, copyButton);
+      });
+    }
+
+    async function copyCode(block, button) {
+      const code = block.querySelector("code");
+      const text = code?.innerText;
+
+      await navigator.clipboard.writeText(text ?? "");
+
+      // visual feedback that task is completed
+      button.innerText = "Copied";
+
+      setTimeout(() => {
+        button.innerText = copyButtonLabel;
+      }, 700);
+    }
+  }
+  attachCopyButtons();
+
+  /* Go to page start after page swap */
+  if (document.documentElement.dataset.postAfterSwapBound !== "true") {
+    document.addEventListener("astro:after-swap", () =>
+      window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+    );
+    document.documentElement.dataset.postAfterSwapBound = "true";
+  }
+</script>
