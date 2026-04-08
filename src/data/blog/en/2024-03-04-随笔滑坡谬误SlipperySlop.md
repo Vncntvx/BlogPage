@@ -1,8 +1,8 @@
 ---
 title: "Essay | Understanding the Slippery Slope Fallacy"
 author: Wenjie Xu
-pubDatetime: 2024-03-04 17:42:00
-modDatetime: 2024-03-04 17:42:00
+pubDatetime: 2024-03-04T17:42:00+08:00
+modDatetime: 2024-03-04T17:42:00+08:00
 description: Slippery Slope
 tags:
   - Discussion

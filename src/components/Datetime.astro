@@ -35,9 +35,8 @@ const fallbackLocaleConfig = getLocaleConfig(DEFAULT_LOCALE.code);
 /* ========== Formatted Datetime ========== */
 const tz = postTimezone || SITE.timezone;
 
-// 判断日期是否带有时区信息（ISO 8601 格式带 Z 或 ±HH:MM）
-const hasTimezone = (d: string | Date) => {
-  if (d instanceof Date) return true;
+// 判断日期字符串是否带有时区信息（ISO 8601 格式带 Z 或 ±HH:MM）
+const hasTimezoneInString = (d: string) => {
   return /[Zz]|[+-]\d{2}:\d{2}$/.test(d.trim());
 };
 
@@ -48,16 +47,23 @@ const modInput = modDatetime
     : modDatetime
   : null;
 
-// 如果原始日期字符串没有时区信息，直接解析使用，不转换时区
-// 否则转换到目标时区
-const pub = hasTimezone(pubInput)
-  ? dayjs(pubInput).tz(tz)
-  : dayjs(pubInput);
+// Date 对象：已包含时区信息，直接格式化显示
+// 字符串：若带时区则转换到目标时区，否则直接解析
+const pub =
+  pubInput instanceof Date
+    ? dayjs(pubInput)
+    : hasTimezoneInString(pubInput)
+      ? dayjs(pubInput).tz(tz)
+      : dayjs(pubInput);
+
 const mod = modInput
-  ? hasTimezone(modInput)
-    ? dayjs(modInput).tz(tz)
-    : dayjs(modInput)
+  ? modInput instanceof Date
+    ? dayjs(modInput)
+    : hasTimezoneInString(modInput)
+      ? dayjs(modInput).tz(tz)
+      : dayjs(modInput)
   : null;
+
 const isModified = Boolean(mod && mod.isAfter(pub));
 
 // 动态加载 dayjs 语言包（如可用）

@@ -1,8 +1,8 @@
 ---
 title: Flexible Python Environment Management with Conda and uv
 author: Wenjie Xu
-pubDatetime: 2024-02-09 13:08:36
-modDatetime: 2024-12-05 17:20:03
+pubDatetime: 2024-02-09T13:08:36+08:00
+modDatetime: 2024-12-05T17:20:03+08:00
 description: Python environment management methods for different needs
 tags:
   - Python
