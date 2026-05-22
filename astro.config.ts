@@ -1,4 +1,4 @@
-import { defineConfig, envField } from "astro/config";
+import { defineConfig, envField, svgoOptimizer } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import react from "@astrojs/react";
@@ -104,6 +104,6 @@ export default defineConfig({
     },
   },
   experimental: {
-    svgo: true,
+    svgOptimizer: svgoOptimizer(),
   },
 });
