@@ -1,5 +1,4 @@
 ---
-import "giscus";
 import { COMMENTS } from "@/config";
 
 export interface Props {
@@ -44,6 +43,8 @@ const { lightTheme = "light", darkTheme = "dark" } = giscus;
     loading="lazy"
   ></giscus-widget>
 </div>
+
+<script>import "giscus";</script>
 
 <script is:inline define:vars={{ lightTheme, darkTheme }}>
   function getInitialTheme() {
