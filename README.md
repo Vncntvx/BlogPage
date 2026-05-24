@@ -15,7 +15,6 @@ Wenjie Xu 的个人博客，基于 [AstroPaper](https://github.com/satnaing/astr
 - **动态 OG 图片** — 自动为每篇文章生成社交分享图
 - **Pagefind 搜索** — 静态站内全文搜索
 - **阅读时间估算** — 支持 CJK 字符的阅读时长计算
-- **Docker 部署** — Dockerfile + docker-compose，nginx 托管
 
 ## 技术栈
 
@@ -29,7 +28,6 @@ Wenjie Xu 的个人博客，基于 [AstroPaper](https://github.com/satnaing/astr
 | 评论   | [Giscus](https://giscus.app/)               |
 | OG 图  | satori + @resvg/resvg-js                    |
 | 包管理 | [Bun](https://bun.sh/)                      |
-| 部署   | Docker + nginx                              |
 
 ## 本地运行
 
@@ -45,13 +43,6 @@ bun run build
 
 # 预览构建结果
 bun run preview
-```
-
-或使用 Docker：
-
-```bash
-docker build -t blog .
-docker run -p 4321:80 blog
 ```
 
 ## 项目结构
@@ -76,9 +67,7 @@ docker run -p 4321:80 blog
 │   ├── config.ts        # 站点配置
 │   ├── constants.ts     # 社交/分享平台元数据
 │   └── content.config.ts # 内容集合 schema
-├── astro.config.ts
-├── Dockerfile
-└── docker-compose.yml
+└── astro.config.ts
 ```
 
 ## 常用命令
