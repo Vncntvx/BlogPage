@@ -1,0 +1,99 @@
+---
+import "giscus";
+import { COMMENTS } from "@/config";
+
+export interface Props {
+  locale?: string;
+}
+
+const { locale } = Astro.props;
+
+if (!COMMENTS.enabled || COMMENTS.provider !== "giscus") return;
+
+const giscus = COMMENTS.giscus;
+
+const REQUIRED_FIELDS = ["repo", "repoId", "category", "categoryId"] as const;
+const hasRequired = REQUIRED_FIELDS.every(field => {
+  const value = giscus[field as keyof typeof giscus];
+  return typeof value === "string" && value.trim().length > 0;
+});
+
+if (!hasRequired) return;
+
+const giscusLang = locale === "en" ? "en" : locale === "zh" ? "zh-CN" : giscus.lang;
+const { lightTheme = "light", darkTheme = "dark" } = giscus;
+---
+
+<div
+  id="giscus-container"
+  class="mt-10 rounded-lg border border-border/70 bg-background/70 px-4 py-5 shadow-sm dark:border-border/60"
+>
+  <giscus-widget
+    id="giscus-widget"
+    repo={giscus.repo}
+    repoid={giscus.repoId}
+    category={giscus.category}
+    categoryid={giscus.categoryId}
+    mapping={giscus.mapping}
+    strict={giscus.strict}
+    reactionsenabled={giscus.reactionsEnabled}
+    emitmetadata={giscus.emitMetadata}
+    inputposition={giscus.inputPosition}
+    theme="light"
+    lang={giscusLang}
+    loading="lazy"
+  ></giscus-widget>
+</div>
+
+<script is:inline define:vars={{ lightTheme, darkTheme }}>
+  function getInitialTheme() {
+    const stored = localStorage.getItem("theme");
+    if (stored === "dark" || stored === "light") return stored;
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  function resolveGiscusTheme(theme) {
+    return theme === "dark" ? darkTheme : lightTheme;
+  }
+
+  function updateGiscusTheme(theme) {
+    const iframe = document.querySelector("iframe.giscus-frame");
+    if (!iframe?.contentWindow) return;
+    iframe.contentWindow.postMessage(
+      { giscus: { setConfig: { theme: resolveGiscusTheme(theme) } } },
+      "https://giscus.app"
+    );
+  }
+
+  function initGiscusThemeSync() {
+    const widget = document.querySelector("#giscus-widget");
+    if (!widget) return;
+
+    // Set initial theme
+    const initialTheme = getInitialTheme();
+    widget.setAttribute("theme", resolveGiscusTheme(initialTheme));
+
+    // Listen for theme-btn clicks (toggle-theme.js updates localStorage)
+    const themeBtn = document.querySelector("#theme-btn");
+    if (themeBtn) {
+      themeBtn.addEventListener("click", () => {
+        const currentTheme = localStorage.getItem("theme") || getInitialTheme();
+        widget.setAttribute("theme", resolveGiscusTheme(currentTheme));
+        updateGiscusTheme(currentTheme);
+      });
+    }
+
+    // Listen for system preference changes
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", e => {
+      if (!localStorage.getItem("theme")) {
+        const systemTheme = e.matches ? "dark" : "light";
+        widget.setAttribute("theme", resolveGiscusTheme(systemTheme));
+        updateGiscusTheme(systemTheme);
+      }
+    });
+  }
+
+  initGiscusThemeSync();
+  document.addEventListener("astro:after-swap", initGiscusThemeSync);
+</script>

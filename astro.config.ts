@@ -1,7 +1,6 @@
 import { defineConfig, envField, svgoOptimizer } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
-import react from "@astrojs/react";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import remarkMath from "remark-math";
@@ -33,9 +32,21 @@ export default defineConfig({
     routing: "manual",
   },
   integrations: [
-    react(),
     sitemap({
-      filter: page => SITE.showArchives || !page.endsWith("/archives"),
+      filter: page => {
+        if (!SITE.showArchives && page.endsWith("/archives")) return false;
+        const url = new URL(page);
+        const path = url.pathname.replace(/\/$/, "");
+        const segments = path.split("/").filter(Boolean);
+        // Exclude root-level redirect pages (no locale prefix)
+        const localePaths = astroLocales.map(l => l.path);
+        const firstSegment = segments[0];
+        if (segments.length > 0 && !localePaths.includes(firstSegment))
+          return false;
+        // Exclude root path / (JS redirect page)
+        if (segments.length === 0) return false;
+        return true;
+      },
     }),
   ],
   markdown: {

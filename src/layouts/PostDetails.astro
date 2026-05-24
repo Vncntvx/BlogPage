@@ -9,7 +9,7 @@ import EditPost from "@/components/EditPost.astro";
 import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
-import Comments from "@/components/Comments";
+import Comments from "@/components/Comments.astro";
 import KatexStyles from "@/components/KatexStyles.astro";
 import CopyrightCard from "@/components/CopyrightCard.astro";
 import { getPath } from "@/utils/getPath";
@@ -202,7 +202,7 @@ const nextPost =
 
     <ShareLinks />
 
-    <Comments client:visible={{ rootMargin: "200px" }} />
+    <Comments locale={postLocale} />
 
     <hr class="my-6 border-dashed" />
 

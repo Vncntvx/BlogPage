@@ -4,7 +4,7 @@ import Footer from "@/components/Footer.astro";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Layout from "./Layout.astro";
 import { SITE, LATEX } from "@/config";
-import Comments from "@/components/Comments";
+import Comments from "@/components/Comments.astro";
 import KatexStyles from "@/components/KatexStyles.astro";
 
 export interface Props {
@@ -12,9 +12,10 @@ export interface Props {
     title: string;
     description?: string;
   };
+  locale?: string;
 }
 
-const { frontmatter } = Astro.props;
+const { frontmatter, locale } = Astro.props;
 ---
 
 <Layout title={`${frontmatter.title} | ${SITE.title}`}>
@@ -27,7 +28,7 @@ const { frontmatter } = Astro.props;
       <slot />
     </section>
     <section class="max-w-app px-4 pb-16">
-      <Comments client:visible={{ rootMargin: "200px" }} />
+      <Comments locale={locale} />
     </section>
   </main>
   <Footer />
