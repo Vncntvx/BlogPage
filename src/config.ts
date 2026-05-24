@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://wenjiexu.site/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
   title: "Blog",
-  ogImage: "astropaper-og.jpg",
+  ogImage: "",
   lightAndDarkMode: true,
   postPerIndex: 5, // 最新文章在首页显示的数量
   postPerPage: 10, // 文章列表每页显示的数量
@@ -86,7 +86,6 @@ export const SHARE = {
 // 功能开关与配置
 export const LATEX = {
   enabled: true,
-  katexCdn: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css",
 } as const;
 
 export const COMMENTS = {

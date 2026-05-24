@@ -85,6 +85,7 @@ document.addEventListener("astro:page-load", () => {
         SITE.pages.posts.enabled && (
           <a
             target="_blank"
+            rel="noopener noreferrer"
             href={`${getLocalePath(locale)}/rss.xml`}
             class="inline-block"
             aria-label="rss feed"
