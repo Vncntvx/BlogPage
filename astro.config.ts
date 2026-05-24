@@ -26,6 +26,9 @@ const defaultAstroLocale = DEFAULT_LOCALE.code as AstroLocale["codes"][number];
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
+  prefetch: {
+    defaultStrategy: "hover",
+  },
   i18n: {
     defaultLocale: defaultAstroLocale,
     locales: astroLocales,
@@ -116,5 +119,6 @@ export default defineConfig({
   },
   experimental: {
     svgOptimizer: svgoOptimizer(),
+    clientPrerender: true,
   },
 });
