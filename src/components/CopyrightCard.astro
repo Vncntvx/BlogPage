@@ -12,10 +12,13 @@ export interface Props {
 
 const {
   locale,
-  year = new Date().getFullYear(),
+  year: _year,
   ccLicense = "by-nc-sa",
   contactHref,
 } = Astro.props;
+
+const currentYear = new Date().getFullYear();
+const year = _year != null && _year < currentYear ? `${_year}-${currentYear}` : String(currentYear);
 
 type CCToken = "BY" | "NC" | "SA" | "ND";
 
