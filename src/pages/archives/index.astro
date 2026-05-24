@@ -3,12 +3,6 @@ import { DEFAULT_LOCALE } from "@/i18n/config";
 import { getLocalePath } from "@/i18n/utils";
 
 export const prerender = true;
-const target = `${getLocalePath(DEFAULT_LOCALE.code)}/archives`.replace(
-  /\/+/,
-  "/"
-);
 
-export function GET() {
-  return Response.redirect(target, 308);
-}
+return Astro.redirect(`${getLocalePath(DEFAULT_LOCALE.code)}/archives`.replace(/\/+/, "/"), 308);
 ---

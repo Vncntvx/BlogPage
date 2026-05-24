@@ -4,12 +4,10 @@ import { getLocalePath } from "@/i18n/utils";
 import { SITE } from "@/config";
 
 export const prerender = true;
-const target = `${getLocalePath(DEFAULT_LOCALE.code)}/tags`.replace(/\/+/, "/");
 
-export function GET() {
-  if (!SITE.pages.tags.enabled) {
-    return Response.redirect("/404", 308);
-  }
-  return Response.redirect(target, 308);
+if (!SITE.pages.tags.enabled) {
+  return Astro.redirect("/404", 308);
 }
+
+return Astro.redirect(`${getLocalePath(DEFAULT_LOCALE.code)}/tags`.replace(/\/+/, "/"), 308);
 ---
