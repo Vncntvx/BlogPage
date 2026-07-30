@@ -1,4 +1,5 @@
 import { defineConfig, envField, svgoOptimizer } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import remarkToc from "remark-toc";
@@ -54,15 +55,17 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [
-      ...(LATEX.enabled ? [remarkMath] : []),
-      [remarkToc, { heading: "目录|Table of contents" }],
-      [remarkCollapse, { test: "目录|Table of contents" }],
-    ],
-    rehypePlugins: [
+    processor: unified({
+      remarkPlugins: [
+        ...(LATEX.enabled ? [remarkMath] : []),
+        [remarkToc, { heading: "目录|Table of contents" }],
+        [remarkCollapse, { test: "目录|Table of contents" }],
+      ],
+      rehypePlugins: [
         ...(LATEX.enabled ? [rehypeKatex] : []),
         rehypeCallouts,
       ],
+    }),
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "night-owl" },
@@ -121,6 +124,7 @@ export default defineConfig({
       }),
     },
   },
+  compressHTML: true,
   experimental: {
     svgOptimizer: svgoOptimizer(),
     clientPrerender: true,
