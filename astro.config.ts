@@ -1,12 +1,10 @@
 import { defineConfig, envField, svgoOptimizer } from "astro/config";
-import { unified } from "@astrojs/markdown-remark";
+import { satteri } from "@astrojs/markdown-satteri";
+import { katex } from "@nullpinter/satteri-katex";
+import satteriCallouts from "satteri-callouts";
+import { tocCollapse } from "./src/utils/satteri-plugins/toc-collapse";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
-import remarkToc from "remark-toc";
-import remarkCollapse from "remark-collapse";
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import rehypeCallouts from "rehype-callouts";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -55,16 +53,17 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    processor: unified({
-      remarkPlugins: [
-        ...(LATEX.enabled ? [remarkMath] : []),
-        [remarkToc, { heading: "目录|Table of contents" }],
-        [remarkCollapse, { test: "目录|Table of contents" }],
+    processor: satteri({
+      features: {
+        math: LATEX.enabled,
+        gfm: true,
+        frontmatter: true,
+      },
+      mdastPlugins: [
+        ...(LATEX.enabled ? [katex()] : []),
+        tocCollapse(),
       ],
-      rehypePlugins: [
-        ...(LATEX.enabled ? [rehypeKatex] : []),
-        rehypeCallouts,
-      ],
+      hastPlugins: [satteriCallouts()],
     }),
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
@@ -120,7 +119,6 @@ export default defineConfig({
       }),
     },
   },
-  compressHTML: true,
   experimental: {
     svgOptimizer: svgoOptimizer(),
     clientPrerender: true,
