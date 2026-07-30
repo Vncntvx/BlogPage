@@ -64,7 +64,15 @@ html[data-theme="dark"] {
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
-/* Anything that has been anchored to should have extra scroll margin */
+/* Anything that has been anchored to should have extra scroll margin so the
+   target heading isn't hidden under the top progress bar (xl+) or the sticky
+   TOC section bar (below xl). */
 :target {
-  scroll-margin-block: 1rem;
+  scroll-margin-block: 4rem;
+}
+@media (min-width: 1280px) {
+  :target {
+    /* No section bar on xl+ — just clear the 4px progress bar. */
+    scroll-margin-block: 1rem;
+  }
 }

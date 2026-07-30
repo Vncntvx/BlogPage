@@ -138,6 +138,12 @@ type TranslationKeys = {
   october: string;
   november: string;
   december: string;
+
+  // Table of contents
+  tableOfContents: string;
+  tocCurrentSection: string;
+  tocOpen: string;
+  tocClose: string;
 };
 
 type TranslationListKeys = never;

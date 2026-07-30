@@ -40,6 +40,7 @@ const blog = defineCollection({
       ccLicense: z.enum(CC_LICENSE_VALUES).optional(),
       timezone: z.string().optional(),
       lang: z.enum(LOCALE_ENUM_VALUES).default(DEFAULT_LOCALE.code),
+          toc: z.boolean().optional().default(false),
     }),
 });
 

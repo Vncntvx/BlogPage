@@ -120,3 +120,9 @@ september: "九月"
 october: "十月"
 november: "十一月"
 december: "十二月"
+
+# Table of contents
+tableOfContents: "本文目录"
+tocCurrentSection: "当前章节"
+tocOpen: "展开目录"
+tocClose: "关闭目录"

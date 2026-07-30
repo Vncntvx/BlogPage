@@ -21,6 +21,7 @@ import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE, LATEX, SOCIAL } from "@/config";
 import { t, getLangFromUrl } from "@/i18n";
+import TableOfContents from "@/components/toc/TableOfContents.astro";
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -50,8 +51,9 @@ const {
 const isRepost = title.trim().startsWith("转载");
 const shouldShowCopyright = showCopyright ?? !isRepost;
 
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 const readingTime = getReadingTime(post.body || "");
+const tocEnabled = post.data.toc === true;
 const displayCategoryName =
   slugifyStr(category || "") === DEFAULT_CATEGORY_SLUG
     ? t("defaultCategory", postLocale)
@@ -119,66 +121,87 @@ const nextPost =
   <main
     id="main-content"
     class:list={[
-      "mx-auto w-full max-w-app px-4 pb-12",
+      "mx-auto w-full px-4 pb-12",
+      // Wider on xl+ to fit TOC sidebar + article side-by-side, centered as a
+      // unit; keep max-w-app on narrower widths so other behaviour is unchanged.
+      "max-w-app xl:max-w-[1100px]",
       { "mt-8": !SITE.showBackButton },
     ]}
     data-pagefind-body
   >
-    <h1
-      transition:name={toTransitionName(title)}
-      class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+    <div
+      class:list={[
+        "mx-auto max-w-app xl:max-w-none",
+        // Fixed sidebar + article columns so the two form one centered unit
+        // (rather than the article stretching with `1fr`, which shifts the
+        // optical center left). justify-center centers the unit in the main.
+        tocEnabled &&
+          "xl:grid xl:grid-cols-[232px_minmax(0,760px)] xl:justify-center xl:gap-14",
+      ]}
     >
-      {title}
-    </h1>
-    <ul class="my-2 flex flex-wrap items-center gap-y-1">
-      <li
-        class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
-      >
-        <Datetime
-          {pubDatetime}
-          {modDatetime}
-          {timezone}
-          size="lg"
-          showLabel={true}
-        />
-      </li>
-
-      {
-        SITE.editPost.enabled && !hideEditPost && (
-          <li class="after:text-muted-foreground hidden items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
-            <EditPost {hideEditPost} {post} />
+      <TableOfContents
+        headings={headings}
+        enabled={tocEnabled}
+        locale={postLocale}
+      />
+      <div class="min-w-0">
+        <h1
+          transition:name={toTransitionName(title)}
+          class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+        >
+          {title}
+        </h1>
+        <ul class="my-2 flex flex-wrap items-center gap-y-1">
+          <li
+            class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
+          >
+            <Datetime
+              {pubDatetime}
+              {modDatetime}
+              {timezone}
+              size="lg"
+              showLabel={true}
+            />
           </li>
-        )
-      }
 
-      <li
-        class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
-      >
-        <span class="whitespace-nowrap">
-          {readingTime}
-          {t("minutesRead", postLocale)}
-        </span>
-      </li>
+          {
+            SITE.editPost.enabled && !hideEditPost && (
+              <li class="after:text-muted-foreground hidden items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
+                <EditPost {hideEditPost} {post} />
+              </li>
+            )
+          }
 
-      {
-        category && SITE.pages.categories.enabled && (
-          <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm">
-            <a
-              href={`/${postLocale}/categories/${slugifyStr(category)}/`}
-              class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
-            >
-              {t("categoryLabel", postLocale)}: {displayCategoryName}
-            </a>
+          <li
+            class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
+          >
+            <span class="whitespace-nowrap">
+              {readingTime}
+              {t("minutesRead", postLocale)}
+            </span>
           </li>
-        )
-      }
-    </ul>
-    <article
-      id="article"
-      class="app-prose mx-auto mt-8 max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
-    >
-      <Content />
-    </article>
+
+          {
+            category && SITE.pages.categories.enabled && (
+              <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm">
+                <a
+                  href={`/${postLocale}/categories/${slugifyStr(category)}/`}
+                  class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
+                >
+                  {t("categoryLabel", postLocale)}: {displayCategoryName}
+                </a>
+              </li>
+            )
+          }
+        </ul>
+        <article
+          id="article"
+          class="app-prose mx-auto mt-8 max-w-app xl:mx-0 xl:max-w-[760px] prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+        >
+          <Content />
+        </article>
+      </div>
+    </div>
 
     <hr class="my-8 border-dashed" />
 

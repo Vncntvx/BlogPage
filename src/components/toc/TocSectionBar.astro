@@ -1,0 +1,79 @@
+---
+import { t } from "@/i18n";
+import type { LocaleCode } from "@/i18n/config";
+
+interface Props {
+  locale: LocaleCode;
+  /** Breakpoint variant: "tablet" shows md…xl, "mobile" shows below md. They
+      share the same markup; only the responsive visibility classes differ. */
+  variant: "tablet" | "mobile";
+}
+
+const { locale, variant } = Astro.props;
+const openLabel = t("tocOpen", locale);
+const currentLabel = t("tocCurrentSection", locale);
+
+const visibilityClass =
+  variant === "tablet" ? "hidden md:block xl:hidden" : "block md:hidden";
+---
+
+{
+  /* Sticky current-section bar. Appears once the post title/meta scroll out of
+     view. Shows the active H2 text + "N / M" position (H2 count) + a button to
+     open the drawer (tablet) / bottom sheet (mobile). The active text/index are
+     kept in sync by the shared scroll-spy script in TableOfContents.astro via
+     data-toc-current-text / data-toc-current-index / data-toc-current-total. */
+}
+<div
+  class:list={[
+    "toc-section-bar sticky top-0 z-30 -mx-4 border-b border-border bg-background/85 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/70",
+    "data-[section-bar-visible=false]:hidden",
+    visibilityClass,
+  ]}
+  data-toc-section-bar
+  data-section-bar-visible="false"
+>
+  <div class="flex items-center gap-3 py-2">
+    <span class="sr-only">{currentLabel}</span>
+    <span
+      class="toc-section-bar__index shrink-0 font-mono text-xs text-foreground/50 tabular-nums"
+      data-toc-current-index
+      aria-hidden="true"
+    >
+      –
+    </span>
+    <span
+      class="toc-section-bar__text min-w-0 flex-1 truncate text-sm font-medium text-foreground/80"
+      data-toc-current-text
+    >
+      –
+    </span>
+    <button
+      type="button"
+      class:list={[
+        "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md",
+        "text-foreground/70 transition-colors hover:bg-muted hover:text-accent",
+        "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed",
+      ]}
+      data-toc-open-trigger
+      aria-label={openLabel}
+      aria-expanded="false"
+      aria-controls="toc-overlay"
+    >
+      <svg
+        class="size-5"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="12" x2="15" y2="12"></line>
+        <line x1="3" y1="18" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+</div>

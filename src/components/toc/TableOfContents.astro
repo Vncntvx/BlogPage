@@ -1,0 +1,483 @@
+---
+import TocSidebar from "@/components/toc/TocSidebar.astro";
+import TocSectionBar from "@/components/toc/TocSectionBar.astro";
+import TocOverlay from "@/components/toc/TocOverlay.astro";
+import { getTocTree } from "@/utils/toc";
+import type { LocaleCode } from "@/i18n/config";
+import type { MarkdownHeading } from "astro";
+import { t } from "@/i18n";
+
+interface Props {
+  headings: MarkdownHeading[];
+  enabled: boolean;
+  locale: LocaleCode;
+}
+
+const { headings, enabled, locale } = Astro.props;
+const tree = enabled ? getTocTree(headings) : [];
+const tocLabel = t("tableOfContents", locale);
+const hasToc = tree.length > 0;
+---
+
+{
+  /* The TOC region. Only rendered when there's at least one H2. Three forms
+     share the same data and the scroll-spy state driven by the script below:
+     desktop sidebar (xl+), tablet section bar + drawer (md…xl), mobile section
+     bar + bottom sheet (<md). The section bars and overlay use sticky/fixed
+     positioning so their placement in the grid doesn't matter. */
+  hasToc && (
+    <>
+      <TocSidebar tree={tree} locale={locale} />
+      <TocSectionBar locale={locale} variant="tablet" />
+      <TocSectionBar locale={locale} variant="mobile" />
+      <TocOverlay tree={tree} locale={locale} />
+    </>
+  )
+}
+
+{
+  /* No-JS fallback: the section bar + overlay need JS to open, so hide their
+     entry points when JS is off. The desktop sidebar's plain #slug anchors
+     keep working natively (CSS shows it on xl+), so it's left visible.
+     Rendered unconditionally (harmless when there's no TOC) to keep the
+     style out of the JSX expression — Astro/Prettier stumble on a <style>
+     nested inside the `hasToc && (...)` block. */
+  hasToc && (
+    <noscript>
+      <style
+        is:global
+        set:html={`[data-toc-section-bar],[data-toc-overlay]{display:none!important}`}
+      />
+    </noscript>
+  )
+}
+
+{
+  /* Serialize the TOC slugs (H2 order) for the client so scroll-spy knows the
+     section order and count without re-parsing the DOM tree structure. */
+  hasToc && (
+    <script
+      is:inline
+      data-astro-rerun
+      data-toc-config
+      type="application/json"
+      set:html={JSON.stringify({
+        slugs: tree.flatMap(n => [n.slug, ...n.children.map(c => c.slug)]),
+        h2Slugs: tree.map(n => n.slug),
+        // H2 slug -> display text, so the section bar can show the active
+        // section's title without re-querying the heading element.
+        h2Text: Object.fromEntries(tree.map(n => [n.slug, n.text])),
+        label: tocLabel,
+      })}
+    />
+  )
+}
+
+<script is:inline data-astro-rerun>
+  (function () {
+    const root = document.documentElement;
+    // Bind scroll/hashchange listeners once (same guard pattern as
+    // BackToTopButton); handlers re-query the DOM each fire so they survive
+    // View Transition swaps to a new article. Only the listeners are bound
+    // once — the per-article config + observer are (re)built by setup() so a
+    // different post's slugs/heading elements are picked up.
+    if (root.dataset.tocSpyBound === "true") return;
+
+    let activeSlug = null;
+    let ticking = false;
+    let io = null;
+    // Latest config captured at setup(); handlers read this closure var so
+    // they always reflect the current article after a swap.
+    let allSlugs = [];
+    let h2Slugs = [];
+    let h2Text = {};
+    let sectionBarVisible = false;
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    function setActive(slug) {
+      if (slug === activeSlug) return;
+      activeSlug = slug;
+
+      // Update every TOC link across all forms (sidebar + drawer/sheet).
+      document
+        .querySelectorAll("[data-toc-slug][aria-current]")
+        .forEach(el => el.removeAttribute("aria-current"));
+      if (slug) {
+        document
+          .querySelectorAll(`[data-toc-slug="${CSS.escape(slug)}"]`)
+          .forEach(el => el.setAttribute("aria-current", "location"));
+      }
+
+      // Broadcast current section for the section bars.
+      root.setAttribute("data-toc-active", slug || "");
+      const h2Index = h2Slugs.indexOf(slug);
+      // If active is an H3, find its parent H2 for the "2 / 7" indicator.
+      const h2ForActive =
+        h2Index >= 0
+          ? slug
+          : (() => {
+              const i = allSlugs.indexOf(slug);
+              for (let j = i; j >= 0; j--) {
+                if (h2Slugs.includes(allSlugs[j])) return allSlugs[j];
+              }
+              return null;
+            })();
+      const h2Idx = h2ForActive ? h2Slugs.indexOf(h2ForActive) : -1;
+      root.setAttribute("data-toc-active-index", String(h2Idx + 1));
+      root.setAttribute("data-toc-active-total", String(h2Slugs.length));
+
+      // Sync the section bars' current-section text + "N / M" readout.
+      const text = h2ForActive ? h2Text[h2ForActive] || "" : "";
+      const indexLabel = h2Idx >= 0 ? `${h2Idx + 1} / ${h2Slugs.length}` : "";
+      document.querySelectorAll("[data-toc-current-text]").forEach(el => {
+        el.textContent = text || "–";
+      });
+      document.querySelectorAll("[data-toc-current-index]").forEach(el => {
+        el.textContent = indexLabel || "–";
+      });
+    }
+
+    // Reading anchor: ~20% from the top of the viewport.
+    function anchorY() {
+      return window.scrollY + window.innerHeight * 0.2;
+    }
+
+    // Resolve live heading elements each call so it survives View Transitions.
+    function headingEls() {
+      return allSlugs.map(s => document.getElementById(s)).filter(Boolean);
+    }
+
+    function computeFromScrollPosition() {
+      // Headings may not be in the DOM yet (script runs before <article>
+      // finishes parsing, or a swap is mid-flight). Bail without changing
+      // state — a later scroll/observer tick re-evaluates once they exist.
+      const els = headingEls();
+      if (els.length === 0) return;
+
+      const docEl = document.documentElement;
+      // At page bottom, force the last heading active.
+      const atBottom =
+        window.scrollY + window.innerHeight >= docEl.scrollHeight - 2;
+      if (atBottom) {
+        setActive(allSlugs[allSlugs.length - 1]);
+        return;
+      }
+
+      // Find the last heading whose top is above the reading anchor.
+      let candidate = null;
+      for (const el of els) {
+        if (el.getBoundingClientRect().top + window.scrollY <= anchorY()) {
+          candidate = el.id;
+        } else {
+          break;
+        }
+      }
+      setActive(candidate || allSlugs[0]);
+    }
+
+    // Show the section bar once the post title (h1) scrolls above the top of
+    // the viewport; hide it again when scrolled back near the top. Uses a
+    // hysteresis-ish check on the h1's bottom edge to avoid flicker.
+    function updateSectionBarVisibility() {
+      const h1 = document.querySelector("article#article h1, main h1");
+      if (!h1) return;
+      // Reveal once the h1's bottom has passed the very top (with a small
+      // negative threshold so it appears just as the title leaves).
+      const shouldShow = h1.getBoundingClientRect().bottom < 0;
+      if (shouldShow === sectionBarVisible) return;
+      sectionBarVisible = shouldShow;
+      document.querySelectorAll("[data-toc-section-bar]").forEach(el => {
+        el.setAttribute(
+          "data-section-bar-visible",
+          shouldShow ? "true" : "false"
+        );
+      });
+    }
+
+    function onScroll() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        computeFromScrollPosition();
+        updateSectionBarVisibility();
+        ticking = false;
+      });
+    }
+
+    // IntersectionObserver as the primary signal — covers the common case
+    // with low overhead. rAF-on-scroll is the authoritative fallback that
+    // also handles fast scrolls the observer may skip, so it alone defines
+    // the active item; the observer just nudges re-computation on band change.
+    io = new IntersectionObserver(() => computeFromScrollPosition(), {
+      rootMargin: "0px 0px -75% 0px",
+      threshold: 0,
+    });
+
+    // Read the current article's TOC config, reset per-article state, and
+    // (re)observe its heading elements. Called on first run and after every
+    // View Transition swap so a different post's slugs/headings are used.
+    function setup() {
+      const configScript = document.querySelector("script[data-toc-config]");
+      if (!configScript) return;
+
+      let config;
+      try {
+        config = JSON.parse(configScript.textContent || "{}");
+      } catch {
+        return;
+      }
+      const newAllSlugs = config.slugs || [];
+      const newH2Slugs = config.h2Slugs || [];
+
+      // Reset active state so a fresh article's first item gets applied even
+      // if it happens to share a slug with the previous post.
+      activeSlug = null;
+      sectionBarVisible = false;
+      document
+        .querySelectorAll("[data-toc-slug][aria-current]")
+        .forEach(el => el.removeAttribute("aria-current"));
+      document
+        .querySelectorAll("[data-toc-section-bar]")
+        .forEach(el => el.setAttribute("data-section-bar-visible", "false"));
+      root.removeAttribute("data-toc-active");
+      root.removeAttribute("data-toc-active-index");
+      root.removeAttribute("data-toc-active-total");
+
+      allSlugs = newAllSlugs;
+      h2Slugs = newH2Slugs;
+      h2Text = config.h2Text || {};
+      if (allSlugs.length === 0) return;
+
+      // Disconnect stale observers/headings from the previous article.
+      if (io) io.disconnect();
+      headingEls().forEach(el => io.observe(el));
+    }
+
+    document.addEventListener("scroll", onScroll, { passive: true });
+
+    // Hash navigation: direct load + forward/back.
+    function jumpToHash(hash) {
+      let id = (hash || "").replace(/^#/, "");
+      if (!id) return;
+      // location.hash is URL-encoded; slugs are decoded strings (e.g. Chinese
+      // text). Decode so the lookup matches.
+      try {
+        id = decodeURIComponent(id);
+      } catch {
+        /* keep raw id if malformed */
+      }
+      if (!allSlugs.includes(id)) return;
+      const el = document.getElementById(id);
+      if (!el) return;
+      setActive(id);
+      el.scrollIntoView({
+        behavior: prefersReducedMotion ? "auto" : "smooth",
+        block: "start",
+      });
+    }
+
+    window.addEventListener("hashchange", () => jumpToHash(location.hash));
+
+    /* ===== Section bar + overlay (drawer / bottom sheet) ===== */
+    // One overlay element shared by tablet (drawer) and mobile (sheet). The
+    // variant is set at open time based on the current viewport. Focus is
+    // trapped, Escape closes, background scroll is locked, and focus returns
+    // to the trigger on close. Clicking a TOC link jumps + closes.
+    let overlayEl = null;
+    let overlayPanel = null;
+    let lastFocused = null;
+    let savedBodyOverflow = null;
+
+    function overlayVariant() {
+      // < md (768px) → bottom sheet; md…xl → right drawer. Matches the
+      // section bars' own breakpoint visibility.
+      return window.matchMedia("(min-width: 768px)").matches
+        ? "drawer"
+        : "sheet";
+    }
+
+    function focusableIn(panel) {
+      return Array.from(
+        panel.querySelectorAll(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+        )
+      ).filter(el => el.offsetParent !== null);
+    }
+
+    function openOverlay(trigger) {
+      overlayEl = document.querySelector("[data-toc-overlay]");
+      overlayPanel = overlayEl?.querySelector("[data-toc-overlay-panel]");
+      if (!overlayEl || !overlayPanel) return;
+      // Already open — don't re-init listeners / re-lock scroll.
+      if (!overlayEl.hasAttribute("hidden")) return;
+
+      lastFocused = trigger || document.activeElement;
+      overlayEl.setAttribute("data-toc-overlay-variant", overlayVariant());
+      overlayEl.removeAttribute("hidden");
+      // Force reflow so the transform transition plays from the off-screen
+      // state to the visible state.
+      void overlayPanel.offsetWidth;
+
+      // Lock background scroll.
+      savedBodyOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      document.addEventListener("keydown", onOverlayKeydown);
+      // Close when clicking the backdrop (not the panel).
+      overlayEl.addEventListener("click", onOverlayClick);
+
+      // Mark triggers as expanded for screen readers.
+      document
+        .querySelectorAll("[data-toc-open-trigger]")
+        .forEach(b => b.setAttribute("aria-expanded", "true"));
+
+      // Move focus into the panel (first focusable = close button).
+      const focusables = focusableIn(overlayPanel);
+      (focusables[0] || overlayPanel).focus();
+    }
+
+    function closeOverlay() {
+      // Resolve from the DOM so close works even if overlayEl wasn't set by
+      // an openOverlay() call in this session (e.g. opened by a previous page
+      // lifecycle). Idempotent: a no-op if already closed.
+      const el = overlayEl || document.querySelector("[data-toc-overlay]");
+      const panel =
+        overlayPanel || el?.querySelector("[data-toc-overlay-panel]");
+      overlayEl = null;
+      overlayPanel = null;
+
+      if (!el || el.hasAttribute("hidden")) {
+        // Already closed — still restore body scroll in case it was locked.
+        document.body.style.overflow = savedBodyOverflow ?? "";
+        savedBodyOverflow = null;
+        document
+          .querySelectorAll("[data-toc-open-trigger]")
+          .forEach(b => b.setAttribute("aria-expanded", "false"));
+        return;
+      }
+
+      document.removeEventListener("keydown", onOverlayKeydown);
+      el.removeEventListener("click", onOverlayClick);
+      document.body.style.overflow = savedBodyOverflow ?? "";
+      savedBodyOverflow = null;
+
+      document
+        .querySelectorAll("[data-toc-open-trigger]")
+        .forEach(b => b.setAttribute("aria-expanded", "false"));
+
+      if (prefersReducedMotion) {
+        el.setAttribute("hidden", "");
+      } else {
+        // Wait for the slide-out transition before hiding.
+        const hide = () => el.setAttribute("hidden", "");
+        panel?.addEventListener("transitionend", hide, { once: true });
+        setTimeout(hide, 250);
+      }
+
+      lastFocused?.focus?.();
+      lastFocused = null;
+    }
+
+    function onOverlayClick(e) {
+      if (e.target === e.currentTarget) closeOverlay();
+      // Also close if the backdrop itself was clicked.
+      if (e.target?.hasAttribute?.("data-toc-overlay-backdrop")) closeOverlay();
+    }
+
+    function onOverlayKeydown(e) {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        closeOverlay();
+        return;
+      }
+      if (e.key === "Tab" && overlayPanel) {
+        const focusables = focusableIn(overlayPanel);
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    }
+
+    function isOverlayOpen() {
+      const el = document.querySelector("[data-toc-overlay]");
+      return !!el && !el.hasAttribute("hidden");
+    }
+
+    // Wire triggers + link clicks once. Delegated on document so it survives
+    // View Transitions without re-binding.
+    document.addEventListener("click", e => {
+      const trigger = e.target.closest?.("[data-toc-open-trigger]");
+      if (trigger) {
+        e.preventDefault();
+        if (isOverlayOpen()) closeOverlay();
+        else openOverlay(trigger);
+        return;
+      }
+      const closer = e.target.closest?.("[data-toc-overlay-close]");
+      if (closer) {
+        e.preventDefault();
+        closeOverlay();
+        return;
+      }
+      // A TOC link click inside the overlay: jump + close. The link's native
+      // hash navigation + jumpToHash handles the scroll; we just close.
+      // Use setTimeout (not rAF) so the close runs after the current click
+      // dispatch finishes and isn't dropped if the tab is backgrounded.
+      const link = e.target.closest?.("[data-toc-overlay] [data-toc-slug]");
+      if (link) {
+        setTimeout(closeOverlay, 0);
+      }
+    });
+
+    // First-run setup + initial active state. Defer to DOMContentLoaded so
+    // headings exist (this script sits before <article> in the markup, so at
+    // parse time the article DOM isn't built yet). On subsequent View
+    // Transition swaps the article is already present, so after-swap runs
+    // setup() directly.
+    function start() {
+      setup();
+      if (location.hash) {
+        requestAnimationFrame(() => jumpToHash(location.hash));
+      } else {
+        computeFromScrollPosition();
+      }
+      updateSectionBarVisibility();
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", start);
+    } else {
+      start();
+    }
+
+    // On View Transitions swap to a new article, rebuild config/observer.
+    document.addEventListener("astro:after-swap", () => {
+      // Ensure no overlay is left open from the previous page.
+      const ol = document.querySelector("[data-toc-overlay]");
+      if (ol) ol.setAttribute("hidden", "");
+      overlayEl = null;
+      overlayPanel = null;
+      document.body.style.overflow = savedBodyOverflow ?? "";
+      savedBodyOverflow = null;
+
+      setup();
+      // after-swap fires after the new DOM is swapped in and scroll reset to
+      // top; recompute so the new article's first heading is active.
+      requestAnimationFrame(() => {
+        computeFromScrollPosition();
+        updateSectionBarVisibility();
+      });
+    });
+
+    root.dataset.tocSpyBound = "true";
+  })();
+</script>

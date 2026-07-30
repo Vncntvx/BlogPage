@@ -1,0 +1,31 @@
+---
+import TocList from "@/components/toc/TocList.astro";
+import type { TocNode } from "@/utils/toc";
+import type { LocaleCode } from "@/i18n/config";
+import { t } from "@/i18n";
+
+interface Props {
+  tree: TocNode[];
+  locale: LocaleCode;
+}
+
+const { tree, locale } = Astro.props;
+const tocLabel = t("tableOfContents", locale);
+---
+
+{
+  /* Desktop sidebar (xl+). Sticky within the article layout, never browser-left
+     fixed. Self-scrolls when taller than the viewport. Hidden below xl —
+     tablet/phone use the section bar + drawer/sheet instead. */
+}
+<aside
+  class="toc-sidebar sticky top-2 hidden max-h-[calc(100svh-2rem)] w-[232px] shrink-0 self-start overflow-y-auto xl:block"
+  data-toc-sidebar
+>
+  <p
+    class="mb-2 ps-2 text-xs font-semibold tracking-wide text-foreground/50 uppercase"
+  >
+    {tocLabel}
+  </p>
+  <TocList tree={tree} variant="sidebar" locale={locale} />
+</aside>

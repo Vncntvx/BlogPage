@@ -14,9 +14,8 @@ draft: false
 showCopyright: true
 slug: "en/python-env-conda-venv"
 lang: en
+toc: true
 ---
-
-## Table of Contents
 
 ## Background
 

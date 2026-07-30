@@ -1,0 +1,119 @@
+---
+import TocList from "@/components/toc/TocList.astro";
+import type { TocNode } from "@/utils/toc";
+import { t } from "@/i18n";
+import type { LocaleCode } from "@/i18n/config";
+
+interface Props {
+  tree: TocNode[];
+  locale: LocaleCode;
+}
+
+const { tree, locale } = Astro.props;
+const label = t("tableOfContents", locale);
+const closeLabel = t("tocClose", locale);
+---
+
+{
+  /* Shared TOC overlay — one markup, two positions:
+     - tablet (md…xl): right-side drawer, width min(360px, 88vw)
+     - mobile (<md): bottom sheet, max-h 75dvh
+     Variant is chosen by CSS at runtime via the [data-toc-overlay-variant]
+     attribute, toggled by the open script based on which trigger was used /
+     the current breakpoint. Focus is trapped, Escape closes, background scroll
+     is locked, and focus returns to the trigger on close. Links jump + close. */
+}
+<div
+  class="toc-overlay fixed inset-0 z-50"
+  data-toc-overlay
+  data-toc-overlay-variant="drawer"
+  data-pagefind-ignore
+  hidden
+>
+  {/* Backdrop */}
+  <div
+    class="toc-overlay__backdrop absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-200 motion-reduce:transition-none"
+    data-toc-overlay-backdrop
+    aria-hidden="true"
+  >
+  </div>
+
+  {/* Panel */}
+  <div
+    class="toc-overlay__panel absolute flex flex-col overflow-hidden border-border bg-background shadow-xl transition-transform duration-200 motion-reduce:transition-none"
+    role="dialog"
+    aria-modal="true"
+    aria-label={label}
+    data-toc-overlay-panel
+  >
+    <div
+      class="flex items-center justify-between border-b border-border px-4 py-3"
+    >
+      <span class="text-sm font-semibold text-foreground/80">{label}</span>
+      <button
+        type="button"
+        class="inline-flex h-9 w-9 items-center justify-center rounded-md text-foreground/60 transition-colors hover:bg-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed"
+        data-toc-overlay-close
+        aria-label={closeLabel}
+      >
+        <svg
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    <div class="toc-overlay__body overflow-y-auto p-3" data-toc-overlay-body>
+      <TocList tree={tree} variant="drawer" locale={locale} />
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  /* Position the panel per variant. Drawer: right side, full height, capped
+     width. Sheet: bottom, capped height. Hidden state is driven by the parent
+     [hidden] attribute + these transforms; the open script removes [hidden]
+     then triggers the transform transition. */
+  .toc-overlay:not([hidden]) .toc-overlay__backdrop {
+    opacity: 1;
+  }
+
+  /* Drawer (tablet) */
+  .toc-overlay[data-toc-overlay-variant="drawer"] .toc-overlay__panel {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(360px, 88vw);
+    border-left-width: 1px;
+    transform: translateX(100%);
+  }
+  .toc-overlay[data-toc-overlay-variant="drawer"]:not([hidden])
+    .toc-overlay__panel {
+    transform: translateX(0);
+  }
+
+  /* Sheet (mobile) */
+  .toc-overlay[data-toc-overlay-variant="sheet"] .toc-overlay__panel {
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-height: 75dvh;
+    border-top-width: 1px;
+    border-top-left-radius: 0.75rem;
+    border-top-right-radius: 0.75rem;
+    transform: translateY(100%);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .toc-overlay[data-toc-overlay-variant="sheet"]:not([hidden])
+    .toc-overlay__panel {
+    transform: translateY(0);
+  }
+</style>

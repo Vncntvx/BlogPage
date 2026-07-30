@@ -2,7 +2,6 @@ import { defineConfig, envField, svgoOptimizer } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
 import { katex } from "@nullpinter/satteri-katex";
 import satteriCallouts from "satteri-callouts";
-import { tocCollapse } from "./src/utils/satteri-plugins/toc-collapse";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import {
@@ -59,10 +58,7 @@ export default defineConfig({
         gfm: true,
         frontmatter: true,
       },
-      mdastPlugins: [
-        ...(LATEX.enabled ? [katex()] : []),
-        tocCollapse(),
-      ],
+      mdastPlugins: [...(LATEX.enabled ? [katex()] : [])],
       hastPlugins: [satteriCallouts()],
     }),
     shikiConfig: {
