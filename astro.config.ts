@@ -5,6 +5,7 @@ import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import rehypeCallouts from "rehype-callouts";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
@@ -58,7 +59,10 @@ export default defineConfig({
       [remarkToc, { heading: "目录|Table of contents" }],
       [remarkCollapse, { test: "目录|Table of contents" }],
     ],
-    rehypePlugins: LATEX.enabled ? [rehypeKatex] : [],
+    rehypePlugins: [
+        ...(LATEX.enabled ? [rehypeKatex] : []),
+        rehypeCallouts,
+      ],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "night-owl" },

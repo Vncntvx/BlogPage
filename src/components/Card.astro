@@ -1,5 +1,5 @@
 ---
-import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import Datetime from "./Datetime.astro";
@@ -20,7 +20,7 @@ const readingTime = getReadingTime(
 );
 
 const headerProps = {
-  style: { viewTransitionName: slugifyStr(title) },
+  style: { viewTransitionName: toTransitionName(title) },
   class: "text-lg font-medium decoration-dashed hover:underline",
 };
 ---
