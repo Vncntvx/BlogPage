@@ -66,6 +66,7 @@ type TranslationKeys = {
 
   // Meta
   minutesRead: string;
+  postCount: string;
 
   // Index page (UI labels)
   socialLinks: string;

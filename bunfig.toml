@@ -17,15 +17,8 @@ print = "bun.lock"
 # 保存锁文件
 save = true
 
-[test]
-# 测试配置
-preload = ["./test/setup.ts"]
-# 测试覆盖率
-coverage = true
-# 覆盖率报告格式 (必须是数组)
-coverageReporter = ["text"]
-# 测试超时时间（毫秒）
-timeout = 10000
+# 测试由 vitest 管理（见 vitest.config.ts），不再使用 bun test。
+
 [run]
 # 运行时默认shell
 shell = "system"

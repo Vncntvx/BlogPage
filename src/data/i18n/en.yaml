@@ -54,6 +54,7 @@ poweredBy: "Powered by"
 
 # Meta
 minutesRead: "min read"
+postCount: "{count} posts"
 
 # Index page (UI labels)
 socialLinks: "Social Links:"

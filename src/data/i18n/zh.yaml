@@ -54,6 +54,7 @@ poweredBy: "由"
 
 # Meta
 minutesRead: "分钟阅读"
+postCount: "{count} 篇文章"
 
 # Index page (UI labels)
 socialLinks: "社交链接："

@@ -1,39 +1,24 @@
 import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "./slugify";
-import postFilter from "./postFilter";
+import { getTaxonomy, type TaxonomyTerm } from "./taxonomy";
 
 export const DEFAULT_CATEGORY = "General";
 export const DEFAULT_CATEGORY_SLUG = slugifyStr(DEFAULT_CATEGORY);
 
-interface CategoryEntry {
-  category: string;
-  categoryName: string;
-}
-
+/**
+ * 返回去重、计数并排序后的分类列表。
+ *
+ * 返回 `TaxonomyTerm[]`（`{ slug, name, count }`），按数量降序、名称升序排序。
+ * 去重按 slug，首写胜出。`defaultLabel` 用于把默认分类（General）替换为本地化显示名。
+ */
 const getUniqueCategories = (
   posts: CollectionEntry<"blog">[],
   defaultLabel?: string
-) => {
-  const categories: CategoryEntry[] = posts
-    .filter(postFilter)
-    .map(post => post.data.category || "")
-    .filter(Boolean)
-    .map(category => {
-      const categorySlug = slugifyStr(category);
-      const categoryName =
-        categorySlug === DEFAULT_CATEGORY_SLUG && defaultLabel
-          ? defaultLabel
-          : category;
-      return { category: categorySlug, categoryName };
-    })
-    .filter(
-      (value, index, self) =>
-        self.findIndex(item => item.category === value.category) === index
-    )
-    .sort((a, b) => a.category.localeCompare(b.category));
-
-  return categories;
-};
+): TaxonomyTerm[] =>
+  getTaxonomy(posts, "category", {
+    defaultLabel,
+    defaultSlug: DEFAULT_CATEGORY_SLUG,
+  });
 
 export default getUniqueCategories;
-export type { CategoryEntry };
+export type { TaxonomyTerm };

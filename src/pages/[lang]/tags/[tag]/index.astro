@@ -7,6 +7,7 @@ import Main from "@/layouts/Main.astro";
 import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
+import { getTaxonomy } from "@/utils/taxonomy";
 import { SITE } from "@/config";
 import { t } from "@/i18n/utils";
 import { SUPPORTED_LOCALES } from "@/i18n/config";
@@ -23,18 +24,11 @@ export async function getStaticPaths() {
 
   return SUPPORTED_LOCALES.flatMap(locale => {
     const localePosts = posts.filter(post => post.data.lang === locale.code);
-    const tagMap = new Map<string, string>();
-
-    localePosts.forEach(post => {
-      (post.data.tags || []).forEach((tag: string) => {
-        const slug = slugifyStr(tag);
-        tagMap.set(slug, tag);
-      });
-    });
-
-    return Array.from(tagMap.entries()).map(([tag, tagName]) => ({
-      params: { lang: locale.path, tag },
-      props: { tagName, locale: locale.code } satisfies PathProps,
+    // 使用 getTaxonomy 统一去重（首写胜出），与聚合页显示名保持一致。
+    const tags = getTaxonomy(localePosts, "tags");
+    return tags.map(({ slug, name }) => ({
+      params: { lang: locale.path, tag: slug },
+      props: { tagName: name, locale: locale.code } satisfies PathProps,
     }));
   });
 }

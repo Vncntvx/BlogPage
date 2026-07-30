@@ -7,6 +7,7 @@ import Main from "@/layouts/Main.astro";
 import Card from "@/components/Card.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import { slugifyStr } from "@/utils/slugify";
+import { getTaxonomy } from "@/utils/taxonomy";
 import { SITE } from "@/config";
 import { t } from "@/i18n/utils";
 import { SUPPORTED_LOCALES } from "@/i18n/config";
@@ -24,21 +25,17 @@ export async function getStaticPaths() {
 
   const paths = SUPPORTED_LOCALES.flatMap(locale => {
     const localePosts = posts.filter(post => post.data.lang === locale.code);
-    const categoryMap = new Map<string, string>();
-
-    localePosts.forEach(post => {
-      const slug = slugifyStr(post.data.category || "");
-      if (slug) {
-        categoryMap.set(slug, post.data.category);
-      }
+    // 使用 getTaxonomy 统一去重（首写胜出），与聚合页显示名保持一致；
+    // 默认分类 General 经 defaultLabel 本地化（与 getUniqueCategories 行为一致）。
+    const categories = getTaxonomy(localePosts, "category", {
+      defaultLabel: t("defaultCategory", locale.code),
+      defaultSlug: DEFAULT_CATEGORY_SLUG,
     });
 
-    return Array.from(categoryMap.entries()).map(
-      ([category, categoryName]) => ({
-        params: { lang: locale.path, category },
-        props: { categoryName, locale: locale.code } satisfies PathProps,
-      })
-    );
+    return categories.map(({ slug, name }) => ({
+      params: { lang: locale.path, category: slug },
+      props: { categoryName: name, locale: locale.code } satisfies PathProps,
+    }));
   });
 
   return paths;

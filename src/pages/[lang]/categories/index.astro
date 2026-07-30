@@ -37,11 +37,12 @@ const categories = getUniqueCategories(posts, t("defaultCategory", locale));
       categories.length === 0 ? (
         <p class="text-muted-foreground italic">{t("noCategories", locale)}</p>
       ) : (
-        <ul>
-          {categories.map(({ category, categoryName }) => (
+        <ul class="divide-y divide-border">
+          {categories.map(({ slug, name, count }) => (
             <Category
-              category={category}
-              categoryName={categoryName}
+              slug={slug}
+              name={name}
+              count={count}
               size="lg"
               lang={locale}
             />

@@ -1,0 +1,16 @@
+---
+import { DEFAULT_LOCALE } from "@/i18n/config";
+import { getLocalePath } from "@/i18n/utils";
+import { SITE } from "@/config";
+
+export const prerender = true;
+
+if (!SITE.pages.categories.enabled) {
+  return Astro.redirect("/404", 308);
+}
+
+return Astro.redirect(
+  `${getLocalePath(DEFAULT_LOCALE.code)}/categories`.replace(/\/+/, "/"),
+  308
+);
+---

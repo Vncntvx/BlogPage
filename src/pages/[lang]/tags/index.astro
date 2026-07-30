@@ -34,13 +34,23 @@ let tags = getUniqueTags(posts);
     pageTitle={t("tagsTitle", locale)}
     pageDesc={t("tagsDescription", locale)}
   >
-    <ul>
-      {
-        tags.map(({ tag, tagName }) => (
-          <Tag {tag} {tagName} size="lg" lang={locale} />
-        ))
-      }
-    </ul>
+    {
+      tags.length === 0 ? (
+        <p class="text-muted-foreground italic">{t("noTags", locale)}</p>
+      ) : (
+        <ul class="flex max-w-full flex-wrap gap-x-1 gap-y-2 overflow-x-clip">
+          {tags.map(({ slug, name, count }) => (
+            <Tag
+              slug={slug}
+              name={name}
+              count={count}
+              size="lg"
+              lang={locale}
+            />
+          ))}
+        </ul>
+      )
+    }
   </Main>
   <Footer />
 </Layout>

@@ -1,59 +1,96 @@
 ---
-import IconArchive from "@/assets/icons/IconArchive.svg";
-import { getLangFromUrl } from "@/i18n/utils";
+import { getLangFromUrl, t } from "@/i18n/utils";
 import { SITE } from "@/config";
 
 export interface Props {
-  category: string;
-  categoryName: string;
+  /** 分类 slug（用于 URL）。旧名 category 作为兼容别名。 */
+  slug?: string;
+  /** 分类显示名。旧名 categoryName 作为兼容别名。 */
+  name?: string;
+  /** 文章数量，仅在聚合页传入。 */
+  count?: number;
+  /** 可选分类描述，当前无数据源，预留位。 */
+  description?: string;
+  /** @deprecated 使用 slug 代替。 */
+  category?: string;
+  /** @deprecated 使用 name 代替。 */
+  categoryName?: string;
   size?: "sm" | "lg";
   lang?: string;
 }
 
-const { category, categoryName, size = "sm", lang } = Astro.props;
+const {
+  slug,
+  name,
+  count,
+  description,
+  category,
+  categoryName,
+  size = "sm",
+  lang,
+} = Astro.props;
+
+// 兼容旧 prop 名。
+const termSlug = slug ?? category ?? "";
+const termName = name ?? categoryName ?? "";
 const currentLang = lang || getLangFromUrl(Astro.url);
+const enabled = SITE.pages.categories.enabled;
+const href = `/${currentLang}/categories/${termSlug}/`;
+
+const countVisible = typeof count === "number";
+const countText = countVisible
+  ? t("postCount", currentLang).replace("{count}", String(count))
+  : "";
 ---
 
-<li
-  class:list={[
-    "group inline-block group-hover:cursor-pointer",
-    size === "sm" ? "my-1 underline-offset-4" : "mx-1 my-3 underline-offset-8",
-  ]}
->
+<li class="group">
   {
-    SITE.pages.categories.enabled ? (
+    enabled ? (
       <a
-        href={`/${currentLang}/categories/${category}/`}
-        transition:name={category}
+        href={href}
+        transition:name={termSlug}
         class:list={[
-          "relative pe-2 text-lg underline decoration-dashed group-hover:-top-0.5 group-hover:text-accent focus-visible:p-1 focus-visible:no-underline",
-          { "text-sm": size === "sm" },
+          "flex items-baseline justify-between gap-3 py-3 text-foreground hover:text-accent focus-visible:no-underline",
+          { "py-1.5": size === "sm" },
         ]}
       >
-        <IconArchive
-          class:list={[
-            "inline-block opacity-80",
-            { "-me-3.5 size-4": size === "sm" },
-            { "-me-5 size-6": size === "lg" },
-          ]}
-        />
-        &nbsp;<span>{categoryName}</span>
+        <span class="min-w-0">
+          <span
+            class:list={[{ "font-semibold": size === "lg" }, "break-words"]}
+          >
+            {termName}
+          </span>
+          {description && (
+            <span class="text-muted-foreground mt-0.5 block text-sm break-words">
+              {description}
+            </span>
+          )}
+        </span>
+        {countVisible && (
+          <span class="text-muted-foreground shrink-0 text-sm tabular-nums">
+            {countText}
+          </span>
+        )}
       </a>
     ) : (
       <span
         class:list={[
-          "text-muted-foreground relative pe-2 text-lg",
-          { "text-sm": size === "sm" },
+          "text-muted-foreground flex items-baseline justify-between gap-3 py-3",
+          { "py-1.5": size === "sm" },
         ]}
       >
-        <IconArchive
-          class:list={[
-            "inline-block opacity-70",
-            { "-me-3.5 size-4": size === "sm" },
-            { "-me-5 size-6": size === "lg" },
-          ]}
-        />
-        &nbsp;<span>{categoryName}</span>
+        <span class="min-w-0">
+          <span
+            class:list={[{ "font-semibold": size === "lg" }, "break-words"]}
+          >
+            {termName}
+          </span>
+        </span>
+        {countVisible && (
+          <span class="text-muted-foreground shrink-0 text-sm tabular-nums">
+            {countText}
+          </span>
+        )}
       </span>
     )
   }

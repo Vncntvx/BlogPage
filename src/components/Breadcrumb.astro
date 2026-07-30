@@ -39,7 +39,7 @@ function buildLocalizedUrl(segments: string[]): string {
 }
 ---
 
-<nav class="mx-auto mt-8 mb-1 w-full max-w-app px-4" aria-label="breadcrumb">
+<nav class="mx-auto mt-8 mb-1 w-full max-w-app px-4" aria-label="Breadcrumb">
   <ul
     class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100"
   >
@@ -47,7 +47,7 @@ function buildLocalizedUrl(segments: string[]): string {
       <a href={getLocalizedUrl("/", currentLocale)} class="opacity-80"
         >{t("home", currentLocale)}</a
       >
-      <span aria-hidden="true" class="opacity-80">&raquo;</span>
+      <span aria-hidden="true" class="mx-1.5 opacity-80">&raquo;</span>
     </li>
     {
       breadcrumbList.map((breadcrumb, index) => {
@@ -63,6 +63,8 @@ function buildLocalizedUrl(segments: string[]): string {
           displayText = t("archives", currentLocale);
         if (breadcrumb === "about") displayText = t("about", currentLocale);
         if (breadcrumb === "search") displayText = t("search", currentLocale);
+        if (breadcrumb === "categories")
+          displayText = t("categories", currentLocale);
 
         return isLastItem ? (
           <li>
@@ -82,7 +84,9 @@ function buildLocalizedUrl(segments: string[]): string {
             >
               {displayText}
             </a>
-            <span aria-hidden="true">&raquo;</span>
+            <span aria-hidden="true" class="mx-1.5">
+              &raquo;
+            </span>
           </li>
         );
       })
