@@ -23,92 +23,96 @@
 
 ## 颜色主题
 
-### 预定义主题
-系统提供多种预定义颜色主题，可在 `src/config.ts` 中配置：
+### 主题色变量
 
-```typescript
-export const SITE = {
-  // ...
-  lightAndDarkMode: true, // 启用亮色/暗色模式
-  // ...
-} as const;
+本项目使用 Tailwind CSS v4，主题色通过 `src/styles/global.css` 中的 CSS 自定义属性控制。亮色和暗色各有一套独立的颜色值：
+
+```css
+:root,
+html[data-theme="light"] {
+  --background: #fdfdfd;   /* 页面背景 */
+  --foreground: #282728;   /* 文字前景 */
+  --accent: #006cac;       /* 强调色 */
+  --muted: #e6e6e6;        /* 弱化背景 */
+  --border: #ece9e9;       /* 边框颜色 */
+}
+
+html[data-theme="dark"] {
+  --background: #212737;
+  --foreground: #eaedf3;
+  --accent: #ff6b01;
+  --muted: #343f60;
+  --border: #ab4b08;
+}
 ```
 
+这些 CSS 变量通过 `@theme inline` 映射为 Tailwind 工具类，因此可以直接使用 `bg-background`、`text-foreground`、`text-accent`、`bg-muted`、`border-border` 等类名。
+
 ### 自定义颜色
-通过修改 CSS 变量来自定义颜色主题：
+
+修改 `src/styles/global.css` 中的变量值即可更改主题色：
+
+1. 修改变量值（`--accent`、`--background` 等）
+2. 亮色和暗色各自独立设置
+3. 保存后热更新即时生效
+
+### 暗色主题切换
+
+主题通过 `<html>` 标签的 `data-theme` 属性控制：
+- `data-theme="light"` → 亮色
+- `data-theme="dark"` → 暗色
+- 无属性时跟随系统偏好（通过 `prefers-color-scheme` 媒体查询）
+
+主题切换按钮会更新 `data-theme` 属性并持久化到 `localStorage`，刷新后保持用户选择。
+
+### 添加新颜色变量
+
+如需添加更多自定义颜色，在 `:root` / `html[data-theme="dark"]` 中定义变量，然后在 `@theme inline` 中注册：
 
 ```css
 :root {
-  --color-gray-50: #f8fafc;
-  --color-gray-100: #f1f5f9;
-  --color-gray-200: #e2e8f0;
-  --color-gray-300: #cbd5e1;
-  --color-gray-400: #94a3b8;
-  --color-gray-500: #64748b;
-  --color-gray-600: #475569;
-  --color-gray-700: #334155;
-  --color-gray-800: #1e293b;
-  --color-gray-900: #0f172a;
-  
-  /* 主色调 */
-  --color-primary: #your-primary-color;
-  --color-primary-50: #your-primary-50;
-  --color-primary-100: #your-primary-100;
-  --color-primary-200: #your-primary-200;
-  --color-primary-300: #your-primary-300;
-  --color-primary-400: #your-primary-400;
-  --color-primary-500: #your-primary-500;
-  --color-primary-600: #your-primary-600;
-  --color-primary-700: #your-primary-700;
-  --color-primary-800: #your-primary-800;
-  --color-primary-900: #your-primary-900;
+  --highlight: #ffdd57;
+}
+
+html[data-theme="dark"] {
+  --highlight: #ffab00;
+}
+
+@theme inline {
+  --color-highlight: var(--highlight);
 }
 ```
 
-### 暗色主题
-暗色主题的变量定义在 `@media (prefers-color-scheme: dark)` 媒体查询中：
-
-```css
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-gray-50: #your-dark-gray-50;
-    --color-gray-100: #your-dark-gray-100;
-    /* ... */
-  }
-}
-```
+之后即可使用 `bg-highlight`、`text-highlight` 等 Tailwind 类名。
 
 ## Tailwind CSS 配置
 
-### 配置文件
-Tailwind CSS 配置在 `tailwind.config.mjs` 中（虽然项目中未显示，但由 `@tailwindcss/vite` 插件处理）。
+### 无需 tailwind.config.js
 
-### 自定义配置
-如需自定义 Tailwind 配置，可以创建 `tailwind.config.js` 文件：
+本项目使用 **Tailwind CSS v4**，采用 CSS-first 配置方式。所有 Tailwind 配置（主题颜色、自定义变体、工具类）均直接写在 `src/styles/global.css` 中，无需 `tailwind.config.js` 文件。
 
-```js
-/** @type {import('tailwindcss').Config} */
-export default {
-  content: [
-    "./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}",
-  ],
-  theme: {
-    extend: {
-      colors: {
-        primary: {
-          50: 'var(--color-primary-50)',
-          100: 'var(--color-primary-100)',
-          // ...
-        },
-      },
-      fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
-    },
-  },
-  plugins: [],
+### 当前自定义配置
+
+```css
+/* 自定义暗色变体：匹配 data-theme 属性 */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* 颜色变量映射 */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+}
+
+/* 自定义工具类 */
+@utility max-w-app {
+  @apply max-w-3xl;
 }
 ```
+
+如需扩展，直接在 `global.css` 中添加 `@theme inline` 变量或 `@utility` 工具类即可，无需额外配置文件。
 
 ## 组件定制
 

@@ -118,6 +118,30 @@ function addedCode() {
 }
 ```
 
+### Callout 提示框
+
+使用 Obsidian 风格的 callout 语法在文章中插入提示框：
+
+```markdown
+> [!NOTE]
+> 这是一个普通笔记。
+
+> [!TIP]
+> 这是一个实用提示。
+
+> [!WARNING]
+> 这是一个警告信息。
+
+> [!DANGER]
+> 这是一个危险警告。
+```
+
+提示框会自动适配亮色/暗色主题。支持的类型包括：`NOTE`、`TIP`、`INFO`、`WARNING`、`DANGER`、`SUCCESS`、`QUESTION`、`BUG`、`EXAMPLE`、`QUOTE`、`ABSTRACT`、`TODO`、`FAILURE`。
+
+> 带标题的 callout：`> [!TIP] 最佳实践` 可以在类型后添加自定义标题。
+
+> 可折叠 callout：在类型后添加 `+`（默认展开）或 `-`（默认折叠），如 `> [!NOTE]- 点击展开`。
+
 ### LaTeX 数学公式
 如果启用了 LaTeX 支持，可以使用数学公式：
 

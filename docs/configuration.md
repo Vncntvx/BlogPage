@@ -15,7 +15,7 @@ export const SITE = {
   profile: "https://wenjiexu.site/", // 作者个人资料链接
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.", // 站点描述
   title: "Blog", // 站点标题
-  ogImage: "astropaper-og.jpg", // 默认 Open Graph 图片
+  ogImage: "", // 默认 Open Graph 图片（留空则自动生成）
   lightAndDarkMode: true, // 是否启用亮色/暗色模式
   postPerIndex: 4, // 首页显示的文章数量
   postPerPage: 10, // 文章列表每页显示的数量
@@ -126,9 +126,10 @@ export const SHARE = {
 ```typescript
 export const LATEX = {
   enabled: true, // 是否启用 LaTeX 数学公式支持
-  katexCdn: "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css", // KaTeX CDN 链接
 } as const;
 ```
+
+启用后，构建时会加载 `remark-math` 和 `rehype-katex` 插件，并在文章页面按需注入 KaTeX 样式表。关闭后完全不加载相关资源，减小页面体积。
 
 ### 评论系统配置 (COMMENTS)
 
@@ -160,16 +161,16 @@ Astro 的主要配置文件位于项目根目录的 `astro.config.ts`，其中�
 
 ### 集成配置
 
-- `@astrojs/react`: React 组件支持
 - `@astrojs/sitemap`: 站点地图生成
-- `tailwindcss`: Tailwind CSS 支持
+- `@tailwindcss/vite`: Tailwind CSS v4 支持
 
 ### Markdown 配置
 
+- `remark-math` 和 `rehype-katex`: LaTeX 数学公式支持（受 `LATEX.enabled` 控制）
 - `remark-toc`: 自动生成目录
 - `remark-collapse`: 可折叠内容块
-- `remark-math` 和 `rehype-katex`: LaTeX 数学公式支持
-- `shikiConfig`: 代码高亮配置
+- `rehype-callouts`: Obsidian 风格提示框
+- `shikiConfig`: 代码高亮配置（双主题 + 行内标注）
 
 ### 环境变量配置
 
