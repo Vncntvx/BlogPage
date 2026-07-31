@@ -40,6 +40,9 @@ html[data-theme="dark"] {
   }
   html {
     @apply overflow-y-scroll scroll-smooth;
+    /* 保留滚动条槽位：TOC overlay 打开时锁滚动（overflow:hidden 切换）不剥
+       滚动条，避免正文横向位移。 */
+    scrollbar-gutter: stable;
   }
   body {
     @apply flex min-h-svh flex-col bg-background font-mono text-foreground selection:bg-accent/75 selection:text-background;
@@ -62,14 +65,47 @@ html[data-theme="dark"] {
   @apply max-w-3xl;
 }
 
+/* 阅读列与 TOC 尺寸令牌。
+   --reading-width 与 max-w-app(768px) 一致，保证有/无 TOC 的文章列
+   位置/宽度像素级相同；rail 只活在 article 左侧留白里，绝不挤压列。 */
+:root {
+  --reading-width: 768px;
+  --toc-rail-width: 192px;
+  --toc-gap: 2.5rem;
+  --toc-bar-height: 2.25rem;
+}
+
+/* 恒定居中阅读列：标题/正文/标签/授权/分享/评论/上下篇共用同一条轴。
+   有无 TOC 都不改此列的位置与宽度。 */
+.post-column {
+  width: min(100%, var(--reading-width));
+  margin-inline: auto;
+}
+
+/* TOC 形态由单一视口阈值决定（不按设备名切分，避免与站点导航 sm/640 断点
+   错位形成混合态）。≥1280px 显示左侧 rail 并隐藏章节条；<1280 交给章节条
+   + overlay（drawer/sheet 互斥）。同一时刻只有一种 TOC 交互形态。
+   显隐统一在此管理，TocSidebar 的 <style is:global> 只负责定位。 */
+.toc-rail {
+  display: none;
+}
+@media (min-width: 1280px) {
+  .toc-rail {
+    display: block;
+  }
+  [data-toc-section-bar] {
+    display: none !important;
+  }
+}
+
 .active-nav {
   @apply underline decoration-wavy decoration-2 underline-offset-4;
 }
 
 /* Source: https://piccalil.li/blog/a-more-modern-css-reset/ */
-/* Anything that has been anchored to should have extra scroll margin so the
-   target heading isn't hidden under the top progress bar (xl+) or the sticky
-   TOC section bar (below xl). */
+/* 锚点偏移：标题专属 scroll-margin-top，随 TOC 章节条是否可见而切换。
+   <1280px 章节条吸顶，h2/h3 顶部留出条高 + 间距，避免被遮挡；
+   ≥1280px 章节条隐藏，只清顶部 4px 进度条。:target 通用规则保留作兜底。 */
 :target {
   scroll-margin-block: 4rem;
 }
@@ -77,5 +113,17 @@ html[data-theme="dark"] {
   :target {
     /* No section bar on xl+ — just clear the 4px progress bar. */
     scroll-margin-block: 1rem;
+  }
+}
+/* 章节条可见区间（<1280px）：标题顶部留出条高 + 间距。 */
+@media (max-width: 1279px) {
+  .app-prose :is(h2, h3) {
+    scroll-margin-top: calc(var(--toc-bar-height) + 0.5rem);
+  }
+}
+/* rail 可见区间（≥1280px）：只清顶部进度条。 */
+@media (min-width: 1280px) {
+  .app-prose :is(h2, h3) {
+    scroll-margin-top: 1rem;
   }
 }

@@ -1,3 +1,8 @@
+# Agent
+.agent/
+.claude/
+.codegraph/
+
 # build output
 dist/
 

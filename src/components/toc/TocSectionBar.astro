@@ -4,57 +4,45 @@ import type { LocaleCode } from "@/i18n/config";
 
 interface Props {
   locale: LocaleCode;
-  /** Breakpoint variant: "tablet" shows md…xl, "mobile" shows below md. They
-      share the same markup; only the responsive visibility classes differ. */
-  variant: "tablet" | "mobile";
 }
 
-const { locale, variant } = Astro.props;
+const { locale } = Astro.props;
 const openLabel = t("tocOpen", locale);
 const currentLabel = t("tocCurrentSection", locale);
-
-const visibilityClass =
-  variant === "tablet" ? "hidden md:block xl:hidden" : "block md:hidden";
 ---
 
 {
-  /* Sticky current-section bar. Appears once the post title/meta scroll out of
-     view. Shows the active H2 text + "N / M" position (H2 count) + a button to
-     open the drawer (tablet) / bottom sheet (mobile). The active text/index are
-     kept in sync by the shared scroll-spy script in TableOfContents.astro via
-     data-toc-current-text / data-toc-current-index / data-toc-current-total. */
+  /* Sticky current-section bar. 占据正常文档流（不覆盖正文），~32–36px 高。
+     外层 sticky 占位（w-full，保证 sticky 行为），内层是圆角浮动胶囊：
+     左右 mx-2 留白、rounded-full、细边、页面底色、微阴影——去「方正通栏」感。
+     top-2 让出顶部 4px 阅读进度条（进度条 z-40 浮于本条 z-30 之上）。
+     rail 显示（≥1280px）时由 global.css 媒体查询 !important 隐藏，杜绝并存。
+     当前标题文本由 TableOfContents.astro 的 scroll-spy 脚本通过
+     [data-toc-current-text] 同步，显示最深标题（H3 时即 H3）。 */
 }
 <div
-  class:list={[
-    "toc-section-bar sticky top-0 z-30 -mx-4 border-b border-border bg-background/85 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/70",
-    "data-[section-bar-visible=false]:hidden",
-    visibilityClass,
-  ]}
+  class="toc-section-bar sticky top-2 z-30 w-full data-[section-bar-visible=false]:hidden"
   data-toc-section-bar
   data-section-bar-visible="false"
 >
-  <div class="flex items-center gap-3 py-2">
+  <div
+    class="mx-2 my-1 flex items-center gap-2 rounded-full border border-border/60 bg-background py-1.5 pr-1.5 pl-3 shadow-sm"
+  >
     <span class="sr-only">{currentLabel}</span>
     <span
-      class="toc-section-bar__index shrink-0 font-mono text-xs text-foreground/50 tabular-nums"
-      data-toc-current-index
+      class="h-1.5 w-1.5 shrink-0 rounded-full bg-accent"
       aria-hidden="true"
     >
-      –
     </span>
     <span
       class="toc-section-bar__text min-w-0 flex-1 truncate text-sm font-medium text-foreground/80"
       data-toc-current-text
     >
-      –
+      {currentLabel}
     </span>
     <button
       type="button"
-      class:list={[
-        "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-md",
-        "text-foreground/70 transition-colors hover:bg-muted hover:text-accent",
-        "focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed",
-      ]}
+      class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-foreground/70 transition-colors hover:bg-muted hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed"
       data-toc-open-trigger
       aria-label={openLabel}
       aria-expanded="false"
@@ -70,9 +58,16 @@ const visibilityClass =
         stroke-linejoin="round"
         aria-hidden="true"
       >
-        <line x1="3" y1="6" x2="21" y2="6"></line>
-        <line x1="3" y1="12" x2="15" y2="12"></line>
-        <line x1="3" y1="18" x2="18" y2="18"></line>
+        {/* 圆点 + 短线的目录/列表图标，区别于站点导航的 hamburger 菜单 */}
+        <circle cx="4.5" cy="6" r="1.2" fill="currentColor" stroke="none">
+        </circle>
+        <line x1="9" y1="6" x2="20" y2="6"></line>
+        <circle cx="4.5" cy="12" r="1.2" fill="currentColor" stroke="none">
+        </circle>
+        <line x1="9" y1="12" x2="20" y2="12"></line>
+        <circle cx="4.5" cy="18" r="1.2" fill="currentColor" stroke="none">
+        </circle>
+        <line x1="9" y1="18" x2="20" y2="18"></line>
       </svg>
     </button>
   </div>

@@ -34,12 +34,12 @@ const tocLabel = t("tableOfContents", locale);
             <span class="toc-link-text line-clamp-2">{node.text}</span>
           </a>
           {node.children.length > 0 && (
-            <ul class="ms-3 mt-0.5 list-none space-y-0.5 border-s border-border/60 ps-2">
+            <ul class="ms-3 mt-0.5 list-none space-y-0.5 ps-1">
               {node.children.map(child => (
                 <li>
                   <a
                     href={`#${child.slug}`}
-                    class="toc-link block border-s-2 border-transparent py-1 ps-2 text-xs leading-snug text-foreground/70 transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed"
+                    class="toc-link block border-s-2 border-transparent py-1 ps-2 text-xs leading-snug text-foreground/60 transition-colors hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed"
                     data-toc-slug={child.slug}
                     data-toc-depth={child.depth}
                   >
@@ -56,16 +56,17 @@ const tocLabel = t("tableOfContents", locale);
 </nav>
 
 <style is:global>
-  /* Active (current) item cue: left bar + weight + color + background, never
-     color alone. Inlined here (unlayered + !important) so it reliably beats
-     Tailwind's @layer utilities regardless of HMR/layer ordering in dev. */
+  /* Active (current) item cue: 左 2px 线 + 字重 + accent 文字 + 极淡背景，
+     不用色块，避免「后台侧栏」观感。Inlined here (unlayered + !important) so
+     it reliably beats Tailwind's @layer utilities regardless of HMR/layer
+     ordering in dev. */
   .toc-link[aria-current="location"] {
     border-color: var(--accent) !important;
     color: var(--accent) !important;
     font-weight: 600 !important;
     background-color: color-mix(
       in oklab,
-      var(--muted) 40%,
+      var(--accent) 8%,
       transparent
     ) !important;
   }

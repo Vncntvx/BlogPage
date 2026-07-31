@@ -30,9 +30,13 @@ const closeLabel = t("tocClose", locale);
   data-pagefind-ignore
   hidden
 >
-  {/* Backdrop */}
+  {
+    /* Backdrop：正文毛玻璃——半透明黑遮罩 + backdrop-blur，透出模糊的正文
+      （对齐 PostDetails lightbox 的 backdrop-blur-sm，但用 /50 比 lightbox /70
+      轻，让正文更可见）。panel 仍 bg-background 不透明，目录文字清晰。 */
+  }
   <div
-    class="toc-overlay__backdrop absolute inset-0 bg-black/40 opacity-0 transition-opacity duration-200 motion-reduce:transition-none"
+    class="toc-overlay__backdrop absolute inset-0 bg-black/50 opacity-0 backdrop-blur-sm transition-opacity duration-200 motion-reduce:transition-none"
     data-toc-overlay-backdrop
     aria-hidden="true"
   >

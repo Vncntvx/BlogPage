@@ -2,7 +2,7 @@
 import TocSidebar from "@/components/toc/TocSidebar.astro";
 import TocSectionBar from "@/components/toc/TocSectionBar.astro";
 import TocOverlay from "@/components/toc/TocOverlay.astro";
-import { getTocTree } from "@/utils/toc";
+import { getTocTree, countTopLevel } from "@/utils/toc";
 import type { LocaleCode } from "@/i18n/config";
 import type { MarkdownHeading } from "astro";
 import { t } from "@/i18n";
@@ -16,20 +16,20 @@ interface Props {
 const { headings, enabled, locale } = Astro.props;
 const tree = enabled ? getTocTree(headings) : [];
 const tocLabel = t("tableOfContents", locale);
-const hasToc = tree.length > 0;
+// 至少 2 个 H2 才渲染 TOC：单条目目录无导航价值，却带来整套响应式/弹层成本。
+const hasToc = enabled && countTopLevel(tree) >= 2;
 ---
 
 {
-  /* The TOC region. Only rendered when there's at least one H2. Three forms
+  /* The TOC region. Only rendered when there are ≥2 H2 sections. Three forms
      share the same data and the scroll-spy state driven by the script below:
-     desktop sidebar (xl+), tablet section bar + drawer (md…xl), mobile section
-     bar + bottom sheet (<md). The section bars and overlay use sticky/fixed
-     positioning so their placement in the grid doesn't matter. */
+     desktop rail (xl+), tablet section bar + drawer (md…xl), mobile section
+     bar + bottom sheet (<md). Exactly one form is shown per width — the rail
+     and section bar are mutually exclusive via the global media query. */
   hasToc && (
     <>
       <TocSidebar tree={tree} locale={locale} />
-      <TocSectionBar locale={locale} variant="tablet" />
-      <TocSectionBar locale={locale} variant="mobile" />
+      <TocSectionBar locale={locale} />
       <TocOverlay tree={tree} locale={locale} />
     </>
   )
@@ -63,10 +63,14 @@ const hasToc = tree.length > 0;
       type="application/json"
       set:html={JSON.stringify({
         slugs: tree.flatMap(n => [n.slug, ...n.children.map(c => c.slug)]),
-        h2Slugs: tree.map(n => n.slug),
-        // H2 slug -> display text, so the section bar can show the active
-        // section's title without re-querying the heading element.
-        h2Text: Object.fromEntries(tree.map(n => [n.slug, n.text])),
+        // 全量 slug -> 显示文本（H2 + H3），章节条据此显示当前最深标题，
+        // 而非回退到父 H2。
+        headingText: Object.fromEntries(
+          tree.flatMap(n => [
+            [n.slug, n.text],
+            ...n.children.map(c => [c.slug, c.text]),
+          ])
+        ),
         label: tocLabel,
       })}
     />
@@ -89,8 +93,8 @@ const hasToc = tree.length > 0;
     // Latest config captured at setup(); handlers read this closure var so
     // they always reflect the current article after a swap.
     let allSlugs = [];
-    let h2Slugs = [];
-    let h2Text = {};
+    let headingText = {};
+    let tocLabel = "";
     let sectionBarVisible = false;
 
     const prefersReducedMotion = window.matchMedia(
@@ -113,30 +117,11 @@ const hasToc = tree.length > 0;
 
       // Broadcast current section for the section bars.
       root.setAttribute("data-toc-active", slug || "");
-      const h2Index = h2Slugs.indexOf(slug);
-      // If active is an H3, find its parent H2 for the "2 / 7" indicator.
-      const h2ForActive =
-        h2Index >= 0
-          ? slug
-          : (() => {
-              const i = allSlugs.indexOf(slug);
-              for (let j = i; j >= 0; j--) {
-                if (h2Slugs.includes(allSlugs[j])) return allSlugs[j];
-              }
-              return null;
-            })();
-      const h2Idx = h2ForActive ? h2Slugs.indexOf(h2ForActive) : -1;
-      root.setAttribute("data-toc-active-index", String(h2Idx + 1));
-      root.setAttribute("data-toc-active-total", String(h2Slugs.length));
 
-      // Sync the section bars' current-section text + "N / M" readout.
-      const text = h2ForActive ? h2Text[h2ForActive] || "" : "";
-      const indexLabel = h2Idx >= 0 ? `${h2Idx + 1} / ${h2Slugs.length}` : "";
+      // 章节条显示当前最深标题（H3 时即 H3 文本），而非父 H2。
+      const text = slug ? headingText[slug] || "" : "";
       document.querySelectorAll("[data-toc-current-text]").forEach(el => {
-        el.textContent = text || "–";
-      });
-      document.querySelectorAll("[data-toc-current-index]").forEach(el => {
-        el.textContent = indexLabel || "–";
+        el.textContent = text ? `${tocLabel} · ${text}` : tocLabel;
       });
     }
 
@@ -230,7 +215,6 @@ const hasToc = tree.length > 0;
         return;
       }
       const newAllSlugs = config.slugs || [];
-      const newH2Slugs = config.h2Slugs || [];
 
       // Reset active state so a fresh article's first item gets applied even
       // if it happens to share a slug with the previous post.
@@ -243,12 +227,10 @@ const hasToc = tree.length > 0;
         .querySelectorAll("[data-toc-section-bar]")
         .forEach(el => el.setAttribute("data-section-bar-visible", "false"));
       root.removeAttribute("data-toc-active");
-      root.removeAttribute("data-toc-active-index");
-      root.removeAttribute("data-toc-active-total");
 
       allSlugs = newAllSlugs;
-      h2Slugs = newH2Slugs;
-      h2Text = config.h2Text || {};
+      headingText = config.headingText || {};
+      tocLabel = config.label || "";
       if (allSlugs.length === 0) return;
 
       // Disconnect stale observers/headings from the previous article.
@@ -289,7 +271,24 @@ const hasToc = tree.length > 0;
     let overlayEl = null;
     let overlayPanel = null;
     let lastFocused = null;
-    let savedBodyOverflow = null;
+    // 滚动锁：在 <html> 上切 overflow:hidden。与 position:fixed 方案不同，
+    // overflow:hidden **保留 scrollY 不归零**，解除时正文位置天然不变 → 关闭
+    // 零位移、无「闪到顶再跳回」。配合 html 的 scrollbar-gutter:stable 保留
+    // 滚动条槽位，切换时不剥滚动条 → 无横向位移。
+    let savedHtmlOverflow = "";
+
+    function lockScroll() {
+      const html = document.documentElement;
+      savedHtmlOverflow = html.style.overflow;
+      html.style.overflow = "hidden";
+    }
+
+    function unlockScroll() {
+      const html = document.documentElement;
+      html.style.overflow = savedHtmlOverflow;
+      savedHtmlOverflow = "";
+      // overflow:hidden 期间 scrollY 未变，无需 scrollTo 还原——正文纹丝不动。
+    }
 
     function overlayVariant() {
       // < md (768px) → bottom sheet; md…xl → right drawer. Matches the
@@ -307,6 +306,28 @@ const hasToc = tree.length > 0;
       ).filter(el => el.offsetParent !== null);
     }
 
+    // 把 overlay 内的目录列表滚到当前 active 项的上 1/3 位置，让视觉重心
+    // 落在用户当前阅读的章节而非列表顶部。直接设 .toc-overlay__body 的
+    // scrollTop（不冒泡到已锁的 <html>），用 getBoundingClientRect 差值定位
+    // 以避开 offsetTop offsetParent 不确定的问题。时机：panel 是 transform
+    // 过渡（200ms），过渡中 panel 还在屏外、rect 算错，故等 transitionend；
+    // reduced-motion 无过渡立即滚。
+    function scrollPanelToActive() {
+      const overlay = document.querySelector("[data-toc-overlay]");
+      const bodyEl = overlay?.querySelector("[data-toc-overlay-body]");
+      if (!bodyEl) return;
+      const active = overlay.querySelector(
+        "[data-toc-slug][aria-current='location']"
+      );
+      if (!active) return; // 无 active（文章顶部打开）保持顶部
+      const targetTop =
+        active.getBoundingClientRect().top -
+        bodyEl.getBoundingClientRect().top +
+        bodyEl.scrollTop -
+        bodyEl.clientHeight / 3;
+      bodyEl.scrollTop = Math.max(0, targetTop);
+    }
+
     function openOverlay(trigger) {
       overlayEl = document.querySelector("[data-toc-overlay]");
       overlayPanel = overlayEl?.querySelector("[data-toc-overlay-panel]");
@@ -315,15 +336,20 @@ const hasToc = tree.length > 0;
       if (!overlayEl.hasAttribute("hidden")) return;
 
       lastFocused = trigger || document.activeElement;
+      // Portal 到 body 根：脱离任何祖先（transform/filter/overflow/view-transition
+      // containing block），保证 position:fixed inset:0 真正覆盖整视口。幂等——
+      // appendChild 是移动而非克隆，已挂到 body 时不会再移。
+      if (overlayEl.parentNode !== document.body) {
+        document.body.appendChild(overlayEl);
+      }
       overlayEl.setAttribute("data-toc-overlay-variant", overlayVariant());
       overlayEl.removeAttribute("hidden");
       // Force reflow so the transform transition plays from the off-screen
       // state to the visible state.
       void overlayPanel.offsetWidth;
 
-      // Lock background scroll.
-      savedBodyOverflow = document.body.style.overflow;
-      document.body.style.overflow = "hidden";
+      // Lock background scroll（保存 scrollY，关闭时精确还原）。
+      lockScroll();
 
       document.addEventListener("keydown", onOverlayKeydown);
       // Close when clicking the backdrop (not the panel).
@@ -337,6 +363,23 @@ const hasToc = tree.length > 0;
       // Move focus into the panel (first focusable = close button).
       const focusables = focusableIn(overlayPanel);
       (focusables[0] || overlayPanel).focus();
+
+      // 把列表滚到当前 active 项（视觉重心在阅读位置）。reduced-motion 无过渡
+      // 立即滚；否则等 panel 滑入过渡结束再滚（过渡中 rect 算错）。
+      if (prefersReducedMotion) {
+        scrollPanelToActive();
+      } else {
+        const onEnd = () => {
+          overlayPanel.removeEventListener("transitionend", onEnd);
+          scrollPanelToActive();
+        };
+        overlayPanel.addEventListener("transitionend", onEnd);
+        // 兜底：transitionend 偶尔不触发（如被打断），220ms 后强制滚。
+        setTimeout(() => {
+          overlayPanel.removeEventListener("transitionend", onEnd);
+          scrollPanelToActive();
+        }, 220);
+      }
     }
 
     function closeOverlay() {
@@ -351,8 +394,7 @@ const hasToc = tree.length > 0;
 
       if (!el || el.hasAttribute("hidden")) {
         // Already closed — still restore body scroll in case it was locked.
-        document.body.style.overflow = savedBodyOverflow ?? "";
-        savedBodyOverflow = null;
+        unlockScroll();
         document
           .querySelectorAll("[data-toc-open-trigger]")
           .forEach(b => b.setAttribute("aria-expanded", "false"));
@@ -361,8 +403,8 @@ const hasToc = tree.length > 0;
 
       document.removeEventListener("keydown", onOverlayKeydown);
       el.removeEventListener("click", onOverlayClick);
-      document.body.style.overflow = savedBodyOverflow ?? "";
-      savedBodyOverflow = null;
+      // 先恢复滚动再做关闭过渡，避免过渡期间内容仍在位移。
+      unlockScroll();
 
       document
         .querySelectorAll("[data-toc-open-trigger]")
@@ -429,13 +471,33 @@ const hasToc = tree.length > 0;
         closeOverlay();
         return;
       }
-      // A TOC link click inside the overlay: jump + close. The link's native
-      // hash navigation + jumpToHash handles the scroll; we just close.
-      // Use setTimeout (not rAF) so the close runs after the current click
-      // dispatch finishes and isn't dropped if the tab is backgrounded.
+      // 抽屉/Sheet 内点击 TOC 链接：自管滚动序列，避免 native hashchange 在
+      // 滚动锁解锁中跳转、且标题被吸顶条遮挡。固定顺序：
+      // preventDefault → 关闭(解锁 overflow，scrollY 保留不动) → 等一帧 →
+      // 瞬时滚动到标题(behavior:auto，尊重 scroll-margin，无长 smooth「从头刷」)
+      // → 更新 hash(不二次跳转) → 更新 active → 焦点移到标题。
       const link = e.target.closest?.("[data-toc-overlay] [data-toc-slug]");
       if (link) {
-        setTimeout(closeOverlay, 0);
+        e.preventDefault();
+        const slug = link.getAttribute("data-toc-slug") || "";
+        const target = slug ? document.getElementById(slug) : null;
+        closeOverlay();
+        if (target) {
+          requestAnimationFrame(() => {
+            target.scrollIntoView({
+              // 瞬时定位：用户反馈 smooth「从头向下刷」体验差，改为即时到位。
+              behavior: "auto",
+              block: "start",
+            });
+            // replaceState 而非赋值 hash，避免触发 hashchange → jumpToHash 二次滚动。
+            history.replaceState(null, "", `#${slug}`);
+            setActive(slug);
+            // 移动焦点到标题，屏幕阅读器跟随。
+            target.setAttribute("tabindex", "-1");
+            target.focus({ preventScroll: true });
+          });
+        }
+        return;
       }
     });
 
@@ -466,8 +528,11 @@ const hasToc = tree.length > 0;
       if (ol) ol.setAttribute("hidden", "");
       overlayEl = null;
       overlayPanel = null;
-      document.body.style.overflow = savedBodyOverflow ?? "";
-      savedBodyOverflow = null;
+      // 只恢复 <html> 的 overflow 内联样式（万一上个页面 overlay 是开着的
+      // 留下了 overflow:hidden 锁）。不强制 scrollTo：PostDetails 自己的
+      // after-swap 会 scrollTo({top:0}) 回顶，新文档本就该从顶部开始。
+      document.documentElement.style.overflow = savedHtmlOverflow;
+      savedHtmlOverflow = "";
 
       setup();
       // after-swap fires after the new DOM is swapped in and scroll reset to

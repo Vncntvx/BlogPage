@@ -122,78 +122,75 @@ const nextPost =
     id="main-content"
     class:list={[
       "mx-auto w-full px-4 pb-12",
-      // Wider on xl+ to fit TOC sidebar + article side-by-side, centered as a
-      // unit; keep max-w-app on narrower widths so other behaviour is unchanged.
-      "max-w-app xl:max-w-[1100px]",
+      "max-w-app",
       { "mt-8": !SITE.showBackButton },
     ]}
     data-pagefind-body
   >
-    <div
-      class:list={[
-        "mx-auto max-w-app xl:max-w-none",
-        // Fixed sidebar + article columns so the two form one centered unit
-        // (rather than the article stretching with `1fr`, which shifts the
-        // optical center left). justify-center centers the unit in the main.
-        tocEnabled &&
-          "xl:grid xl:grid-cols-[232px_minmax(0,760px)] xl:justify-center xl:gap-14",
-      ]}
-    >
-      <TableOfContents
-        headings={headings}
-        enabled={tocEnabled}
-        locale={postLocale}
-      />
-      <div class="min-w-0">
-        <h1
-          transition:name={toTransitionName(title)}
-          class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+    {
+      /* 恒定居中阅读列：标题/正文/标签/授权/分享/评论/上下篇共用同一条轴，
+        有无 TOC 都不改此列位置/宽度。 */
+    }
+    <div class="post-column">
+      <h1
+        transition:name={toTransitionName(title)}
+        class="inline-block text-2xl font-bold text-accent sm:text-3xl"
+      >
+        {title}
+      </h1>
+      <ul class="my-2 flex flex-wrap items-center gap-y-1">
+        <li
+          class="inline-flex items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none"
         >
-          {title}
-        </h1>
-        <ul class="my-2 flex flex-wrap items-center gap-y-1">
-          <li
-            class="after:text-muted-foreground inline-flex items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
-          >
-            <Datetime
-              {pubDatetime}
-              {modDatetime}
-              {timezone}
-              size="lg"
-              showLabel={true}
-            />
-          </li>
+          <Datetime
+            {pubDatetime}
+            {modDatetime}
+            {timezone}
+            size="lg"
+            showLabel={true}
+          />
+        </li>
 
-          {
-            SITE.editPost.enabled && !hideEditPost && (
-              <li class="after:text-muted-foreground hidden items-center after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
-                <EditPost {hideEditPost} {post} />
-              </li>
-            )
-          }
+        {
+          SITE.editPost.enabled && !hideEditPost && (
+            <li class="hidden items-center after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none sm:inline-flex">
+              <EditPost {hideEditPost} {post} />
+            </li>
+          )
+        }
 
-          <li
-            class="text-muted-foreground after:text-muted-foreground inline-flex items-center text-sm after:mx-2 after:opacity-70 after:content-['|'] last:after:content-none"
-          >
-            <span class="whitespace-nowrap">
-              {readingTime}
-              {t("minutesRead", postLocale)}
-            </span>
-          </li>
+        <li
+          class="inline-flex items-center text-sm text-muted-foreground after:mx-2 after:text-muted-foreground after:opacity-70 after:content-['|'] last:after:content-none"
+        >
+          <span class="whitespace-nowrap">
+            {readingTime}
+            {t("minutesRead", postLocale)}
+          </span>
+        </li>
 
-          {
-            category && SITE.pages.categories.enabled && (
-              <li class="text-muted-foreground inline-flex min-w-0 items-center text-sm">
-                <a
-                  href={`/${postLocale}/categories/${slugifyStr(category)}/`}
-                  class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
-                >
-                  {t("categoryLabel", postLocale)}: {displayCategoryName}
-                </a>
-              </li>
-            )
-          }
-        </ul>
+        {
+          category && SITE.pages.categories.enabled && (
+            <li class="inline-flex min-w-0 items-center text-sm text-muted-foreground">
+              <a
+                href={`/${postLocale}/categories/${slugifyStr(category)}/`}
+                class="min-w-0 decoration-dashed underline-offset-4 hover:text-accent hover:underline focus-visible:text-accent"
+              >
+                {t("categoryLabel", postLocale)}: {displayCategoryName}
+              </a>
+            </li>
+          )
+        }
+      </ul>
+      {
+        /* 相对定位容器仅包裹正文：TOC rail 绝对定位在其左侧留白，
+            不挤压阅读列；rail 随正文滚动行走，正文结束自然收起。 */
+      }
+      <div class="post-article-wrapper relative">
+        <TableOfContents
+          headings={headings}
+          enabled={tocEnabled}
+          locale={postLocale}
+        />
         <article
           id="article"
           class="app-prose mx-auto mt-8 max-w-app xl:mx-0 xl:max-w-[760px] prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
@@ -274,8 +271,8 @@ const nextPost =
       }
     </div>
   </main>
-  <Footer />
 </Layout>
+<Footer />
 
 <script is:inline data-astro-rerun>
   /** Create a progress indicator
@@ -287,7 +284,7 @@ const nextPost =
     // Create the main container div
     const progressContainer = document.createElement("div");
     progressContainer.className =
-      "progress-container fixed top-0 z-10 h-1 w-full bg-background";
+      "progress-container fixed top-0 z-40 h-1 w-full bg-background";
 
     // Create the progress bar div
     const progressBar = document.createElement("div");
