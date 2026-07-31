@@ -328,6 +328,26 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
       bodyEl.scrollTop = Math.max(0, targetTop);
     }
 
+    // 等 panel 关闭/入场过渡结束再做事（过渡中 rect 算错、display:none 会截断视觉）。
+    // drawer/sheet 入场是 opacity+transform 双属性，transitionend 触发两次——只认
+    // transform（最慢属性），避免被 opacity 提前触发。兜底 320ms 防 transitionend 被打断。
+    function onceOnTransformEnd(target, cb, ms = 320) {
+      let done = false;
+      const finish = () => {
+        if (done) return;
+        done = true;
+        target.removeEventListener("transitionend", onEnd);
+        clearTimeout(timer);
+        cb();
+      };
+      const onEnd = e => {
+        if (e && e.propertyName !== "transform") return;
+        finish();
+      };
+      const timer = setTimeout(finish, ms);
+      target.addEventListener("transitionend", onEnd);
+    }
+
     function openOverlay(trigger) {
       overlayEl = document.querySelector("[data-toc-overlay]");
       overlayPanel = overlayEl?.querySelector("[data-toc-overlay-panel]");
@@ -367,24 +387,11 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
       (focusables[0] || overlayPanel).focus();
 
       // 把列表滚到当前 active 项（视觉重心在阅读位置）。reduced-motion 无过渡
-      // 立即滚；否则等 panel 滑入过渡结束再滚（过渡中 rect 算错）。drawer 入场
-      // 是 opacity+transform 双属性，transitionend 会触发两次——只认 transform
-      //（scale 合并在 transform 内），避免被 opacity 事件提前触发导致 rect 仍算错。
+      // 立即滚；否则等 panel 滑入过渡结束再滚（过渡中 rect 算错）。
       if (prefersReducedMotion) {
         scrollPanelToActive();
       } else {
-        const onEnd = e => {
-          if (e && e.propertyName !== "transform") return;
-          overlayPanel.removeEventListener("transitionend", onEnd);
-          scrollPanelToActive();
-        };
-        overlayPanel.addEventListener("transitionend", onEnd);
-        // 兜底：transitionend 偶尔不触发（如被打断），320ms 后强制滚。
-        // 时长对齐新动画（drawer 220ms、sheet 280ms）+ 余量。
-        setTimeout(() => {
-          overlayPanel.removeEventListener("transitionend", onEnd);
-          scrollPanelToActive();
-        }, 320);
+        onceOnTransformEnd(overlayPanel, scrollPanelToActive);
       }
     }
 
@@ -423,21 +430,11 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
 
       if (prefersReducedMotion) {
         el.setAttribute("hidden", "");
+      } else if (panel) {
+        onceOnTransformEnd(panel, () => el.setAttribute("hidden", ""));
       } else {
-        // drawer 关闭是 opacity+transform 双属性，transitionend 触发两次——
-        // 只认 transform（最慢的属性），避免被 opacity 提前触发导致 panel
-        // 在 transform 仍在过渡时被 display:none 截断、视觉跳变。
-        const hide = e => {
-          if (e && e.propertyName !== "transform") return;
-          panel?.removeEventListener("transitionend", hide);
-          el.setAttribute("hidden", "");
-        };
-        panel?.addEventListener("transitionend", hide);
-        // 兜底 320ms：transitionend 偶尔不触发（如被打断）。
-        setTimeout(() => {
-          panel?.removeEventListener("transitionend", hide);
-          el.setAttribute("hidden", "");
-        }, 320);
+        // panel 缺失（DOM 异常）兜底，与原 setTimeout 行为等价
+        setTimeout(() => el.setAttribute("hidden", ""), 320);
       }
 
       lastFocused?.focus?.();

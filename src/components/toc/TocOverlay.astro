@@ -134,12 +134,14 @@ const closeLabel = t("tocClose", locale);
     transform: translateY(0);
   }
 
-  /* reduced-motion：unlayered 简写会压过 utility 的 motion-reduce:transition-none，
-     故在此显式归零，覆盖上面的 transition 声明。 */
+  /* reduced-motion：上面三条 transition 分属不同选择器（backdrop (0,1,0)、
+     drawer/sheet panel (0,3,0)），此处用等/更高特异性匹配，无需 !important 即
+     可覆盖（媒体查询源序靠后）。对齐 CopyrightCard 的 media-query 写法。 */
   @media (prefers-reduced-motion: reduce) {
-    .toc-overlay__panel,
-    .toc-overlay__backdrop {
-      transition: none !important;
+    .toc-overlay .toc-overlay__backdrop,
+    .toc-overlay[data-toc-overlay-variant="drawer"] .toc-overlay__panel,
+    .toc-overlay[data-toc-overlay-variant="sheet"] .toc-overlay__panel {
+      transition: none;
     }
   }
 </style>

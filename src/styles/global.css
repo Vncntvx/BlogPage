@@ -73,8 +73,12 @@ html[data-theme="dark"] {
   --toc-rail-width: 192px;
   --toc-gap: 2.5rem;
   --toc-bar-height: 2.25rem;
-  /* 动画曲线：iOS sheet 标志曲线（轻微过冲，符合手机操作肌肉记忆）+
-     ease-out-expo（无过冲减速，drawer 淡入用）。项目首组动画 token。 */
+}
+
+/* 动画曲线令牌。iOS sheet 标志曲线（轻微过冲，符合手机操作肌肉记忆）+
+   ease-out-expo（无过冲减速，drawer 淡入用）。仅 TocOverlay 使用，非主题
+   变体。项目首组（亦唯一一组）动画 token。 */
+:root {
   --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }

@@ -671,35 +671,35 @@ const nextPost =
   function initTableScroll() {
     const containers = document.querySelectorAll(".app-prose .table-scroll");
     if (!containers.length) return;
-    containers.forEach((el) => {
+    containers.forEach(el => {
       updateTableScroll(el);
       if (el.dataset.tableScrollBound === "true") return;
       el.dataset.tableScrollBound = "true";
       el.addEventListener("scroll", () => updateTableScroll(el), {
         passive: true,
       });
+      tableResizeObserver.observe(el);
     });
   }
+
+  // 共享 ResizeObserver：容器尺寸变化时重算 can-scroll-right（横竖屏、字体加载、
+  // 侧边栏开合）。observer 实例只创建一次——data-astro-rerun 每次视图过渡重跑本
+  // <script>，靠 dataset 标志防重复创建；实例挂在 documentElement 上跨 rerun 存活。
+  if (document.documentElement.dataset.tableScrollResizeBound !== "true") {
+    document.documentElement.__tableResizeObserver = new ResizeObserver(
+      entries => {
+        for (const entry of entries) updateTableScroll(entry.target);
+      }
+    );
+    document.documentElement.dataset.tableScrollResizeBound = "true";
+  }
+  const tableResizeObserver = document.documentElement.__tableResizeObserver;
+
   initTableScroll();
 
   // view-transition 后重新查询并绑定新页面的表格
   if (document.documentElement.dataset.tableScrollSwapBound !== "true") {
     document.addEventListener("astro:after-swap", initTableScroll);
     document.documentElement.dataset.tableScrollSwapBound = "true";
-  }
-
-  // resize + rAF 节流重算（横竖屏、字体加载、侧边栏开合）
-  if (document.documentElement.dataset.tableScrollResizeBound !== "true") {
-    let raf = 0;
-    const onResize = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        document
-          .querySelectorAll(".app-prose .table-scroll")
-          .forEach((el) => updateTableScroll(el));
-      });
-    };
-    window.addEventListener("resize", onResize, { passive: true });
-    document.documentElement.dataset.tableScrollResizeBound = "true";
   }
 </script>
