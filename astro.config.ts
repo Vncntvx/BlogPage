@@ -2,6 +2,7 @@ import { defineConfig, envField, svgoOptimizer } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
 import { katex } from "@nullpinter/satteri-katex";
 import satteriCallouts from "satteri-callouts";
+import { wrapTable } from "./src/utils/hast/wrapTable";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
 import {
@@ -59,7 +60,7 @@ export default defineConfig({
         frontmatter: true,
       },
       mdastPlugins: [...(LATEX.enabled ? [katex()] : [])],
-      hastPlugins: [satteriCallouts()],
+      hastPlugins: [satteriCallouts(), wrapTable()],
     }),
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes

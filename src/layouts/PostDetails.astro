@@ -658,4 +658,48 @@ const nextPost =
     });
   }
   initLightbox();
+
+  /* ===== Table horizontal scroll indicator ===== */
+  // 宽表在窄屏溢出时显示右侧渐变遮罩提示可横向滑动；滑到右边界即隐藏。
+  // 窄表（不溢出）永不显示，桌面端宽屏同理——纯按 scrollWidth/clientWidth 判断。
+  function updateTableScroll(el) {
+    const canScroll = el.scrollWidth - el.clientWidth > 1;
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+    el.classList.toggle("can-scroll-right", canScroll && !atEnd);
+  }
+
+  function initTableScroll() {
+    const containers = document.querySelectorAll(".app-prose .table-scroll");
+    if (!containers.length) return;
+    containers.forEach((el) => {
+      updateTableScroll(el);
+      if (el.dataset.tableScrollBound === "true") return;
+      el.dataset.tableScrollBound = "true";
+      el.addEventListener("scroll", () => updateTableScroll(el), {
+        passive: true,
+      });
+    });
+  }
+  initTableScroll();
+
+  // view-transition 后重新查询并绑定新页面的表格
+  if (document.documentElement.dataset.tableScrollSwapBound !== "true") {
+    document.addEventListener("astro:after-swap", initTableScroll);
+    document.documentElement.dataset.tableScrollSwapBound = "true";
+  }
+
+  // resize + rAF 节流重算（横竖屏、字体加载、侧边栏开合）
+  if (document.documentElement.dataset.tableScrollResizeBound !== "true") {
+    let raf = 0;
+    const onResize = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        document
+          .querySelectorAll(".app-prose .table-scroll")
+          .forEach((el) => updateTableScroll(el));
+      });
+    };
+    window.addEventListener("resize", onResize, { passive: true });
+    document.documentElement.dataset.tableScrollResizeBound = "true";
+  }
 </script>

@@ -67,6 +67,26 @@
       }
     }
 
+    /* 移动端表格水平滚动容器（hast 插件为每个 <table> 注入 .table-scroll 包裹层）。
+       overflow-x:auto 常开：宽屏表格不溢出时无副作用，窄屏宽表可横向滑动。
+       position:relative 作为遮罩 ::after 的定位祖先。 */
+    .table-scroll {
+      @apply relative overflow-x-auto;
+    }
+
+    /* 右侧渐变遮罩：默认隐藏，JS 检测到溢出且未滑到右边界时加
+       .can-scroll-right 显示。仅右侧（阅读从左开始，左侧溢出不符合阅读直觉）。
+       用 --background token 适配暗/亮模式，与页面背景融合。 */
+    .table-scroll::after {
+      content: "";
+      @apply pointer-events-none absolute inset-y-0 end-0 w-8 opacity-0 transition-opacity;
+      background: linear-gradient(to right, transparent, var(--background));
+    }
+
+    .table-scroll.can-scroll-right::after {
+      @apply opacity-100;
+    }
+
     code {
       @apply rounded bg-muted/75 p-1 break-words text-foreground before:content-none after:content-none;
     }
