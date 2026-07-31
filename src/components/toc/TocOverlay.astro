@@ -36,7 +36,7 @@ const closeLabel = t("tocClose", locale);
       轻，让正文更可见）。panel 仍 bg-background 不透明，目录文字清晰。 */
   }
   <div
-    class="toc-overlay__backdrop absolute inset-0 bg-black/50 opacity-0 backdrop-blur-sm transition-opacity duration-200 motion-reduce:transition-none"
+    class="toc-overlay__backdrop absolute inset-0 bg-black/50 opacity-0 backdrop-blur-sm"
     data-toc-overlay-backdrop
     aria-hidden="true"
   >
@@ -44,7 +44,7 @@ const closeLabel = t("tocClose", locale);
 
   {/* Panel */}
   <div
-    class="toc-overlay__panel absolute flex flex-col overflow-hidden border-border bg-background shadow-xl transition-transform duration-200 motion-reduce:transition-none"
+    class="toc-overlay__panel absolute flex flex-col overflow-hidden border-border bg-background shadow-xl"
     role="dialog"
     aria-modal="true"
     aria-label={label}
@@ -82,29 +82,42 @@ const closeLabel = t("tocClose", locale);
 </div>
 
 <style is:global>
-  /* Position the panel per variant. Drawer: right side, full height, capped
-     width. Sheet: bottom, capped height. Hidden state is driven by the parent
-     [hidden] attribute + these transforms; the open script removes [hidden]
-     then triggers the transform transition. */
-  .toc-overlay:not([hidden]) .toc-overlay__backdrop {
+  /* 态机：可见态由 .is-open class 控制（终态），[hidden] 只管 display:none
+     （彻底隐藏）。分离二者后，关闭时先移除 .is-open 触发回初态的过渡，
+     等 transitionend 再 setAttribute(hidden)——关闭过渡才能真正播放，
+     不再被 display:none 立即掐断（原先关闭是 setTimeout 后硬切）。 */
+
+  /* backdrop：先于 panel 到位——150ms < panel 220/280ms，同时开始先完成。
+     用「更短时长」而非 transition-delay，避免关闭方向也被延迟。 */
+  .toc-overlay__backdrop {
+    transition: opacity 150ms var(--ease-out);
+  }
+  .toc-overlay.is-open .toc-overlay__backdrop {
     opacity: 1;
   }
 
-  /* Drawer (tablet) */
+  /* Drawer（平板）：右侧原位淡入 + 微缩放 + 微左移。不再从屏外整块滑入，
+     去「机械滑入感」，对齐 SaaS 文档站 modal 的「浮出」质感。
+     scale 合并在 transform 内（非独立 scale 属性），故 transitionend 的
+     propertyName 为 transform，便于脚本过滤。 */
   .toc-overlay[data-toc-overlay-variant="drawer"] .toc-overlay__panel {
     top: 0;
     right: 0;
     bottom: 0;
     width: min(360px, 88vw);
     border-left-width: 1px;
-    transform: translateX(100%);
+    opacity: 0;
+    transform: translateX(16px) scale(0.96);
+    transition:
+      opacity 220ms var(--ease-out),
+      transform 220ms var(--ease-out);
   }
-  .toc-overlay[data-toc-overlay-variant="drawer"]:not([hidden])
-    .toc-overlay__panel {
-    transform: translateX(0);
+  .toc-overlay[data-toc-overlay-variant="drawer"].is-open .toc-overlay__panel {
+    opacity: 1;
+    transform: translateX(0) scale(1);
   }
 
-  /* Sheet (mobile) */
+  /* Sheet（手机）：保留上滑 + iOS 曲线（轻微过冲），符合手机操作习惯。 */
   .toc-overlay[data-toc-overlay-variant="sheet"] .toc-overlay__panel {
     left: 0;
     right: 0;
@@ -114,10 +127,19 @@ const closeLabel = t("tocClose", locale);
     border-top-left-radius: 0.75rem;
     border-top-right-radius: 0.75rem;
     transform: translateY(100%);
+    transition: transform 280ms var(--ease-ios);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-  .toc-overlay[data-toc-overlay-variant="sheet"]:not([hidden])
-    .toc-overlay__panel {
+  .toc-overlay[data-toc-overlay-variant="sheet"].is-open .toc-overlay__panel {
     transform: translateY(0);
+  }
+
+  /* reduced-motion：unlayered 简写会压过 utility 的 motion-reduce:transition-none，
+     故在此显式归零，覆盖上面的 transition 声明。 */
+  @media (prefers-reduced-motion: reduce) {
+    .toc-overlay__panel,
+    .toc-overlay__backdrop {
+      transition: none !important;
+    }
   }
 </style>

@@ -73,6 +73,10 @@ html[data-theme="dark"] {
   --toc-rail-width: 192px;
   --toc-gap: 2.5rem;
   --toc-bar-height: 2.25rem;
+  /* 动画曲线：iOS sheet 标志曲线（轻微过冲，符合手机操作肌肉记忆）+
+     ease-out-expo（无过冲减速，drawer 淡入用）。项目首组动画 token。 */
+  --ease-ios: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* 恒定居中阅读列：标题/正文/标签/授权/分享/评论/上下篇共用同一条轴。

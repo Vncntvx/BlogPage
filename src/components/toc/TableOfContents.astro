@@ -344,9 +344,11 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
       }
       overlayEl.setAttribute("data-toc-overlay-variant", overlayVariant());
       overlayEl.removeAttribute("hidden");
-      // Force reflow so the transform transition plays from the off-screen
-      // state to the visible state.
+      // 强制 reflow：[hidden] 是 display:none，移除后 display:none→flex 切换
+      // 不会自动播 transition，必须 reflow 让浏览器登记初态，再加 .is-open
+      // 触发到终态的过渡。
       void overlayPanel.offsetWidth;
+      overlayEl.classList.add("is-open");
 
       // Lock background scroll（保存 scrollY，关闭时精确还原）。
       lockScroll();
@@ -365,20 +367,24 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
       (focusables[0] || overlayPanel).focus();
 
       // 把列表滚到当前 active 项（视觉重心在阅读位置）。reduced-motion 无过渡
-      // 立即滚；否则等 panel 滑入过渡结束再滚（过渡中 rect 算错）。
+      // 立即滚；否则等 panel 滑入过渡结束再滚（过渡中 rect 算错）。drawer 入场
+      // 是 opacity+transform 双属性，transitionend 会触发两次——只认 transform
+      //（scale 合并在 transform 内），避免被 opacity 事件提前触发导致 rect 仍算错。
       if (prefersReducedMotion) {
         scrollPanelToActive();
       } else {
-        const onEnd = () => {
+        const onEnd = e => {
+          if (e && e.propertyName !== "transform") return;
           overlayPanel.removeEventListener("transitionend", onEnd);
           scrollPanelToActive();
         };
         overlayPanel.addEventListener("transitionend", onEnd);
-        // 兜底：transitionend 偶尔不触发（如被打断），220ms 后强制滚。
+        // 兜底：transitionend 偶尔不触发（如被打断），320ms 后强制滚。
+        // 时长对齐新动画（drawer 220ms、sheet 280ms）+ 余量。
         setTimeout(() => {
           overlayPanel.removeEventListener("transitionend", onEnd);
           scrollPanelToActive();
-        }, 220);
+        }, 320);
       }
     }
 
@@ -410,13 +416,28 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
         .querySelectorAll("[data-toc-open-trigger]")
         .forEach(b => b.setAttribute("aria-expanded", "false"));
 
+      // 移除 .is-open 触发回初态的关闭过渡（取代原先 setAttribute(hidden)
+      // 立即 display:none 掐断过渡——原关闭其实是 setTimeout 后硬切）。
+      // [hidden] 只在过渡结束后设，作为彻底隐藏的清理。
+      el.classList.remove("is-open");
+
       if (prefersReducedMotion) {
         el.setAttribute("hidden", "");
       } else {
-        // Wait for the slide-out transition before hiding.
-        const hide = () => el.setAttribute("hidden", "");
-        panel?.addEventListener("transitionend", hide, { once: true });
-        setTimeout(hide, 250);
+        // drawer 关闭是 opacity+transform 双属性，transitionend 触发两次——
+        // 只认 transform（最慢的属性），避免被 opacity 提前触发导致 panel
+        // 在 transform 仍在过渡时被 display:none 截断、视觉跳变。
+        const hide = e => {
+          if (e && e.propertyName !== "transform") return;
+          panel?.removeEventListener("transitionend", hide);
+          el.setAttribute("hidden", "");
+        };
+        panel?.addEventListener("transitionend", hide);
+        // 兜底 320ms：transitionend 偶尔不触发（如被打断）。
+        setTimeout(() => {
+          panel?.removeEventListener("transitionend", hide);
+          el.setAttribute("hidden", "");
+        }, 320);
       }
 
       lastFocused?.focus?.();
@@ -525,7 +546,10 @@ const hasToc = enabled && countTopLevel(tree) >= 2;
     document.addEventListener("astro:after-swap", () => {
       // Ensure no overlay is left open from the previous page.
       const ol = document.querySelector("[data-toc-overlay]");
-      if (ol) ol.setAttribute("hidden", "");
+      if (ol) {
+        ol.setAttribute("hidden", "");
+        ol.classList.remove("is-open");
+      }
       overlayEl = null;
       overlayPanel = null;
       // 只恢复 <html> 的 overflow 内联样式（万一上个页面 overlay 是开着的
